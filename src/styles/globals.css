@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 100 55% 15%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14.3% 95.9%;
+    --secondary-foreground: 0 0% 10%;
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
+    --accent: 100 45% 42%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 100 55% 15%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 0 0% 10%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 10%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-white text-lomash-dark font-sans antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+  }
+}
+
+@layer utilities {
+  .container-padding {
+    @apply px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16;
+  }
+  
+  .section-padding {
+    @apply py-12 md:py-16 lg:py-20 xl:py-24;
+  }
+  
+  .heading-1 {
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight;
+  }
+  
+  .heading-2 {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight;
+  }
+  
+  .heading-3 {
+    @apply text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight;
+  }
+  
+  .body-large {
+    @apply text-lg md:text-xl leading-relaxed;
+  }
+  
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-lomash-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-lomash-gray-400 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-lomash-primary;
+}
