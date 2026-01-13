@@ -1,0 +1,586 @@
+/**
+ * Lomash Wood Design System
+ * Reusable patterns, components, and utilities
+ */
+
+/* ==========================================================================
+   Typography Scale
+   ========================================================================== */
+
+.text-display {
+  @apply font-heading text-5xl font-bold tracking-tight md:text-6xl lg:text-7xl;
+}
+
+.text-display-sm {
+  @apply font-heading text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl;
+}
+
+.text-heading {
+  @apply font-heading text-3xl font-semibold tracking-tight md:text-4xl lg:text-5xl;
+}
+
+.text-heading-sm {
+  @apply font-heading text-2xl font-semibold tracking-tight md:text-3xl lg:text-4xl;
+}
+
+.text-subheading {
+  @apply font-heading text-xl font-medium md:text-2xl lg:text-3xl;
+}
+
+.text-body {
+  @apply text-base leading-relaxed text-lomash-gray-700 dark:text-lomash-gray-300;
+}
+
+.text-body-lg {
+  @apply text-lg leading-relaxed text-lomash-gray-700 dark:text-lomash-gray-300;
+}
+
+.text-body-sm {
+  @apply text-sm leading-relaxed text-lomash-gray-600 dark:text-lomash-gray-400;
+}
+
+.text-caption {
+  @apply text-xs text-lomash-gray-500 dark:text-lomash-gray-500;
+}
+
+/* ==========================================================================
+   Layout Components
+   ========================================================================== */
+
+.page-container {
+  @apply mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-8;
+}
+
+.page-header {
+  @apply mb-8 space-y-4 md:mb-12;
+}
+
+.page-title {
+  @apply text-heading text-lomash-dark dark:text-white;
+}
+
+.page-description {
+  @apply text-body-lg max-w-3xl;
+}
+
+.content-section {
+  @apply section space-y-8;
+}
+
+.content-grid {
+  @apply grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+}
+
+.content-grid-2 {
+  @apply grid gap-6 md:grid-cols-2;
+}
+
+.content-grid-3 {
+  @apply grid gap-6 md:grid-cols-2 lg:grid-cols-3;
+}
+
+/* ==========================================================================
+   Product Components
+   ========================================================================== */
+
+.product-card {
+  @apply card-product group relative;
+}
+
+.product-image-wrapper {
+  @apply relative aspect-product overflow-hidden rounded-t-lg bg-lomash-gray-100 dark:bg-lomash-gray-700;
+}
+
+.product-image {
+  @apply h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110;
+}
+
+.product-badge {
+  @apply absolute left-3 top-3 z-10 rounded-full bg-lomash-primary px-3 py-1 text-xs font-semibold text-white shadow-lg;
+}
+
+.product-actions {
+  @apply absolute inset-x-0 bottom-0 flex translate-y-full items-center justify-center gap-2 bg-gradient-to-t from-black/50 to-transparent p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100;
+}
+
+.product-details {
+  @apply space-y-2 p-4;
+}
+
+.product-category {
+  @apply text-caption uppercase tracking-wide text-lomash-gray-500 dark:text-lomash-gray-400;
+}
+
+.product-title {
+  @apply line-clamp-2 font-heading text-lg font-semibold text-lomash-dark transition-colors hover:text-lomash-primary dark:text-white dark:hover:text-lomash-accent;
+}
+
+.product-description {
+  @apply line-clamp-2 text-body-sm;
+}
+
+.product-price-wrapper {
+  @apply flex items-baseline gap-2;
+}
+
+.product-price {
+  @apply font-heading text-xl font-bold text-lomash-primary dark:text-lomash-accent;
+}
+
+.product-price-old {
+  @apply text-sm text-lomash-gray-400 line-through;
+}
+
+.product-discount {
+  @apply badge-danger ml-2;
+}
+
+.product-rating {
+  @apply flex items-center gap-1;
+}
+
+.product-rating-stars {
+  @apply flex items-center;
+}
+
+.product-rating-count {
+  @apply text-caption;
+}
+
+/* ==========================================================================
+   Form Components
+   ========================================================================== */
+
+.form-group {
+  @apply space-y-2;
+}
+
+.form-row {
+  @apply grid gap-4 md:grid-cols-2;
+}
+
+.form-label-required::after {
+  content: " *";
+  @apply text-red-500;
+}
+
+.form-helper {
+  @apply text-caption mt-1;
+}
+
+.form-error {
+  @apply mt-1 text-xs text-red-600 dark:text-red-400;
+}
+
+.form-success {
+  @apply mt-1 text-xs text-green-600 dark:text-green-400;
+}
+
+.input-group {
+  @apply relative;
+}
+
+.input-icon-left {
+  @apply absolute left-3 top-1/2 -translate-y-1/2 text-lomash-gray-400;
+}
+
+.input-icon-right {
+  @apply absolute right-3 top-1/2 -translate-y-1/2 text-lomash-gray-400;
+}
+
+.input-with-icon-left {
+  @apply pl-10;
+}
+
+.input-with-icon-right {
+  @apply pr-10;
+}
+
+/* ==========================================================================
+   Navigation Components
+   ========================================================================== */
+
+.nav-link {
+  @apply relative text-sm font-medium text-lomash-gray-700 transition-colors hover:text-lomash-primary dark:text-lomash-gray-300 dark:hover:text-lomash-accent;
+}
+
+.nav-link-active {
+  @apply text-lomash-primary dark:text-lomash-accent;
+}
+
+.nav-link-active::after {
+  content: "";
+  @apply absolute -bottom-1 left-0 h-0.5 w-full bg-lomash-primary dark:bg-lomash-accent;
+}
+
+.breadcrumb {
+  @apply flex items-center space-x-2 text-sm;
+}
+
+.breadcrumb-item {
+  @apply flex items-center;
+}
+
+.breadcrumb-link {
+  @apply text-lomash-gray-600 transition-colors hover:text-lomash-primary dark:text-lomash-gray-400 dark:hover:text-lomash-accent;
+}
+
+.breadcrumb-separator {
+  @apply mx-2 text-lomash-gray-400;
+}
+
+.breadcrumb-current {
+  @apply font-medium text-lomash-dark dark:text-white;
+}
+
+/* ==========================================================================
+   Modal & Dialog Components
+   ========================================================================== */
+
+.modal-overlay {
+  @apply overlay fixed inset-0 z-50 animate-fade-in;
+}
+
+.modal-content {
+  @apply fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 animate-scale-in rounded-lg bg-white p-6 shadow-2xl dark:bg-lomash-gray-800;
+}
+
+.modal-header {
+  @apply mb-4 flex items-center justify-between border-b border-lomash-gray-200 pb-4 dark:border-lomash-gray-700;
+}
+
+.modal-title {
+  @apply font-heading text-xl font-semibold text-lomash-dark dark:text-white;
+}
+
+.modal-close {
+  @apply rounded-lg p-1 text-lomash-gray-400 transition-colors hover:bg-lomash-gray-100 hover:text-lomash-gray-600 dark:hover:bg-lomash-gray-700 dark:hover:text-lomash-gray-300;
+}
+
+.modal-body {
+  @apply space-y-4;
+}
+
+.modal-footer {
+  @apply mt-6 flex items-center justify-end gap-3 border-t border-lomash-gray-200 pt-4 dark:border-lomash-gray-700;
+}
+
+/* ==========================================================================
+   Alert Components
+   ========================================================================== */
+
+.alert {
+  @apply rounded-lg border p-4;
+}
+
+.alert-info {
+  @apply alert border-blue-200 bg-blue-50 text-blue-800 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-400;
+}
+
+.alert-success {
+  @apply alert border-green-200 bg-green-50 text-green-800 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400;
+}
+
+.alert-warning {
+  @apply alert border-yellow-200 bg-yellow-50 text-yellow-800 dark:border-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400;
+}
+
+.alert-error {
+  @apply alert border-red-200 bg-red-50 text-red-800 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400;
+}
+
+.alert-title {
+  @apply mb-1 font-semibold;
+}
+
+.alert-description {
+  @apply text-sm;
+}
+
+/* ==========================================================================
+   Table Components
+   ========================================================================== */
+
+.table-wrapper {
+  @apply overflow-x-auto rounded-lg border border-lomash-gray-200 dark:border-lomash-gray-700;
+}
+
+.table {
+  @apply w-full text-left text-sm;
+}
+
+.table-header {
+  @apply bg-lomash-gray-50 dark:bg-lomash-gray-800;
+}
+
+.table-header-cell {
+  @apply px-4 py-3 font-medium text-lomash-gray-700 dark:text-lomash-gray-300;
+}
+
+.table-body {
+  @apply divide-y divide-lomash-gray-200 bg-white dark:divide-lomash-gray-700 dark:bg-lomash-gray-900;
+}
+
+.table-row {
+  @apply transition-colors hover:bg-lomash-gray-50 dark:hover:bg-lomash-gray-800;
+}
+
+.table-cell {
+  @apply px-4 py-3 text-lomash-gray-900 dark:text-lomash-gray-100;
+}
+
+/* ==========================================================================
+   Pagination Components
+   ========================================================================== */
+
+.pagination {
+  @apply flex items-center justify-center gap-2;
+}
+
+.pagination-button {
+  @apply flex h-10 w-10 items-center justify-center rounded-lg border border-lomash-gray-300 bg-white text-sm font-medium text-lomash-gray-700 transition-colors hover:bg-lomash-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-lomash-gray-700 dark:bg-lomash-gray-800 dark:text-lomash-gray-300 dark:hover:bg-lomash-gray-700;
+}
+
+.pagination-button-active {
+  @apply bg-lomash-primary text-white hover:bg-lomash-primary/90 dark:bg-lomash-accent dark:hover:bg-lomash-accent/90;
+}
+
+.pagination-ellipsis {
+  @apply flex h-10 w-10 items-center justify-center text-lomash-gray-400;
+}
+
+/* ==========================================================================
+   Skeleton Loaders
+   ========================================================================== */
+
+.skeleton {
+  @apply animate-shimmer rounded-lg bg-gradient-to-r from-lomash-gray-200 via-lomash-gray-100 to-lomash-gray-200 bg-[length:200%_100%] dark:from-lomash-gray-700 dark:via-lomash-gray-600 dark:to-lomash-gray-700;
+}
+
+.skeleton-text {
+  @apply skeleton h-4 w-full;
+}
+
+.skeleton-title {
+  @apply skeleton h-6 w-3/4;
+}
+
+.skeleton-avatar {
+  @apply skeleton h-12 w-12 rounded-full;
+}
+
+.skeleton-image {
+  @apply skeleton aspect-product w-full;
+}
+
+.skeleton-button {
+  @apply skeleton h-10 w-24;
+}
+
+/* ==========================================================================
+   Empty State Components
+   ========================================================================== */
+
+.empty-state {
+  @apply flex flex-col items-center justify-center space-y-4 rounded-lg border-2 border-dashed border-lomash-gray-300 bg-lomash-gray-50 p-12 text-center dark:border-lomash-gray-700 dark:bg-lomash-gray-800;
+}
+
+.empty-state-icon {
+  @apply h-16 w-16 text-lomash-gray-400 dark:text-lomash-gray-600;
+}
+
+.empty-state-title {
+  @apply font-heading text-xl font-semibold text-lomash-gray-900 dark:text-white;
+}
+
+.empty-state-description {
+  @apply max-w-sm text-body;
+}
+
+.empty-state-action {
+  @apply mt-4;
+}
+
+/* ==========================================================================
+   Hero Components
+   ========================================================================== */
+
+.hero {
+  @apply relative overflow-hidden bg-gradient-to-br from-lomash-light via-white to-lomash-gray-50 dark:from-lomash-gray-900 dark:via-lomash-gray-900 dark:to-lomash-gray-800;
+}
+
+.hero-content {
+  @apply page-container py-20 lg:py-28;
+}
+
+.hero-grid {
+  @apply grid items-center gap-12 lg:grid-cols-2;
+}
+
+.hero-text {
+  @apply space-y-6;
+}
+
+.hero-title {
+  @apply text-display text-lomash-dark dark:text-white;
+}
+
+.hero-description {
+  @apply text-body-lg max-w-2xl;
+}
+
+.hero-actions {
+  @apply flex flex-wrap items-center gap-4;
+}
+
+.hero-image {
+  @apply relative aspect-square overflow-hidden rounded-2xl shadow-2xl lg:aspect-[4/3];
+}
+
+/* ==========================================================================
+   Feature Components
+   ========================================================================== */
+
+.feature-grid {
+  @apply grid gap-8 md:grid-cols-2 lg:grid-cols-3;
+}
+
+.feature-card {
+  @apply card space-y-4 p-6;
+}
+
+.feature-icon {
+  @apply flex h-12 w-12 items-center justify-center rounded-lg bg-lomash-primary/10 text-lomash-primary dark:bg-lomash-accent/10 dark:text-lomash-accent;
+}
+
+.feature-title {
+  @apply font-heading text-xl font-semibold text-lomash-dark dark:text-white;
+}
+
+.feature-description {
+  @apply text-body;
+}
+
+/* ==========================================================================
+   Testimonial Components
+   ========================================================================== */
+
+.testimonial-card {
+  @apply card space-y-4 p-6;
+}
+
+.testimonial-quote {
+  @apply text-body-lg italic;
+}
+
+.testimonial-author {
+  @apply flex items-center gap-3;
+}
+
+.testimonial-avatar {
+  @apply h-12 w-12 rounded-full bg-lomash-gray-200 object-cover dark:bg-lomash-gray-700;
+}
+
+.testimonial-info {
+  @apply space-y-1;
+}
+
+.testimonial-name {
+  @apply font-semibold text-lomash-dark dark:text-white;
+}
+
+.testimonial-role {
+  @apply text-caption;
+}
+
+/* ==========================================================================
+   CTA (Call-to-Action) Components
+   ========================================================================== */
+
+.cta-section {
+  @apply section bg-gradient-to-r from-lomash-primary to-lomash-secondary text-white;
+}
+
+.cta-content {
+  @apply page-container space-y-6 text-center;
+}
+
+.cta-title {
+  @apply text-heading;
+}
+
+.cta-description {
+  @apply mx-auto max-w-2xl text-lg opacity-90;
+}
+
+.cta-actions {
+  @apply flex flex-wrap items-center justify-center gap-4;
+}
+
+/* ==========================================================================
+   Footer Components
+   ========================================================================== */
+
+.footer {
+  @apply border-t border-lomash-gray-200 bg-white dark:border-lomash-gray-800 dark:bg-lomash-gray-900;
+}
+
+.footer-content {
+  @apply page-container py-12;
+}
+
+.footer-grid {
+  @apply grid gap-8 md:grid-cols-2 lg:grid-cols-4;
+}
+
+.footer-column {
+  @apply space-y-4;
+}
+
+.footer-title {
+  @apply font-heading text-lg font-semibold text-lomash-dark dark:text-white;
+}
+
+.footer-links {
+  @apply space-y-2;
+}
+
+.footer-link {
+  @apply block text-body-sm transition-colors hover:text-lomash-primary dark:hover:text-lomash-accent;
+}
+
+.footer-bottom {
+  @apply border-t border-lomash-gray-200 py-6 dark:border-lomash-gray-800;
+}
+
+.footer-copyright {
+  @apply text-center text-caption;
+}
+
+/* ==========================================================================
+   Utility Patterns
+   ========================================================================== */
+
+.glass-effect {
+  @apply bg-white/80 backdrop-blur-lg dark:bg-lomash-gray-800/80;
+}
+
+.gradient-border {
+  @apply border-2 border-transparent bg-gradient-to-r from-lomash-primary to-lomash-accent bg-clip-border;
+}
+
+.shadow-lomash {
+  @apply shadow-lg shadow-lomash-primary/10 dark:shadow-lomash-accent/10;
+}
+
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-lomash-primary focus:ring-offset-2 dark:focus:ring-lomash-accent;
+}
+
+.hover-lift {
+  @apply transition-transform duration-300 hover:-translate-y-1;
+}
+
+.hover-glow {
+  @apply transition-shadow duration-300 hover:shadow-lomash;
+}
