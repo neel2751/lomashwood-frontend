@@ -123,7 +123,7 @@ export function Hero() {
       aria-label="Hero Slider"
     >
       {/* Slides */}
-      <div className="relative h-full w-full">
+      <div className="relative h-full w-full check">
         {slides.map((slide, index) => (
           <div
             key={slide.id}
