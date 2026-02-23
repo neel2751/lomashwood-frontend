@@ -1,0 +1,34 @@
+# Robots.txt for Lomash Wood - Kitchen & Bedroom Design & Consultation Website
+# https://lomashwood.com
+
+# Allow all crawlers by default
+User-agent: *
+Allow: /
+
+# Disallow specific paths
+Disallow: /api/
+Disallow: /my-account/
+Disallow: /_next/
+Disallow: /admin/
+Disallow: /*.json$
+Disallow: /*?*debug=
+Disallow: /*?*test=
+
+# Allow specific API endpoints for indexing
+Allow: /api/og/
+
+# Crawl-delay for specific bots (optional)
+# User-agent: Googlebot
+# Crawl-delay: 0
+
+# User-agent: Bingbot
+# Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://lomashwood.com/sitemap.xml
+Sitemap: https://lomashwood.com/sitemap-products.xml
+Sitemap: https://lomashwood.com/sitemap-blog.xml
+Sitemap: https://lomashwood.com/sitemap-pages.xml
+
+# Host (preferred domain)
+Host: https://lomashwood.com
