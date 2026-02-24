@@ -137,8 +137,10 @@ export default function ApplyForm({
   // 1. Get the current files from watch
 const files = form.watch("documents");
 
-// 2. Convert FileList to Array for mapping
-const fileArray = files instanceof FileList ? Array.from(files) : [];
+// Change the array conversion to this:
+const fileArray = (isBrowser && files instanceof FileList) 
+  ? Array.from(files) 
+  : [];
 
 const removeFile = (indexToRemove: number) => {
   // 1. Filter the array to remove the specific index
