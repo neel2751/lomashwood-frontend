@@ -12,7 +12,10 @@ import {
   ArrowRight,
   ArrowLeft,
   Shield,
+  Upload,
+  X,
 } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -25,6 +28,17 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
+
+
+
+const isBrowser = typeof window !== "undefined";
+
+
 
 const financeApplicationSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
@@ -54,6 +68,17 @@ const financeApplicationSchema = z.object({
   loanAmount: z.string().min(1, "Loan amount is required"),
   loanPurpose: z.string().min(10, "Please specify loan purpose (minimum 10 characters)"),
   preferredTenure: z.string().min(1, "Preferred tenure is required"),
+
+  documents: z
+  .custom<FileList | undefined>()
+  .refine((files) => {
+    if (!isBrowser) return true;
+    return files && files.length > 0;
+  }, "Please upload at least one document")
+  .refine((files) => {
+    if (!isBrowser) return true;
+    return files && files.length <= 2;
+  }, "Maximum 2 documents allowed"),
 
   consentToCredit: z.boolean().refine((val) => val === true, {
     message: "You must consent to credit check",
@@ -109,6 +134,50 @@ export default function ApplyForm({
     mode: "onChange",
   });
 
+  // 1. Get the current files from watch
+const files = form.watch("documents");
+
+// 2. Convert FileList to Array for mapping
+const fileArray = files instanceof FileList ? Array.from(files) : [];
+
+const removeFile = (indexToRemove: number) => {
+  // 1. Filter the array to remove the specific index
+  const updatedFiles = fileArray.filter((_, index) => index !== indexToRemove);
+  
+  // 2. Create a new DataTransfer object to reconstruct a FileList
+  const dataTransfer = new DataTransfer();
+  updatedFiles.forEach((file) => dataTransfer.items.add(file));
+  
+  // 3. Update the form state
+  form.setValue("documents", dataTransfer.files, { shouldValidate: true });
+};
+
+const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const selectedFiles = e.target.files;
+  if (!selectedFiles) return;
+
+  const existingFiles = fileArray;
+  const limitedFiles = [...existingFiles, ...Array.from(selectedFiles)].slice(0, 2);
+
+  for (const file of limitedFiles) {
+    if (file.size > 5 * 1024 * 1024) {
+     alert(`File "${file.name}" exceeds the 5MB size limit and will not be added.`);
+      
+      // CRITICAL: Reset the physical input so the browser doesn't hold the files
+      e.target.value = ""; 
+      return; 
+    }
+  }
+
+  const dataTransfer = new DataTransfer();
+  limitedFiles.forEach((file) => dataTransfer.items.add(file));
+
+  form.setValue("documents", dataTransfer.files, { 
+    shouldValidate: true,
+    shouldDirty: true 
+  });
+};
+
   const onFormSubmit = async (data: FinanceApplicationFormData) => {
     setIsSubmitting(true);
     try {
@@ -163,7 +232,7 @@ export default function ApplyForm({
       case 4:
         return ["loanAmount", "loanPurpose", "preferredTenure"];
       case 5:
-        return ["consentToCredit", "agreeToTerms"];
+        return ["consentToCredit",  "agreeToTerms", "documents"];
       default:
         return [];
     }
@@ -269,12 +338,11 @@ export default function ApplyForm({
                     <label htmlFor="firstName" className="text-sm font-medium">
                       First Name <span className="text-destructive">*</span>
                     </label>
-                    <input
+                    <Input
                       id="firstName"
                       {...form.register("firstName")}
                       placeholder="John"
                       className={cn(
-                        "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary",
                         form.formState.errors.firstName && "border-destructive"
                       )}
                     />
@@ -289,12 +357,11 @@ export default function ApplyForm({
                     <label htmlFor="lastName" className="text-sm font-medium">
                       Last Name <span className="text-destructive">*</span>
                     </label>
-                    <input
+                    <Input
                       id="lastName"
                       {...form.register("lastName")}
                       placeholder="Doe"
                       className={cn(
-                        "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary",
                         form.formState.errors.lastName && "border-destructive"
                       )}
                     />
@@ -311,13 +378,12 @@ export default function ApplyForm({
                     <label htmlFor="email" className="text-sm font-medium">
                       Email Address <span className="text-destructive">*</span>
                     </label>
-                    <input
+                    <Input
                       id="email"
                       type="email"
                       {...form.register("email")}
                       placeholder="john.doe@example.com"
                       className={cn(
-                        "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary",
                         form.formState.errors.email && "border-destructive"
                       )}
                     />
@@ -332,14 +398,13 @@ export default function ApplyForm({
                     <label htmlFor="phone" className="text-sm font-medium">
                       Phone Number <span className="text-destructive">*</span>
                     </label>
-                    <input
+                    <Input
                       id="phone"
                       type="tel"
                       {...form.register("phone")}
                       placeholder="9876543210"
                       maxLength={10}
                       className={cn(
-                        "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary",
                         form.formState.errors.phone && "border-destructive"
                       )}
                     />
@@ -356,13 +421,12 @@ export default function ApplyForm({
                     <label htmlFor="dateOfBirth" className="text-sm font-medium">
                       Date of Birth <span className="text-destructive">*</span>
                     </label>
-                    <input
+                    <Input
                       id="dateOfBirth"
                       type="date"
                       {...form.register("dateOfBirth")}
                       max={new Date().toISOString().split('T')[0]}
                       className={cn(
-                        "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary",
                         form.formState.errors.dateOfBirth && "border-destructive"
                       )}
                     />
@@ -404,12 +468,11 @@ export default function ApplyForm({
                     <label htmlFor="city" className="text-sm font-medium">
                       City <span className="text-destructive">*</span>
                     </label>
-                    <input
+                    <Input
                       id="city"
                       {...form.register("city")}
                       placeholder="E.g. 'London'"
                       className={cn(
-                        "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary",
                         form.formState.errors.city && "border-destructive"
                       )}
                     />
@@ -424,21 +487,24 @@ export default function ApplyForm({
                     <label htmlFor="state" className="text-sm font-medium">
                       State <span className="text-destructive">*</span>
                     </label>
-                    <select
-                      id="state"
-                      {...form.register("state")}
-                      className={cn(
-                        "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary",
-                        form.formState.errors.state && "border-destructive"
-                      )}
-                    >
-                      <option value="">Select state</option>
-                      {UKStates.map((state) => (
-                        <option key={state} value={state}>
-                          {state}
-                        </option>
-                      ))}
-                    </select>
+                     <Select onValueChange={(value) => form.setValue("state", value, { shouldValidate: true })}>
+                <SelectTrigger className={`w-full h-10 pl-3 pr-3 py-2 border rounded-md ${
+                  form.formState.errors.state ? 'border-red-500' : 'border-gray-300'
+                }`}>
+                  <SelectValue placeholder="Select state" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>State</SelectLabel>
+                    {UKStates.map((state) => (
+                      <SelectItem key={state} value={state.toLowerCase()}>
+                        {state}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+
                     {form.formState.errors.state && (
                       <p className="text-sm text-destructive">
                         {form.formState.errors.state.message}
@@ -450,14 +516,13 @@ export default function ApplyForm({
                     <label htmlFor="postcode" className="text-sm font-medium">
                       Postcode <span className="text-destructive">*</span>
                     </label>
-                    <input
+                    <Input
                       id="postcode"
                       type="tel"
                       {...form.register("postcode")}
                       placeholder="E.g. 'CR4 7BU'"
                       maxLength={8}
                       className={cn(
-                        "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary",
                         form.formState.errors.postcode && "border-destructive"
                       )}
                     />
@@ -474,40 +539,38 @@ export default function ApplyForm({
                     <label className="text-sm font-medium">
                       Residence Type <span className="text-destructive">*</span>
                     </label>
-                    <div className="space-y-2">
+                    <RadioGroup defaultValue={form.getValues("residenceType")} className="space-y-2">
                       {[
                         { value: "owned", label: "Owned" },
                         { value: "rented", label: "Rented" },
                         { value: "family", label: "Family Owned" },
                       ].map((option) => (
                         <div key={option.value} className="flex items-center space-x-2">
-                          <input
-                            type="radio"
+                          <RadioGroupItem
                             id={`residence-${option.value}`}
                             value={option.value}
                             {...form.register("residenceType")}
                             className="w-4 h-4 text-primary focus:ring-primary"
                           />
-                          <label htmlFor={`residence-${option.value}`} className="cursor-pointer text-sm">
+                          <Label htmlFor={`residence-${option.value}`} className="cursor-pointer text-sm">
                             {option.label}
-                          </label>
+                          </Label>
                         </div>
                       ))}
-                    </div>
+                    </RadioGroup>
                   </div>
 
                   <div className="space-y-2">
                     <label htmlFor="yearsAtAddress" className="text-sm font-medium">
                       Years at Current Address <span className="text-destructive">*</span>
                     </label>
-                    <input
+                    <Input
                       id="yearsAtAddress"
                       type="number"
                       {...form.register("yearsAtAddress")}
                       placeholder="3"
                       min="0"
                       className={cn(
-                        "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary",
                         form.formState.errors.yearsAtAddress && "border-destructive"
                       )}
                     />
@@ -528,7 +591,7 @@ export default function ApplyForm({
                   <label className="text-sm font-medium">
                     Employment Type <span className="text-destructive">*</span>
                   </label>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  <RadioGroup defaultValue={form.getValues("employmentType")} className="grid grid-cols-2 md:grid-cols-4 gap-2">
                     {[
                       { value: "salaried", label: "Salaried" },
                       { value: "self-employed", label: "Self Employed" },
@@ -536,19 +599,18 @@ export default function ApplyForm({
                       { value: "professional", label: "Professional" },
                     ].map((option) => (
                       <div key={option.value} className="flex items-center space-x-2">
-                        <input
-                          type="radio"
+                        <RadioGroupItem
                           id={`employment-${option.value}`}
                           value={option.value}
                           {...form.register("employmentType")}
-                          className="w-4 h-4 text-primary focus:ring-primary"
+                          className="w-4 h-4 text-lomash-primary focus:ring-lomash-primary"
                         />
-                        <label htmlFor={`employment-${option.value}`} className="cursor-pointer text-sm">
+                        <Label htmlFor={`employment-${option.value}`} className="cursor-pointer text-sm">
                           {option.label}
-                        </label>
+                        </Label>
                       </div>
                     ))}
-                  </div>
+                  </RadioGroup>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -556,12 +618,12 @@ export default function ApplyForm({
                     <label htmlFor="employerName" className="text-sm font-medium">
                       Employer/Business Name <span className="text-destructive">*</span>
                     </label>
-                    <input
+                    <Input
                       id="employerName"
                       {...form.register("employerName")}
                       placeholder="Company Name"
                       className={cn(
-                        "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary",
+                        "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lomash-primary",
                         form.formState.errors.employerName && "border-destructive"
                       )}
                     />
@@ -576,12 +638,12 @@ export default function ApplyForm({
                     <label htmlFor="designation" className="text-sm font-medium">
                       Designation/Profession <span className="text-destructive">*</span>
                     </label>
-                    <input
+                    <Input
                       id="designation"
                       {...form.register("designation")}
                       placeholder="Software Engineer"
                       className={cn(
-                        "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary",
+                        "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lomash-primary",
                         form.formState.errors.designation && "border-destructive"
                       )}
                     />
@@ -598,14 +660,14 @@ export default function ApplyForm({
                     <label htmlFor="yearsOfEmployment" className="text-sm font-medium">
                       Years of Employment <span className="text-destructive">*</span>
                     </label>
-                    <input
+                    <Input
                       id="yearsOfEmployment"
                       type="number"
                       {...form.register("yearsOfEmployment")}
                       placeholder="5"
                       min="0"
                       className={cn(
-                        "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary",
+                        "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lomash-primary",
                         form.formState.errors.yearsOfEmployment && "border-destructive"
                       )}
                     />
@@ -620,14 +682,14 @@ export default function ApplyForm({
                     <label htmlFor="monthlyIncome" className="text-sm font-medium">
                       Monthly/Yearly Income (£) <span className="text-destructive">*</span>
                     </label>
-                    <input
+                    <Input
                       id="monthlyIncome"
                       type="number"
                       {...form.register("monthlyIncome")}
                       placeholder="enter income"
                       min="0"
                       className={cn(
-                        "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary",
+                        "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lomash-primary",
                         form.formState.errors.monthlyIncome && "border-destructive"
                       )}
                     />
@@ -649,6 +711,7 @@ export default function ApplyForm({
                     placeholder="Office/Business address"
                     rows={3}
                     className={cn(
+                      "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lomash-primary",
                       form.formState.errors.officeAddress && "border-destructive"
                     )}
                   />
@@ -669,14 +732,14 @@ export default function ApplyForm({
                     <label htmlFor="loanAmount" className="text-sm font-medium">
                       Loan Amount (£) <span className="text-destructive">*</span>
                     </label>
-                    <input
+                    <Input
                       id="loanAmount"
                       type="number"
                       {...form.register("loanAmount")}
                       placeholder="Enter loan amount"
                       min="50000"
                       className={cn(
-                        "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary",
+                        "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lomash-primary",
                         form.formState.errors.loanAmount && "border-destructive"
                       )}
                     />
@@ -691,11 +754,34 @@ export default function ApplyForm({
                     <label htmlFor="preferredTenure" className="text-sm font-medium">
                       Preferred Tenure <span className="text-destructive">*</span>
                     </label>
-                    <select
+                    <Select
+                      onValueChange={(value) => form.setValue("preferredTenure", value, { shouldValidate: true })}
+                    >
+                      <SelectTrigger
+                        id="preferredTenure"
+                        className={cn(
+                          "w-full h-10 pl-3 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lomash-primary",
+                          form.formState.errors.preferredTenure && "border-destructive"
+                        )}
+                      >
+                        <SelectValue placeholder="Select tenure" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Tenure</SelectLabel>
+                          {[6, 12, 18, 24, 36, 48, 60].map((months) => (
+                            <SelectItem key={months} value={months.toString()}>
+                              {months} months ({Math.floor(months / 12)} {months >= 24 ? 'years' : 'year'})
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    {/* <select
                       id="preferredTenure"
                       {...form.register("preferredTenure")}
                       className={cn(
-                        "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary",
+                        "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lomash-primary",
                         form.formState.errors.preferredTenure && "border-destructive"
                       )}
                     >
@@ -706,6 +792,7 @@ export default function ApplyForm({
                         </option>
                       ))}
                     </select>
+                      */}
                     {form.formState.errors.preferredTenure && (
                       <p className="text-sm text-destructive">
                         {form.formState.errors.preferredTenure.message}
@@ -724,6 +811,7 @@ export default function ApplyForm({
                     placeholder="Please specify the purpose of the loan (e.g., Kitchen renovation, Bedroom furniture, Modular kitchen installation)"
                     rows={4}
                     className={cn(
+                      "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lomash-primary",
                       form.formState.errors.loanPurpose && "border-destructive"
                     )}
                   />
@@ -761,6 +849,127 @@ export default function ApplyForm({
                   </ul>
                 </div>
 
+                {/* Upload Documents Section */}
+                <div className="space-y-4">
+                  <div className="flex flex-wrap gap-4 mb-4">
+  {fileArray.map((file, index) => {
+    const isImage = file.type.startsWith("image/");
+    
+    return (
+      <div key={index} className="relative group w-24 h-24 border rounded-lg p-1 bg-white shadow-sm">
+        {isImage ? (
+          <Image
+            src={URL.createObjectURL(file)}
+            alt={`Preview ${index}`}
+            height={96}
+            width={96}
+            className="w-full h-full object-cover rounded-md"
+          />
+        ) : (
+          <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100 rounded-md">
+            <FileText className="h-8 w-8 text-gray-400" />
+            <span className="text-[10px] truncate w-full px-1 text-center">{file.name}</span>
+          </div>
+        )}
+
+        {/* Delete Button */}
+        <button
+          type="button"
+          onClick={() => removeFile(index)}
+          className="absolute -top-2 -right-2 bg-destructive text-white rounded-full p-1 hover:bg-red-600 transition-colors shadow-md"
+          title="Remove file"
+        >
+          <X className="h-3 w-3" />
+        </button>
+      </div>
+    );
+  })}
+</div>
+                
+                <div className="space-y-2">
+                  <label htmlFor="documents" className="text-sm font-medium">
+                    Upload Documents
+                  </label>
+                  <div className="border rounded-md p-4">
+                    <div className="flex items-center justify-center w-full">
+                      <label
+                        htmlFor="documents"
+                        className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg  bg-gray-50  transition-colors duration-200 text-center
+                          ${(form.watch("documents")?.length ?? 0) >= 2 ? "cursor-not-allowed opacity-50 " : "cursor-pointer hover:border-lomash-primary hover:bg-lomash-primary/10"}
+                          `}
+                      >
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <Upload className="w-8 h-8 mb-4 text-gray-500" />
+                          <p className="mb-2 text-sm text-gray-500">
+                            <span className="font-semibold">Click to upload</span> or drag and drop
+                          </p>
+                          <p className="text-xs text-gray-500">PDF, DOCX, JPG (MAX. 10MB)</p>
+                        </div>
+                        <input
+                        {...form.register("documents",{
+                          onChange(event) {
+                            handleFileChange(event);
+                          },
+                          validate: {
+                            fileCount: (files) => {
+                              if (files && files.length > 2) {
+                                return "You can upload a maximum of 2 documents";
+                              }
+                              if (files && files.length < 1) {
+                                return "Please upload at least one document";
+                              }
+                              return true;
+                            },
+                            fileSize: (files) => {
+                              if (files) {
+                                for (let i = 0; i < files.length; i++) {
+                                  if (files[i].size > 10 * 1024 * 1024) {
+                                    return `File ${files[i].name} exceeds the maximum size of 10MB`;
+                                  }
+                                }
+                              }
+                              return true;
+                            },
+                            fileType: (files) => {
+                              const allowedTypes = ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "image/jpeg", "image/png"];
+                              if (files) {
+                                for (let i = 0; i < files.length; i++) {
+                                  if (!allowedTypes.includes(files[i].type)) {
+                                    return `File ${files[i].name} is not an allowed type`;
+                                  }
+                                }
+                              }
+                              return true;
+                            },
+                          }
+                        })}
+                        disabled={
+                          (form.watch("documents")?.length ?? 0) >= 2
+                        }
+                        className= {cn(
+                          "hidden",
+                          form.formState.errors.documents && "border-destructive"
+                        )}
+                        min={1}
+                        max={2}
+                        multiple
+                        accept=".pdf, .docx, .jpg, .jpeg, .png"
+                         id="documents" type="file"/>
+                      </label>
+                    </div>
+                  </div>
+                 
+                  {
+                    form.formState.errors.documents && (
+                      <p className="text-sm text-destructive">
+                        {typeof form.formState.errors.documents.message === 'string'
+                          ? form.formState.errors.documents.message
+                          : 'Please upload at least one document'}
+                      </p>
+                    )
+                  }
+                </div>
+                </div>
                 <Separator />
 
                 <div className="space-y-4">
@@ -847,18 +1056,21 @@ export default function ApplyForm({
                 type="button"
                 variant="outline"
                 onClick={prevStep}
+                className="text-lg font-medium"
                 disabled={currentStep === 1}
               >
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Previous
               </Button>
 
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm font-medium text-muted-foreground">
                 Step {currentStep} of {STEPS.length}
               </div>
 
               {currentStep < STEPS.length ? (
-                <Button type="button" onClick={nextStep}>
+                <Button
+                className="text-lg font-medium"
+                 type="button" onClick={nextStep}>
                   Next
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>

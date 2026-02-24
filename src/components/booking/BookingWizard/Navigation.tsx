@@ -50,7 +50,7 @@ export default function Navigation({
         type="button"
         onClick={onNext}
         disabled={isNextDisabled || isLoading}
-        className="ml-auto gap-2"
+        className="ml-auto gap-2 text-lg font-medium"
       >
         {isLoading ? (
           <>
@@ -60,7 +60,7 @@ export default function Navigation({
         ) : (
           <>
             {nextButtonText}
-            {!isLastStep && <ArrowRight className="h-4 w-4" />}
+            {!isLastStep && <ArrowRight className="h-5 w-5" />}
           </>
         )}
       </Button>

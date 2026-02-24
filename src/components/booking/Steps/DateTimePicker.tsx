@@ -102,11 +102,11 @@ export default function DateTimePicker() {
           <Info className="h-4 w-4" />
           <AlertDescription>
             You've selected a{' '}
-            <strong>
-              {appointmentType === 'showroom' ? 'Showroom Visit' :
-               appointmentType === 'home'     ? 'Home Visit'     : 'Virtual Consultation'}
+            <strong className="capitalize text-lomash-secondary">
+              {appointmentType === 'showroom-visit' ? 'Showroom Visit Appointment' :
+               appointmentType === 'home-visit'     ? 'Home Measurement Appointment'     : 'Online Consultation'}
             </strong>
-            {appointmentType === 'showroom' && (
+            {appointmentType === 'showroom-visit' && (
               <span className="block mt-1 text-sm">
                 Please select a date and time to visit our showroom
               </span>
@@ -130,7 +130,7 @@ export default function DateTimePicker() {
                   <span>Available</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <div className="h-3 w-3 rounded-full bg-gray-300" />
+                  <div className="h-3 w-3 rounded-full bg-yellow-500" />
                   <span>Limited</span>
                 </div>
               </div>

@@ -1,14 +1,15 @@
 'use client';
-
 import { Calculator, CreditCard, FileText, CheckCircle2, BadgePercent, Clock, ShieldCheck, HelpCircle } from 'lucide-react';
+import Link from 'next/link';
+
+import ApplyForm from '@/components/finance/ApplyForm';
+import EMICalculator from '@/components/finance/EMICalculator';
+import FinanceComparison from '@/components/finance/FinanceComparison';
+import FinanceOptions from '@/components/finance/FinanceOptions';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import FinanceOptions from '@/components/finance/FinanceOptions';
-import EMICalculator from '@/components/finance/EMICalculator';
-import ApplyForm from '@/components/finance/ApplyForm';
-import FinanceComparison from '@/components/finance/FinanceComparison';
-import Link from 'next/link';
+
 
 const features = [
   {
@@ -276,10 +277,13 @@ export default function FinancePage() {
   };
 
   const handleFormSubmit = async (data: any) => {
+    // Here you would typically send the data to your backend API for processing
     console.log('Finance application submitted:', data);
+      alert('Your finance application has been submitted successfully! Our team will review your application and get back to you within 24-48 hours.');
   };
 
   const handleEMIApply = (details: any) => {
+    
     console.log('Apply with EMI details:', details);
 
     const formSection = document.getElementById('application-form');
@@ -448,11 +452,12 @@ export default function FinancePage() {
                     {step.description}
                   </p>
                 </div>
-                {index < steps.length - 1 && (
+                {/* {index < steps.length - 1 && (
                   <div className="hidden lg:block absolute top-8 left-full w-full h-0.5 bg-neutral-200 -z-10">
-                    <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-2 h-2 rounded-full bg-lomash-primary"></div>
+                    <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-2 h-2 rounded-full bg-lomash-primary">
+                    </div>
                   </div>
-                )}
+                )} */}
               </div>
             ))}
           </div>

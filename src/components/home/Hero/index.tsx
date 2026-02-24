@@ -41,7 +41,7 @@ const slides: Slide[] = [
   {
     id: '2',
     type: 'video',
-    src: 'https://assets.mixkit.co/videos/preview/mixkit-wooden-table-3024-large.mp4',
+    src: 'https://portal.cdcproperty.management/storage/site_settings/68f11d406c6356qQ2x1760632128.mov',
     title: 'Bedroom Sanctuary',
     subtitle: 'Where Comfort Meets Elegance',
     description: 'Create your perfect retreat with our bespoke bedroom designs',

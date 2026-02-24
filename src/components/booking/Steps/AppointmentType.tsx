@@ -9,20 +9,20 @@ import { cn } from "@/lib/utils";
 const appointmentTypes = [
   {
     value: "home-visit",
-    label: "Home Visit",
-    description: "Our designer will visit your home for measurements and consultation",
+    label: "Home Measure Appointment",
+    description: "In just 60 minutes, our expert will visit your home to measure your space and discuss your design needs in detail.",
     icon: Home,
     features: [
       "Free home visit",
       "Accurate measurements",
-      "Personalized design advice",
+      "Personalised design advice",
       "See samples in your space",
     ],
   },
   {
     value: "video-call",
-    label: "Video Consultation",
-    description: "Connect with our design team via video call from anywhere",
+    label: "Free Online Design Consultation",
+    description: "Online video consultation with our design experts. Share your space and ideas for personalised advice and design guidance.",
     icon: Video,
     features: [
       "Convenient online meeting",
@@ -34,7 +34,7 @@ const appointmentTypes = [
   {
     value: "showroom-visit",
     label: "Showroom Visit",
-    description: "Visit our showroom to see products and meet our design team",
+    description: "Visit our showroom to explore our full range of products and materials with the guidance of our designers. Experience our quality in person.",
     icon: MapPin,
     features: [
       "See products in person",
@@ -95,17 +95,17 @@ export default function AppointmentType() {
                       <div className="space-y-3">
                         <div
                           className={cn(
-                            "inline-flex h-12 w-12 items-center justify-center rounded-lg transition-colors",
+                            "inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors",
                             isSelected
                               ? "bg-primary text-primary-foreground"
                               : "bg-muted"
                           )}
                         >
-                          <Icon className="h-6 w-6" />
+                          <Icon className="h-5 w-5" />
                         </div>
                         <div>
                           <h3 className="font-semibold">{type.label}</h3>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-muted-foreground font-medium mt-1">
                             {type.description}
                           </p>
                         </div>
@@ -115,7 +115,7 @@ export default function AppointmentType() {
                         {type.features.map((feature, index) => (
                           <li
                             key={index}
-                            className="flex items-center gap-2 text-muted-foreground"
+                            className="flex items-center gap-2 text-muted-foreground font-medium"
                           >
                             <span
                               className={cn(

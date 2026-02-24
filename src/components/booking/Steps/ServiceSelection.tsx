@@ -37,14 +37,14 @@ interface AdditionalService {
 const serviceOptions: ServiceOption[] = [
   {
     id: 'kitchen',
-    label: 'Kitchen Only',
+    label: 'Kitchen',
     description: 'Complete kitchen design and consultation',
     icon: <ChefHat className="h-6 w-6" />,
     popular: true,
   },
   {
     id: 'bedroom',
-    label: 'Bedroom Only',
+    label: 'Bedroom',
     description: 'Complete bedroom design and consultation',
     icon: <Bed className="h-6 w-6" />,
   },
@@ -61,13 +61,13 @@ const additionalServices: AdditionalService[] = [
   {
     id: 'space_planning',
     label: 'Space Planning',
-    description: 'Optimize your room layout for maximum functionality',
+    description: 'Optimise your room layout for maximum functionality',
     icon: <Maximize2 className="h-4 w-4" />,
   },
   {
     id: 'color_consultation',
-    label: 'Color Consultation',
-    description: 'Expert advice on color schemes and finishes',
+    label: 'Colour Consultation',
+    description: 'Expert advice on colour schemes and finishes',
     icon: <Palette className="h-4 w-4" />,
   },
   {
@@ -78,7 +78,7 @@ const additionalServices: AdditionalService[] = [
   },
 ];
 
-export default function ServiceSelection() {
+export default function ServiceSelection({category}: {category?: string}) {
   const { setValue, watch } = useFormContext();
 
   // ✅ FIX 1: was watch('service'), must match schema field name 'serviceType'
@@ -106,8 +106,11 @@ export default function ServiceSelection() {
     return (selectedAdditionalServices as string[]).includes(serviceId);
   };
 
-  // ✅ FIX 4: serviceType is now an array, so check first element for selected display
-  const selectedServiceId = Array.isArray(selectedService) ? selectedService[0] : selectedService;
+  // ✅ FIX 4: serviceType is now an array, so check first element for selected display we have category from URL query params
+  const selectedServiceId = 
+    selectedService && selectedService.length > 0
+      ? selectedService[0]
+      : category || ''; // default to category from URL if available
 
   return (
     <div className="space-y-8">

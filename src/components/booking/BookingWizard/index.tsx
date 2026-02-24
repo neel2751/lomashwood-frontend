@@ -84,9 +84,11 @@ const DEFAULT_VALUES: BookingFormData = {
 
 interface BookingWizardProps {
   className?: string;
+  product?: string;
+  category?: string;
 }
 
-export default function BookingWizard({ className }: BookingWizardProps) {
+export default function BookingWizard({ className, product, category }: BookingWizardProps) {
   const router = useRouter();
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(1);
@@ -102,7 +104,7 @@ export default function BookingWizard({ className }: BookingWizardProps) {
       const response = await fetch("/api/appointments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, product, category }),
       });
       if (!response.ok) throw new Error("Failed to submit booking");
       return response.json();
@@ -177,7 +179,7 @@ export default function BookingWizard({ className }: BookingWizardProps) {
 
         <Card>
           <CardContent className="pt-6">
-            <CurrentStepComponent />
+            <CurrentStepComponent category={category} />
           </CardContent>
         </Card>
 

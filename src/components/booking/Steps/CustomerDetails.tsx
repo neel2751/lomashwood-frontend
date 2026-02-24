@@ -11,11 +11,14 @@ import {
   Shield,
   InfoIcon,
 } from 'lucide-react';
+import Link from 'next/link';
 import { useFormContext } from 'react-hook-form';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 
 const TITLE_OPTIONS = ['Mr', 'Mrs', 'Ms', 'Miss', 'Dr', 'Prof'];
@@ -71,20 +74,24 @@ export default function CustomerDetails() {
               <label htmlFor="title" className="text-sm font-medium">
                 Title <span className="text-red-500">*</span>
               </label>
-              <select
-                id="title"
-                className={`w-full h-10 px-3 py-2 border rounded-md bg-white ${
+
+              <Select onValueChange={(value) => setValue('title', value, { shouldValidate: true })}>
+                <SelectTrigger className={`w-full h-10 pl-3 pr-3 py-2 border rounded-md ${
                   errors.title ? 'border-red-500' : 'border-gray-300'
-                }`}
-                {...register('title')}
-              >
-                <option value="">Select title</option>
-                {TITLE_OPTIONS.map((title) => (
-                  <option key={title} value={title.toLowerCase()}>
-                    {title}
-                  </option>
-                ))}
-              </select>
+                }`}>
+                  <SelectValue placeholder="Select title" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Title</SelectLabel>
+                    {TITLE_OPTIONS.map((title) => (
+                      <SelectItem key={title} value={title.toLowerCase()}>
+                        {title}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
               {errors.title && (
                 <p className="text-sm text-red-500">{errors.title.message as string}</p>
               )}
@@ -94,13 +101,11 @@ export default function CustomerDetails() {
               <label htmlFor="firstName" className="text-sm font-medium">
                 First Name <span className="text-red-500">*</span>
               </label>
-              <input
+              <Input
                 id="firstName"
                 type="text"
                 placeholder="Enter your first name"
-                className={`w-full h-10 px-3 py-2 border rounded-md ${
-                  errors.firstName ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={errors.firstName ? 'border-red-500' : ''}
                 {...register('firstName')}
               />
               {errors.firstName && (
@@ -113,13 +118,11 @@ export default function CustomerDetails() {
             <label htmlFor="lastName" className="text-sm font-medium">
               Last Name <span className="text-red-500">*</span>
             </label>
-            <input
+            <Input
               id="lastName"
               type="text"
               placeholder="Enter your last name"
-              className={`w-full h-10 px-3 py-2 border rounded-md ${
-                errors.lastName ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={errors.lastName ? 'border-red-500' : ''} 
               {...register('lastName')}
             />
             {errors.lastName && (
@@ -144,7 +147,7 @@ export default function CustomerDetails() {
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <input
+                <Input
                   id="email"
                   type="email"
                   placeholder="your.email@example.com"
@@ -165,7 +168,7 @@ export default function CustomerDetails() {
               </label>
               <div className="relative">
                 <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <input
+                <Input
                   id="phone"
                   type="tel"
                   placeholder="07XXX XXXXXX"
@@ -188,7 +191,7 @@ export default function CustomerDetails() {
             </label>
             <div className="relative">
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <input
+              <Input
                 id="alternatePhone"
                 type="tel"
                 placeholder="07XXX XXXXXX"
@@ -215,7 +218,7 @@ export default function CustomerDetails() {
               </label>
               <div className="relative">
                 <Home className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <input
+                <Input
                   id="houseNumber"
                   type="text"
                   placeholder="e.g., 123 or Apartment A"
@@ -234,11 +237,11 @@ export default function CustomerDetails() {
               <label htmlFor="street" className="text-sm font-medium">
                 Street <span className="text-red-500">*</span>
               </label>
-              <input
+              <Input
                 id="street"
                 type="text"
                 placeholder="Street name"
-                className={`w-full h-10 px-3 py-2 border rounded-md ${
+                className={`w-full h-10 pl-3 pr-3 py-2 border rounded-md ${
                   errors.street ? 'border-red-500' : 'border-gray-300'
                 }`}
                 {...register('street')}
@@ -256,7 +259,7 @@ export default function CustomerDetails() {
               </label>
               <div className="relative">
                 <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <input
+                <Input
                   id="city"
                   type="text"
                   placeholder="City or town"
@@ -275,11 +278,11 @@ export default function CustomerDetails() {
               <label htmlFor="postcode" className="text-sm font-medium">
                 Postcode <span className="text-red-500">*</span>
               </label>
-              <input
+              <Input
                 id="postcode"
                 type="text"
                 placeholder="e.g., SW1A 1AA"
-                className={`w-full h-10 px-3 py-2 border rounded-md ${
+                className={`w-full h-10 pl-3 pr-3 py-2 border rounded-md ${
                   errors.postcode ? 'border-red-500' : 'border-gray-300'
                 }`}
                 {...register('postcode')}
@@ -365,6 +368,7 @@ export default function CustomerDetails() {
           <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
             <Checkbox
               id="marketingConsent"
+              className='mt-1.5'
               checked={marketingConsent}
               onCheckedChange={(checked: boolean) =>
                 setValue('marketingConsent', checked, { shouldValidate: true })
@@ -385,7 +389,7 @@ export default function CustomerDetails() {
             <Checkbox
               id="termsAccepted"
               {...register('termsAccepted')}
-              className={errors.termsAccepted ? 'border-red-500' : ''}
+              className={`mt-1.5 ${errors.termsAccepted ? 'border-red-500' : ''}`}
             />
             <div className="space-y-1 flex-1">
               <label htmlFor="termsAccepted" className="cursor-pointer font-medium text-sm">
@@ -394,23 +398,23 @@ export default function CustomerDetails() {
               </label>
               <p className="text-sm text-gray-600">
                 By booking an appointment, you agree to our{' '}
-                <a
+                <Link
                   href="/terms-conditions"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-primary hover:underline font-medium"
                 >
                   Terms & Conditions
-                </a>{' '}
+                </Link>{' '}
                 and{' '}
-                <a
+                <Link
                   href="/privacy-policy"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-primary hover:underline font-medium"
                 >
                   Privacy Policy
-                </a>
+                </Link>
                 .
               </p>
               {errors.termsAccepted && (

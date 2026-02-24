@@ -17,6 +17,7 @@ export const metadata: Metadata = {
 const products = [
   {
     id: '1',
+    slug: 'modern-white-bedroom',
     name: 'Modern White Bedroom',
     category: 'bedroom',
     style: 'modern',
@@ -32,6 +33,7 @@ const products = [
   {
     id: '2',
     name: 'Classic Oak Bedroom',
+    slug: 'classic-oak-bedroom',
     category: 'bedroom',
     style: 'traditional',
     finish: 'wood-grain',
@@ -47,6 +49,7 @@ const products = [
   {
     id: '3',
     name: 'Sleek Black Bedroom',
+    slug: 'sleek-black-bedroom',
     category: 'bedroom',
     style: 'industrial',
     finish: 'matt',

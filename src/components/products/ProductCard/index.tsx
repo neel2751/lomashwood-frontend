@@ -16,6 +16,7 @@ import { WishlistButton } from './WishlistButton';
 interface ProductCardProps {
   product: {
     id: string;
+    slug: string;
     name: string;
     category: string;
     style: string;
@@ -53,7 +54,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <Card className="group h-full overflow-hidden border-2 hover:border-primary/50 transition-all duration-300 hover:shadow-xl">
         {/* Image Container */}
         <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
-          <Link href={`/product/${product.id}`}>
+          <Link href={`/product/${product.slug}`}>
             <Image
               src={imageError ? '/images/placeholder-product.jpg' : product.image}
               alt={product.name}
@@ -132,7 +133,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
 
           {/* Product Name */}
-          <Link href={`/product/${product.id}`}>
+          <Link href={`/product/${product.slug}?category=${product.category}`} className="block">
             <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary transition-colors">
               {product.name}
             </h3>
@@ -201,9 +202,9 @@ export function ProductCard({ product }: ProductCardProps) {
             <Button
               asChild
               className="flex-1"
-              disabled={!product.inStock}
+              // disabled={!product.inStock}
             >
-              <Link href={`/product/${product.id}`}>
+              <Link href={`/product/${product.slug}?category=${product.category}`}>
                 View Details
               </Link>
             </Button>
@@ -212,7 +213,7 @@ export function ProductCard({ product }: ProductCardProps) {
               variant="outline"
               size="icon"
             >
-              <Link href={`/book-appointment?product=${product.id}`}>
+              <Link href={`/book-appointment?product=${product.slug}&category=${product.category}`}>
                 <svg
                   className="w-5 h-5"
                   fill="none"
