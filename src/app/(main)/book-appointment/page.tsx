@@ -11,7 +11,7 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 
 import BookingWizard from '@/components/booking/BookingWizard';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
 

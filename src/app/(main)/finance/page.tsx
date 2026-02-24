@@ -278,18 +278,19 @@ export default function FinancePage() {
 
   const handleFormSubmit = async (data: any) => {
     // Here you would typically send the data to your backend API for processing
-    console.log('Finance application submitted:', data);
-      alert('Your finance application has been submitted successfully! Our team will review your application and get back to you within 24-48 hours.');
+    console.log('Form submitted with data:', data);
   };
 
   const handleEMIApply = (details: any) => {
     
-    console.log('Apply with EMI details:', details);
 
     const formSection = document.getElementById('application-form');
     if (formSection) {
       formSection.scrollIntoView({ behavior: 'smooth' });
     }
+
+    alert(`You have calculated an EMI of £${details.emi} for a loan amount of £${details.amount} at an interest rate of ${details.rate}% over a tenure of ${details.tenure} months. Click OK to proceed with your application.`);
+
   };
 
   return (
