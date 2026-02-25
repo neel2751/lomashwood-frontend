@@ -16,9 +16,37 @@ export function Footer() {
   return (
     <footer className="bg-lomash-dark text-white
      px-6 sm:px-10 lg:px-18
-    pt-12 md:pt-16 lg:pt-20
-    pb-16 md:pb-20 lg:pb-24
+    pt-6 md:pt-8 lg:pt-10
+      pb-6 md:pb-8 lg:pb-10
     ">
+       <div className="border-b border-primary-foreground/10">
+        <div className="mx-auto grid container grid-cols-1 gap-6 px-4 pb-4 sm:grid-cols-2 lg:grid-cols-4 lg:px-8">
+          <div className="flex flex-col items-center text-center">
+            <span className="mb-1 text-lg font-semibold">Dedicated Designer</span>
+            <span className="text-sm text-primary-foreground/70">
+              Your expert, your guide, your go-to.
+            </span>
+          </div>
+          <div className="flex flex-col items-center text-center">
+            <span className="mb-1 text-lg font-semibold">Premium Quality</span>
+            <span className="text-sm text-primary-foreground/70">
+              High-quality materials and craftsmanship.
+            </span>
+          </div>
+          <div className="flex flex-col items-center text-center">
+            <span className="mb-1 text-lg font-semibold">10-Year Guarantee</span>
+            <span className="text-sm text-primary-foreground/70">
+              All cabinets are guaranteed for 10 years.
+            </span>
+          </div>
+          <div className="flex flex-col items-center text-center">
+            <span className="mb-1 text-lg font-semibold">Satisfaction Guaranteed</span>
+            <span className="text-sm text-primary-foreground/70">
+              We’re not happy until you’re happy.
+            </span>
+            </div>
+        </div>
+      </div>
       {/* Main Footer Content */}
       <div className="container-custom pt-10 pb-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
@@ -153,7 +181,7 @@ export function Footer() {
             {socialLinks.map((social) => {
               const Icon = getIconComponent(social.icon);
               return (
-                <a
+                <Link
                   key={social.name}
                   href={social.href}
                   target="_blank"
@@ -162,7 +190,7 @@ export function Footer() {
                   aria-label={social.name}
                 >
                   <Icon className="h-5 w-5" />
-                </a>
+                </Link>
               );
             })}
           </div>

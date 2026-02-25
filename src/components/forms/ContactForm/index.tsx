@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { contactFormSchema } from "@/schemas/contact.schema";
+import Link from "next/link";
 
 type ContactFormData = z.infer<typeof contactFormSchema>;
 
@@ -359,9 +360,9 @@ export default function ContactForm({
             </div>
             <div>
               <h4 className="font-semibold text-gray-900 mb-1">Phone</h4>
-              <a href="tel:+917912345678" className="text-gray-600 hover:text-primary transition-colors">
+              <Link href="tel:+917912345678" className="text-gray-600 hover:text-primary transition-colors">
                 +91 79 1234 5678
-              </a>
+              </Link>
               <p className="text-sm text-gray-500 mt-1">Mon-Sat: 10am - 8pm</p>
             </div>
           </div>
@@ -375,9 +376,9 @@ export default function ContactForm({
             </div>
             <div>
               <h4 className="font-semibold text-gray-900 mb-1">Email</h4>
-              <a href="mailto:info@lomashwood.com" className="text-gray-600 hover:text-primary transition-colors break-all">
+              <Link href="mailto:info@lomashwood.com" className="text-gray-600 hover:text-primary transition-colors break-all">
                 info@lomashwood.com
-              </a>
+              </Link>
               <p className="text-sm text-gray-500 mt-1">
                 We reply within 24 hours
               </p>
@@ -409,18 +410,18 @@ export default function ContactForm({
           <div className="pt-6 border-t">
             <h4 className="font-semibold text-gray-900 mb-4">Quick Links</h4>
             <div className="space-y-3">
-              <a href="/book-appointment" className="block text-sm text-gray-600 hover:text-primary transition-colors">
+              <Link href="/book-appointment" className="block text-sm text-gray-600 hover:text-primary transition-colors">
                 → Book a Free Consultation
-              </a>
-              <a href="/showrooms" className="block text-sm text-gray-600 hover:text-primary transition-colors">
+              </Link>
+              <Link href="/showrooms" className="block text-sm text-gray-600 hover:text-primary transition-colors">
                 → Find a Showroom
-              </a>
-              <a href="/brochure" className="block text-sm text-gray-600 hover:text-primary transition-colors">
+              </Link>
+              <Link href="/brochure" className="block text-sm text-gray-600 hover:text-primary transition-colors">
                 → Download Brochure
-              </a>
-              <a href="/finance" className="block text-sm text-gray-600 hover:text-primary transition-colors">
+              </Link>
+              <Link href="/finance" className="block text-sm text-gray-600 hover:text-primary transition-colors">
                 → Finance Options
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -451,9 +452,9 @@ export default function ContactForm({
             <p className="text-sm text-red-700 mb-3">
               For urgent matters related to existing installations or services:
             </p>
-            <a href="tel:+919876543210" className="text-sm font-medium text-red-900 hover:text-red-700 transition-colors">
+            <Link href="tel:+919876543210" className="text-sm font-medium text-red-900 hover:text-red-700 transition-colors">
               Emergency Hotline: +91 98765 43210
-            </a>
+            </Link>
             <p className="text-xs text-red-600 mt-2">Available 24/7</p>
           </div>
         </div>

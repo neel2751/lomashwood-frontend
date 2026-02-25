@@ -412,9 +412,9 @@ export default function AppointmentsPage() {
                         </div>
                         <div className="flex items-center gap-2">
                           <Button size="sm" variant="ghost" asChild>
-                            <a href={`tel:${appointment.consultant.phone}`}>
+                            <Link href={`tel:${appointment.consultant.phone}`}>
                               <Phone className="h-4 w-4" />
-                            </a>
+                            </Link>
                           </Button>
                         </div>
                       </div>

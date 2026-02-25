@@ -141,9 +141,9 @@ export default function ProductError({ error, reset }: ProductErrorProps) {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="sm">
-                <a href="tel:+1234567890">
+                <Link href="tel:+1234567890">
                   Call Us Now
-                </a>
+                </Link>
               </Button>
             </div>
           </div>

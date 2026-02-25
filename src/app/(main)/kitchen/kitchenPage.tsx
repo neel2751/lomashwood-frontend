@@ -34,7 +34,7 @@ export default function KitchenPageCom({products}: {products: any[]}) {
     pb-16 md:pb-20 lg:pb-24"
       />
 
-      <div className="container mx-auto px-18 py-8 lg:py-12">
+      <div className="container mx-auto px-8 lg:px-18 py-8 lg:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
           {/* Filters Sidebar - Desktop */}
           <aside className="hidden lg:block lg:col-span-1">
@@ -103,10 +103,10 @@ export default function KitchenPageCom({products}: {products: any[]}) {
                   </Link>
                 </Button>
                 <Button asChild variant="outline" size="lg">
-                  <a href="tel:+1234567890" className="flex items-center gap-2">
+                  <Link href="tel:+1234567890" className="flex items-center gap-2">
                     <Phone className="h-4 w-4" />
                     Call Us Now
-                  </a>
+                  </Link>
                 </Button>
               </div>
             </div>

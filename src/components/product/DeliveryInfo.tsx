@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface DeliveryOption {
   id: string;
@@ -358,16 +359,16 @@ export default function DeliveryInfo({
             <p className="font-medium">Need help with your delivery?</p>
             <div className="flex flex-col gap-3 sm:flex-row sm:gap-6">
               <Button variant="outline" className="gap-2" asChild>
-                <a href="tel:+441234567890">
+                <Link href="tel:+441234567890">
                   <Phone className="h-4 w-4" />
                   Call Us
-                </a>
+                </Link>
               </Button>
               <Button variant="outline" className="gap-2" asChild>
-                <a href="mailto:delivery@lomashwood.com">
+                <Link href="mailto:delivery@lomashwood.com">
                   <Mail className="h-4 w-4" />
                   Email Support
-                </a>
+                </Link>
               </Button>
             </div>
           </div>

@@ -20,14 +20,14 @@ export function ColorPicker({ colour, className }: ColorPickerProps) {
       {/* Color Circle */}
       <div className="relative w-full aspect-square mb-2">
         <div
-          className="w-full h-full rounded-lg shadow-md transition-all duration-300 group-hover:shadow-xl group-hover:scale-110 border-2 border-lomash-gray-200 group-hover:border-lomash-primary"
+          className="w-full h-full rounded-full shadow-md transition-all duration-300 group-hover:shadow-xl group-hover:scale-110 border-2 border-lomash-gray-200 group-hover:border-lomash-primary"
           style={{ backgroundColor: colour.hexCode }}
         >
           {/* Checkered pattern for light/white colors */}
           {(colour.hexCode.toLowerCase() === "#ffffff" ||
             colour.hexCode.toLowerCase() === "#fff") && (
             <div
-              className="absolute inset-0 rounded-lg opacity-10"
+              className="absolute inset-0 rounded-full opacity-10"
               style={{
                 backgroundImage: `
                   linear-gradient(45deg, #ccc 25%, transparent 25%),

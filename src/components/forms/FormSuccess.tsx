@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface FormSuccessAction {
   label: string;
@@ -133,10 +134,10 @@ export default function FormSuccess({
                 asChild={!!action.href}
               >
                 {action.href ? (
-                  <a href={action.href}>
+                  <Link href={action.href}>
                     {action.icon}
                     {action.label}
-                  </a>
+                  </Link>
                 ) : (
                   <>
                     {action.icon}
@@ -231,10 +232,10 @@ export default function FormSuccess({
               asChild={!!action.href}
             >
               {action.href ? (
-                <a href={action.href}>
+                <Link href={action.href}>
                   {action.icon}
                   {action.label}
-                </a>
+                </Link>
               ) : (
                 <>
                   {action.icon}

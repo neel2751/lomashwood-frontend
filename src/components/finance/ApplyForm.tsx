@@ -33,6 +33,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
+import Link from "next/link";
 
 
 
@@ -1014,13 +1015,13 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                         className="cursor-pointer font-normal text-sm"
                       >
                         I agree to the{" "}
-                        <a href="/terms-conditions" className="text-primary hover:underline">
+                        <Link href="/terms-conditions" className="text-primary hover:underline">
                           terms and conditions
-                        </a>{" "}
+                        </Link>{" "}
                         and{" "}
-                        <a href="/privacy-policy" className="text-primary hover:underline">
+                        <Link href="/privacy-policy" className="text-primary hover:underline">
                           privacy policy
-                        </a>{" "}
+                        </Link>{" "}
                         <span className="text-destructive">*</span>
                       </label>
                     </div>

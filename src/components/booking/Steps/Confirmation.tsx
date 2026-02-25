@@ -27,6 +27,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
+import Link from 'next/link';
 
 interface SummaryItemProps {
   icon: React.ReactNode;
@@ -347,9 +348,9 @@ export default function Confirmation({ onEdit }: ConfirmationProps) {
               <p className="text-gray-600">
                 By clicking "Confirm Appointment" below, you agree that all the information
                 provided is accurate and you accept our{' '}
-                <a href="/terms-conditions" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">
+                <Link href="/terms-conditions" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">
                   Terms & Conditions
-                </a>
+                </Link>
                 .
               </p>
               <div className="flex items-center gap-2 pt-2">

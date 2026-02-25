@@ -391,15 +391,15 @@ export default function TermsConditionsPage() {
                 <div className="flex flex-col gap-2 text-sm text-slate-700">
                   <div className="flex items-center gap-2">
                     <Mail className="w-4 h-4 text-amber-600" />
-                    <a href="mailto:legal@lomashwood.com" className="hover:text-amber-600">
+                    <Link href="mailto:legal@lomashwood.com" className="hover:text-amber-600">
                       legal@lomashwood.com
-                    </a>
+                    </Link>
                   </div>
                   <div className="flex items-center gap-2">
                     <Mail className="w-4 h-4 text-amber-600" />
-                    <a href="mailto:hello@lomashwood.com" className="hover:text-amber-600">
+                    <Link href="mailto:hello@lomashwood.com" className="hover:text-amber-600">
                       hello@lomashwood.com
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>

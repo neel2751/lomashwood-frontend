@@ -8,20 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-export interface Showroom {
-  id: string;
-  name: string;
-  address: string;
-  city: string;
-  state: string;
-  pincode: string;
-  phone: string;
-  coordinates?: {
-    lat: number;
-    lng: number;
-  };
-  isOpen?: boolean;
-}
+import type { Showroom } from "@/types/showrooms.types";
 
 interface ShowroomMapProps {
   showrooms: Showroom[];
@@ -37,7 +24,7 @@ interface ShowroomMapProps {
 
 export default function ShowroomMap({
   showrooms,
-  selectedShowroomId,
+  // selectedShowroomId,
   onShowroomSelect,
   height = "500px",
   showControls = true,
@@ -64,7 +51,7 @@ export default function ShowroomMap({
     }
 
     const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsKey || "YOUR_GOOGLE_MAPS_KEY"}`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsKey || "Google_Maps_API_Key"}`;
     script.async = true;
     script.defer = true;
     script.onload = () => setIsLoaded(true);
@@ -136,6 +123,7 @@ export default function ShowroomMap({
 
     map.fitBounds(bounds);
 
+
     const infoWindow = new google.maps.InfoWindow();
     infoWindowRef.current = infoWindow;
 
@@ -149,15 +137,13 @@ export default function ShowroomMap({
         position: { lat: showroom.coordinates.lat, lng: showroom.coordinates.lng },
         map,
         title: showroom.name,
-        icon: {
-          path: google.maps.SymbolPath.CIRCLE,
-          scale: 10,
-          fillColor: showroom.id === selectedShowroomId ? "#2563eb" : "#ef4444",
-          fillOpacity: 1,
-          strokeColor: "#ffffff",
-          strokeWeight: 2,
-        },
-        animation: showroom.id === selectedShowroomId ? google.maps.Animation.BOUNCE : null,
+       icon: {
+    url: "/logo.jpg", // Path to your logo (in the public folder)
+    scaledSize: new google.maps.Size(40, 40), // Adjust width and height in pixels
+    origin: new google.maps.Point(0, 0),
+    anchor: new google.maps.Point(20, 20), // Centers the icon on the coordinate
+  },
+        animation: showroom.slug === selectedShowroom?.slug ? google.maps.Animation.BOUNCE : null,
       });
 
       marker.addListener("click", () => {
@@ -204,43 +190,40 @@ export default function ShowroomMap({
         title: "Your Location",
       });
     }
-  }, [isLoaded, showrooms, selectedShowroomId, userLocation, showControls, onShowroomSelect]);
+  }, [isLoaded, showrooms, selectedShowroom, userLocation, showControls, onShowroomSelect]);
 
   useEffect(() => {
     initializeMap();
   }, [initializeMap]);
 
   useEffect(() => {
-    if (!isLoaded || !mapInstanceRef.current || !(window as any).google?.maps) return;
+  if (!isLoaded || !mapInstanceRef.current || !(window as any).google?.maps) return;
 
-    const google = (window as any).google;
+  markersRef.current.forEach((marker, index) => {
+    const validShowrooms = showrooms.filter((s) => s.coordinates);
+    const showroom = validShowrooms[index];
+    if (!showroom) return;
 
-    markersRef.current.forEach((marker, index) => {
-      const showroom = showrooms.filter((s) => s.coordinates)[index];
-      if (!showroom) return;
-
-      const isSelected = showroom.id === selectedShowroomId;
-      
-      marker.setIcon({
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: 10,
-        fillColor: isSelected ? "#2563eb" : "#ef4444",
-        fillOpacity: 1,
-        strokeColor: "#ffffff",
-        strokeWeight: 2,
-      });
-
-      marker.setAnimation(isSelected ? google.maps.Animation.BOUNCE : null);
-
-      if (isSelected && showroom.coordinates) {
-        mapInstanceRef.current.panTo({
-          lat: showroom.coordinates.lat,
-          lng: showroom.coordinates.lng,
-        });
-        mapInstanceRef.current.setZoom(15);
-      }
+    const isSelected = showroom.slug === selectedShowroom?.slug;
+    
+    // FIX: Use your logo here too, instead of the path: CIRCLE
+    marker.setIcon({
+      url: "/map.png", // Same logo as initializeMap
+      scaledSize: new (window as any).google.maps.Size(isSelected ? 50 : 40, isSelected ? 50 : 40),
+      origin: new (window as any).google.maps.Point(0, 0),
+      anchor: new (window as any).google.maps.Point(isSelected ? 25 : 20, isSelected ? 25 : 20),
     });
-  }, [selectedShowroomId, showrooms, isLoaded]);
+
+    marker.setAnimation(isSelected ? (window as any).google.maps.Animation.BOUNCE : null);
+
+    if (isSelected && showroom.coordinates) {
+      mapInstanceRef.current.panTo({
+        lat: showroom.coordinates.lat,
+        lng: showroom.coordinates.lng,
+      });
+    }
+  });
+}, [selectedShowroom, showrooms, isLoaded]);
 
   const toggleFullscreen = () => {
     setIsFullscreen(!isFullscreen);
@@ -345,9 +328,9 @@ export default function ShowroomMap({
                     {selectedShowroom.address}, {selectedShowroom.city}
                   </p>
                 </div>
-                {selectedShowroom.isOpen !== undefined && (
-                  <Badge variant={selectedShowroom.isOpen ? "default" : "secondary"}>
-                    {selectedShowroom.isOpen ? "Open" : "Closed"}
+                {selectedShowroom.openToday !== undefined && (
+                  <Badge variant={selectedShowroom.openToday.includes("Open") ? "default" : "secondary"}>
+                    {selectedShowroom.openToday.includes("Open") ? "Open" : "Closed"}
                   </Badge>
                 )}
               </div>

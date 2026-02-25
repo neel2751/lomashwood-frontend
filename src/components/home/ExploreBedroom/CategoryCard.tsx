@@ -33,7 +33,7 @@ export function CategoryCard({ product, className }: CategoryCardProps) {
           />
 
           {/* Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-2">
+          <div className="absolute top-3 left-3 flex gap-2">
             {product.featured && (
               <Badge variant="default" className="shadow-md">
                 Featured
@@ -57,7 +57,7 @@ export function CategoryCard({ product, className }: CategoryCardProps) {
           )}
 
           {/* Title */}
-          <h3 className="font-semibold text-lomash-dark mb-1 line-clamp-1 group-hover:text-lomash-primary transition-colors">
+          <h3 className="font-bold tracking-normal text-xl text-lomash-dark mb-1 line-clamp-1 group-hover:text-lomash-primary transition-colors">
             {product.title}
           </h3>
 

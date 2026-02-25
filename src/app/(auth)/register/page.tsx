@@ -162,13 +162,13 @@ export default function RegisterPage() {
             <div className="mt-6 p-4 bg-amber-50 rounded-lg border border-amber-100">
               <p className="text-xs text-stone-600 text-center">
                 <strong>Need assistance?</strong> Contact us at{' '}
-                <a href="mailto:support@lomashwood.com" className="text-amber-700 hover:text-amber-800 underline">
+                <Link href="mailto:support@lomashwood.com" className="text-amber-700 hover:text-amber-800 underline">
                   support@lomashwood.com
-                </a>{' '}
+                </Link>{' '}
                 or call{' '}
-                <a href="tel:+911234567890" className="text-amber-700 hover:text-amber-800 underline">
+                <Link href="tel:+911234567890" className="text-amber-700 hover:text-amber-800 underline">
                   +91 123 456 7890
-                </a>
+                </Link>
               </p>
             </div>
           </CardContent>

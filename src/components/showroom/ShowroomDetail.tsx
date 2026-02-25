@@ -34,7 +34,7 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
 
-import { ShowroomStaticMap } from "./ShowroomMap";
+import Link from "next/link";
 
 export interface ShowroomDetailType {
   id: string;
@@ -44,6 +44,7 @@ export interface ShowroomDetailType {
   city: string;
   state: string;
   pincode: string;
+  postcode: string;
   phone: string;
   alternatePhone?: string;
   email: string;
@@ -62,7 +63,9 @@ export interface ShowroomDetailType {
   features: string[];
   services: string[];
   amenities?: string[];
+  facilities?: string[];
   isOpen?: boolean;
+  openToday: string;
   rating?: number;
   reviewCount?: number;
   manager?: {
@@ -77,6 +80,11 @@ export interface ShowroomDetailType {
   };
   parkingInfo?: string;
   publicTransport?: string;
+  slug: string;
+  team?: string[];
+  kitchensOnDisplay?: string[];
+  openingHours?: string;
+  nearbyStores?: Array<{ name: string; distance: string }>;
 }
 
 interface ShowroomDetailProps {
@@ -378,9 +386,9 @@ export default function ShowroomDetail({
                     <Phone className="h-5 w-5 text-muted-foreground" />
                     <div>
                       <p className="text-sm font-medium">Primary Phone</p>
-                      <a href={`tel:${showroom.phone}`} className="text-primary hover:underline">
+                      <Link href={`tel:${showroom.phone}`} className="text-primary hover:underline">
                         {showroom.phone}
-                      </a>
+                      </Link>
                     </div>
                   </div>
 
@@ -389,12 +397,12 @@ export default function ShowroomDetail({
                       <Phone className="h-5 w-5 text-muted-foreground" />
                       <div>
                         <p className="text-sm font-medium">Alternate Phone</p>
-                        <a
+                        <Link
                           href={`tel:${showroom.alternatePhone}`}
                           className="text-primary hover:underline"
                         >
                           {showroom.alternatePhone}
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   )}
@@ -405,12 +413,12 @@ export default function ShowroomDetail({
                     <Mail className="h-5 w-5 text-muted-foreground" />
                     <div>
                       <p className="text-sm font-medium">Email</p>
-                      <a
+                      <Link
                         href={`mailto:${showroom.email}`}
                         className="text-primary hover:underline"
                       >
                         {showroom.email}
-                      </a>
+                      </Link>
                     </div>
                   </div>
 
@@ -421,14 +429,14 @@ export default function ShowroomDetail({
                         <ExternalLink className="h-5 w-5 text-muted-foreground" />
                         <div>
                           <p className="text-sm font-medium">Website</p>
-                          <a
+                          <Link
                             href={showroom.website}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-primary hover:underline"
                           >
                             {showroom.website}
-                          </a>
+                          </Link>
                         </div>
                       </div>
                     </>
@@ -442,20 +450,20 @@ export default function ShowroomDetail({
                         <div className="space-y-2 pl-3">
                           <p className="text-sm">{showroom.manager.name}</p>
                           {showroom.manager.phone && (
-                            <a
+                            <Link
                               href={`tel:${showroom.manager.phone}`}
                               className="text-sm text-primary hover:underline block"
                             >
                               {showroom.manager.phone}
-                            </a>
+                            </Link>
                           )}
                           {showroom.manager.email && (
-                            <a
+                            <Link
                               href={`mailto:${showroom.manager.email}`}
                               className="text-sm text-primary hover:underline block"
                             >
                               {showroom.manager.email}
-                            </a>
+                            </Link>
                           )}
                         </div>
                       </div>
@@ -514,7 +522,7 @@ export default function ShowroomDetail({
               <CardTitle>Location</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              <ShowroomStaticMap showroom={showroom} height="250px" />
+              {/* <ShowroomStaticMap showroom={showroom} height="250px" /> */}
             </CardContent>
           </Card>
 

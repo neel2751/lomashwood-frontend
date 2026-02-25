@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface FAQ {
   question: string;
@@ -87,10 +88,10 @@ export default function HelpSidebar({
               </div>
             </div>
             <Button className="w-full" asChild>
-              <a href="/book-appointment">
+              <Link href="/book-appointment">
                 <Calendar className="mr-2 h-4 w-4" />
                 Book Now
-              </a>
+              </Link>
             </Button>
           </div>
 
@@ -105,10 +106,10 @@ export default function HelpSidebar({
               className="w-full justify-start"
               asChild
             >
-              <a href="tel:+441234567890">
+              <Link href="tel:+441234567890">
                 <Phone className="mr-2 h-4 w-4" />
                 Call: 01234 567890
-              </a>
+              </Link>
             </Button>
 
             <Button
@@ -116,10 +117,10 @@ export default function HelpSidebar({
               className="w-full justify-start"
               asChild
             >
-              <a href="mailto:info@lomashwood.com">
+              <Link href="mailto:info@lomashwood.com">
                 <Mail className="mr-2 h-4 w-4" />
                 Email Us
-              </a>
+              </Link>
             </Button>
 
             <Button
@@ -127,10 +128,10 @@ export default function HelpSidebar({
               className="w-full justify-start"
               asChild
             >
-              <a href="/contact">
+              <Link href="/contact">
                 <MessageCircle className="mr-2 h-4 w-4" />
                 Live Chat
-              </a>
+              </Link>
             </Button>
           </div>
 
@@ -173,10 +174,10 @@ export default function HelpSidebar({
             See our products in person and get expert advice from our design team.
           </p>
           <Button variant="outline" className="w-full" asChild>
-            <a href="/showrooms">
+            <Link href="/showrooms">
               Find Showroom
               <ChevronRight className="ml-2 h-4 w-4" />
-            </a>
+            </Link>
           </Button>
         </CardContent>
       </Card>
@@ -195,7 +196,7 @@ export default function HelpSidebar({
               </div>
             </div>
             <Button variant="outline" className="w-full" asChild>
-              <a href="/brochure">Download PDF</a>
+              <Link href="/brochure">Download PDF</Link>
             </Button>
           </div>
         </CardContent>
@@ -225,10 +226,10 @@ export default function HelpSidebar({
             className="mt-4 w-full"
             asChild
           >
-            <a href="/contact">
+            <Link href="/contact">
               View All FAQs
               <ChevronRight className="ml-1 h-4 w-4" />
-            </a>
+            </Link>
           </Button>
         </CardContent>
       </Card>
@@ -247,7 +248,7 @@ export default function HelpSidebar({
               Book now and get a complimentary 3D design visualization
             </p>
             <Button size="sm" className="w-full" asChild>
-              <a href="/book-appointment">Claim Offer</a>
+              <Link href="/book-appointment">Claim Offer</Link>
             </Button>
           </div>
         </CardContent>

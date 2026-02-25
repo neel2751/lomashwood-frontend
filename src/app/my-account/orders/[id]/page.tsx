@@ -293,10 +293,10 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
                   <p className="font-mono font-medium">{order.trackingNumber}</p>
                 </div>
                 <Button variant="outline" asChild>
-                  <a href={order.trackingUrl} target="_blank" rel="noopener noreferrer">
+                  <Link href={order.trackingUrl} target="_blank" rel="noopener noreferrer">
                     <Truck className="h-4 w-4 mr-2" />
                     Track Shipment
-                  </a>
+                  </Link>
                 </Button>
               </div>
             </div>

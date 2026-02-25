@@ -26,6 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import Link from "next/link";
 
 const brochureRequestSchema = z.object({
   firstName: z
@@ -452,10 +453,10 @@ export default function BrochureForm({
         </p>
         <div className="flex flex-col sm:flex-row gap-3">
           <Button variant="outline" size="sm" asChild>
-            <a href="/contact">Contact Us</a>
+            <Link href="/contact">Contact Us</Link>
           </Button>
           <Button variant="outline" size="sm" asChild>
-            <a href="tel:+917912345678">Call: +91 79 1234 5678</a>
+            <Link href="tel:+917912345678">Call: +91 79 1234 5678</Link>
           </Button>
         </div>
       </div>

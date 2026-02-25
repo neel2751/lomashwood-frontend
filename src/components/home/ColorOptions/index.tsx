@@ -12,16 +12,44 @@ import { QUERY_KEYS } from "@/lib/react-query";
 
 import { ColorPicker } from "./ColorPicker";
 
+const coloursDemoData = [
+  { id: "white", name: "White", hexCode: "#FFFFFF" },
+  { id: "grey", name: "Grey", hexCode: "#808080" },
+  { id: "black", name: "Black", hexCode: "#000000" },
+  { id: "blue", name: "Blue", hexCode: "#0000FF" },
+  { id: "red", name: "Red", hexCode: "#FF0000" },
+  { id: "green", name: "Green", hexCode: "#00FF00" },
+  { id: "yellow", name: "Yellow", hexCode: "#FFFF00" },
+  { id: "purple", name: "Purple", hexCode: "#800080" },
+  { id: "orange", name: "Orange", hexCode: "#FFA500" },
+  { id: "pink", name: "Pink", hexCode: "#FFC0CB" },
+  { id: "brown", name: "Brown", hexCode: "#A52A2A" },
+  { id: "cyan", name: "Cyan", hexCode: "#00FFFF" },
+  { id: "magenta", name: "Magenta", hexCode: "#FF00FF" },
+  { id: "lime", name: "Lime", hexCode: "#00FF00" },
+  { id: "navy", name: "Navy", hexCode: "#000080" },
+  { id: "teal", name: "Teal", hexCode: "#008080" },
+  { id: "olive", name: "Olive", hexCode: "#808000" },
+  { id: "maroon", name: "Maroon", hexCode: "#800000" },
+  { id: "silver", name: "Silver", hexCode: "#C0C0C0" },
+  { id: "gold", name: "Gold", hexCode: "#FFD700" },
+];
+
+
 export function ColorOptions() {
   const { data: coloursData, isLoading } = useQuery({
     queryKey: QUERY_KEYS.colours.all,
     queryFn: () => apiClient.colours.getAll(),
   });
 
-  const colours = coloursData?.data || [];
+  const colours = coloursData?.data || coloursDemoData;
 
   return (
-    <section className="section-padding bg-white">
+    <section className="section-padding bg-white
+     px-6 sm:px-10 lg:px-18
+    pt-12 md:pt-16 lg:pt-20
+    pb-16 md:pb-20 lg:pb-24
+    ">
       <div className="container-custom">
         {/* Section Header */}
         <div className="text-center mb-8 md:mb-12">

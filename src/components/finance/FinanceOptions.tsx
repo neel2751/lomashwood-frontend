@@ -34,6 +34,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import Link from "next/link";
 
 export interface FinanceOption {
   id: string;
@@ -217,10 +218,10 @@ export default function FinanceOptions({
             </div>
             <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
               <Button asChild>
-                <a href="tel:+919876543210">Call Us</a>
+                <Link href="tel:+919876543210">Call Us</Link>
               </Button>
               <Button variant="outline" asChild>
-                <a href="/contact">Contact Support</a>
+                <Link href="/contact">Contact Support</Link>
               </Button>
             </div>
           </div>

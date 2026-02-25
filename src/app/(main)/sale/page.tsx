@@ -141,10 +141,10 @@ export default function SalePage() {
                     size="sm"
                     className="w-full gap-2"
                   >
-                    <a href="tel:+1234567890">
+                    <Link href="tel:+1234567890">
                       <Phone className="h-4 w-4" />
                       Call Now
-                    </a>
+                    </Link>
                   </Button>
                 </div>
               </Card>

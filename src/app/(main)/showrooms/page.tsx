@@ -8,6 +8,9 @@ import ShowroomMap from '@/components/showroom/ShowroomMap';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
+import { showrooms } from '@/types/showrooms.types';
+import Link from 'next/link';
+
 export const metadata: Metadata = {
   title: 'Kitchen Showrooms Near Me | Lomash Wood',
   description:
@@ -20,6 +23,7 @@ export const metadata: Metadata = {
     type: 'website',
   },
 };
+
 
 export default function ShowroomsPage() {
   return (
@@ -39,15 +43,15 @@ export default function ShowroomsPage() {
             <p className="text-base md:text-lg text-slate-600 mb-8 font-medium">
               Dreaming of a{' '}
               <strong className="font-semibold text-slate-900">
-              <a href="/kitchen" className="underline hover:text-lomash-primary transition-colors">
+              <Link href="/kitchen" className="underline hover:text-lomash-primary transition-colors">
                 Traditional Kitchen
-              </a>
+              </Link>
               </strong>
               ? Or have you been longing for a bedroom refresh with our{' '} 
               <strong className="font-semibold text-slate-900">
-              <a href="/bedroom" className="underline hover:text-lomash-primary transition-colors">
+              <Link href="/bedroom" className="underline hover:text-lomash-primary transition-colors">
                 Bespoke Bedroom Designs
-              </a>
+              </Link>
               </strong>
               ? Whatever your kitchen or bedroom dream, find your nearest Lomash Wood showroom and let our
               expert designers help bring it to life.
@@ -72,7 +76,7 @@ export default function ShowroomsPage() {
       </section>
 
       {/* ── Showrooms List / Map (tabs) ── */}
-      <section className="py-8 md:py-12 px-18 bg-slate-50">
+      <section className="py-8 md:py-12 px-4 md:px-18 bg-slate-50">
         <div className="container mx-auto px-4">
           <Tabs defaultValue="list" className="w-full">
             <div className="flex justify-center mb-8">
@@ -98,13 +102,13 @@ export default function ShowroomsPage() {
 
             <TabsContent value="list" className="mt-0">
               <Suspense fallback={<PageLoader />}>
-                <ShowroomList showrooms={[]} />
+                <ShowroomList showrooms={showrooms} />
               </Suspense>
             </TabsContent>
 
             <TabsContent value="map" className="mt-0">
               <Suspense fallback={<PageLoader />}>
-                <ShowroomMap showrooms={[]} />
+                <ShowroomMap showrooms={showrooms} />
               </Suspense>
             </TabsContent>
           </Tabs>

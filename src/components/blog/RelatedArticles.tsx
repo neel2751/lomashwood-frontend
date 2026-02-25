@@ -50,6 +50,7 @@ const TabsContent = ({
 );
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export interface RelatedArticle {
   id: string;
@@ -145,7 +146,7 @@ export default function RelatedArticles({
         <h3 className="text-lg font-semibold">{title}</h3>
         <div className="space-y-2">
           {filteredArticles.map((article) => (
-            <a key={article.id} href={`/blog/${article.slug}`}>
+            <Link key={article.id} href={`/blog/${article.slug}`}>
               <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent transition-colors group cursor-pointer">
                 <div className="relative h-16 w-16 flex-shrink-0 rounded overflow-hidden bg-muted">
                   <img
@@ -175,7 +176,7 @@ export default function RelatedArticles({
                   )}
                 </div>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
@@ -189,10 +190,10 @@ export default function RelatedArticles({
           <h2 className="text-2xl font-bold">{title}</h2>
           {filteredArticles.length > 3 && (
             <Button variant="ghost" asChild>
-              <a href="/blog">
+              <Link href="/blog">
                 View All
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </a>
+              </Link>
             </Button>
           )}
         </div>
@@ -203,7 +204,7 @@ export default function RelatedArticles({
               key={article.id}
               className="overflow-hidden hover:shadow-lg transition-shadow group cursor-pointer"
             >
-              <a href={`/blog/${article.slug}`}>
+              <Link href={`/blog/${article.slug}`}>
                 <div className="flex flex-col sm:flex-row">
                   {/* Image */}
                   <div className="relative h-48 sm:h-auto sm:w-64 flex-shrink-0 overflow-hidden bg-muted">
@@ -275,7 +276,7 @@ export default function RelatedArticles({
                     )}
                   </div>
                 </div>
-              </a>
+              </Link>
             </Card>
           ))}
         </div>
@@ -296,7 +297,7 @@ export default function RelatedArticles({
               key={article.id}
               className="flex-shrink-0 w-80 overflow-hidden hover:shadow-lg transition-shadow group cursor-pointer snap-start"
             >
-              <a href={`/blog/${article.slug}`}>
+              <Link href={`/blog/${article.slug}`}>
                 <div className="relative h-48 overflow-hidden bg-muted">
                   <img
                     src={article.image}
@@ -337,7 +338,7 @@ export default function RelatedArticles({
                     </p>
                   )}
                 </CardHeader>
-              </a>
+              </Link>
             </Card>
           ))}
         </div>
@@ -354,10 +355,10 @@ export default function RelatedArticles({
         </h2>
         {filteredArticles.length > 3 && (
           <Button variant="ghost" asChild>
-            <a href="/blog">
+            <Link href="/blog">
               View All
               <ArrowRight className="ml-2 h-4 w-4" />
-            </a>
+            </Link>
           </Button>
         )}
       </div>
@@ -440,7 +441,7 @@ function ArticleCard({
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow group cursor-pointer h-full flex flex-col">
-      <a href={`/blog/${article.slug}`}>
+      <Link href={`/blog/${article.slug}`}>
         <div className="relative h-48 overflow-hidden bg-muted">
           <img
             src={article.image}
@@ -497,7 +498,7 @@ function ArticleCard({
             <ArrowRight className="h-3 w-3 transition-transform group-hover/btn:translate-x-1" />
           </Button>
         </CardFooter>
-      </a>
+      </Link>
     </Card>
   );
 }
@@ -520,7 +521,7 @@ export function RelatedArticlesSidebar({
         {articles.slice(0, maxArticles).map((article, index) => (
           <div key={article.id}>
             {index > 0 && <Separator className="mb-4" />}
-            <a href={`/blog/${article.slug}`}>
+            <Link href={`/blog/${article.slug}`}>
               <div className="flex gap-3 group cursor-pointer">
                 <div className="relative h-16 w-16 flex-shrink-0 rounded overflow-hidden bg-muted">
                   <img
@@ -540,7 +541,7 @@ export function RelatedArticlesSidebar({
                   )}
                 </div>
               </div>
-            </a>
+            </Link>
           </div>
         ))}
       </CardContent>

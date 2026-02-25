@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import Link from 'next/link';
 
 interface PackageFeature {
   name: string;
@@ -101,13 +102,13 @@ export default function ComparisonTable({ features, category }: ComparisonTableP
           {/* CTA Buttons - Mobile */}
           <div className="grid grid-cols-3 gap-2 p-4 bg-gray-50">
             <Button size="sm" variant="outline" className="text-xs" asChild>
-              <a href="/book-appointment">Select</a>
+              <Link href="/book-appointment">Select</Link>
             </Button>
             <Button size="sm" className="text-xs" asChild>
-              <a href="/book-appointment">Select</a>
+              <Link href="/book-appointment">Select</Link>
             </Button>
             <Button size="sm" variant="outline" className="text-xs" asChild>
-              <a href="/book-appointment">Select</a>
+              <Link href="/book-appointment">Select</Link>
             </Button>
           </div>
         </div>
@@ -172,17 +173,17 @@ export default function ComparisonTable({ features, category }: ComparisonTableP
               <TableCell className="font-semibold text-gray-900">Get Started</TableCell>
               <TableCell className="text-center">
                 <Button variant="outline" asChild>
-                  <a href="/book-appointment">Choose Basic</a>
+                  <Link href="/book-appointment">Choose Basic</Link>
                 </Button>
               </TableCell>
               <TableCell className="text-center bg-primary/5">
                 <Button asChild>
-                  <a href="/book-appointment">Choose Premium</a>
+                  <Link href="/book-appointment">Choose Premium</Link>
                 </Button>
               </TableCell>
               <TableCell className="text-center">
                 <Button variant="outline" asChild>
-                  <a href="/book-appointment">Choose Luxury</a>
+                  <Link href="/book-appointment">Choose Luxury</Link>
                 </Button>
               </TableCell>
             </TableRow>

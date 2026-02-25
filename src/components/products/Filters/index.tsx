@@ -19,7 +19,7 @@ export default function Filters({ resultCount = 0 }: FiltersProps) {
   return (
     <>
       {/* Mobile Filter Button */}
-      <div className="lg:hidden mb-6">
+      <div className="lg:hidden">
         <Sheet open={isMobileFilterOpen} onOpenChange={setIsMobileFilterOpen}>
           <SheetTrigger asChild>
             <Button variant="outline" className="w-full relative">

@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface CategoryHeroProps {
   title: string;
@@ -87,10 +88,10 @@ export default function CategoryHero({
             {/* CTA Buttons */}
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button size="lg" asChild>
-                <a href="/book-appointment">
+                <Link href="/book-appointment">
                   Free Consultation
                   <ArrowRight className="ml-2 h-4 w-4" />
-                </a>
+                </Link>
               </Button>
               <Button
                 size="lg"
@@ -102,7 +103,7 @@ export default function CategoryHero({
                 Filter Products
               </Button>
               <Button size="lg" variant="outline" asChild className="hidden md:flex">
-                <a href="/showrooms">Visit Showroom</a>
+                <Link href="/showrooms">Visit Showroom</Link>
               </Button>
             </div>
 

@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -9,6 +10,7 @@ import { WishlistButton } from '../ProductCard/WishlistButton';
 
 interface Product {
   id: string;
+  slug: string;
   name: string;
   category: string;
   style: string;
@@ -50,7 +52,7 @@ export function ListView({ products }: ListViewProps) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
               {/* Image Section */}
               <div className="relative aspect-[4/3] md:aspect-auto md:h-full bg-gray-100">
-                <Link href={`/product/${product.id}`}>
+                <Link href={`/product/${product.slug}`}>
                   <Image
                     src={product.image}
                     alt={product.name}
@@ -95,7 +97,7 @@ export function ListView({ products }: ListViewProps) {
                       </div>
 
                       {/* Product Name */}
-                      <Link href={`/product/${product.id}`}>
+                      <Link href={`/product/${product.slug}`}>
                         <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 hover:text-primary transition-colors">
                           {product.name}
                         </h3>
@@ -197,21 +199,44 @@ export function ListView({ products }: ListViewProps) {
                     {/* Action Buttons */}
                     <div className="flex gap-2 w-full sm:w-auto">
                       <Button
-                        asChild
-                        variant="outline"
-                        disabled={!product.inStock}
-                        className="flex-1 sm:flex-none"
-                      >
-                        <Link href={`/product/${product.id}`}>
-                          View Details
-                        </Link>
-                      </Button>
+              asChild
+              className="flex-1"
+              // disabled={!product.inStock}
+            >
+              <Link href={`/product/${product.slug}?category=${product.category}`}>
+                View Details
+              </Link>
+            </Button>
+                      <Button
+              asChild
+              variant="outline"
+              size="icon"
+              className='sm:hidden'
+            >
+              <Link href={`/book-appointment?product=${product.slug}&category=${product.category}`}>
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+              </Link>
+            </Button>
                       <Button
                         asChild
+                        variant="outline"
+                        
                         disabled={!product.inStock}
-                        className="flex-1 sm:flex-none"
+                        className="flex-1 sm:flex-none hidden sm:inline-flex"
                       >
-                        <Link href={`/book-appointment?product=${product.id}`}>
+                        <Link href={`/book-appointment?product=${product.slug}&category=${product.category}`}>
                           Book Consultation
                         </Link>
                       </Button>

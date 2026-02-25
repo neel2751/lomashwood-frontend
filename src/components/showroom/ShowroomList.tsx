@@ -16,32 +16,37 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import type { Showroom } from "@/types/showrooms.types";
 
 import ShowroomCard from "./ShowroomCard";
+import Link from "next/link";
 
-export interface Showroom {
-  id: string;
-  name: string;
-  address: string;
-  city: string;
-  state: string;
-  pincode: string;
-  phone: string;
-  email?: string;
-  image?: string;
-  coordinates?: {
-    lat: number;
-    lng: number;
-  };
-  hours: {
-    weekdays: string;
-    saturday: string;
-    sunday: string;
-  };
-  features?: string[];
-  isOpen?: boolean;
-  distance?: number;
-}
+
+
+
+// export interface OpeningHour {
+//   day: string
+//   date: string
+//   hours: string
+// }
+// export interface Showroom {
+//   id: string;
+//   name: string;
+//   address: string;
+//   city: string;
+//   postcode: string;
+//   phone: string;
+//   email?: string;
+//   image?: string;
+//   coordinates?: {
+//     lat: number;
+//     lng: number;
+//   };
+//   openingHours: OpeningHour[];
+//   features?: string[];
+//   isOpen?: boolean;
+//   distance?: number;
+// }
 
 interface ShowroomListProps {
   showrooms: Showroom[];
@@ -52,20 +57,6 @@ interface ShowroomListProps {
   viewMode?: "grid" | "list";
   className?: string;
 }
-
-const states = [
-  "All States",
-  "Maharashtra",
-  "Gujarat",
-  "Karnataka",
-  "Delhi",
-  "Tamil Nadu",
-  "Rajasthan",
-  "Uttar Pradesh",
-  "West Bengal",
-  "Telangana",
-  "Punjab",
-];
 
 const sortOptions = [
   { value: "name", label: "Name (A-Z)" },
@@ -103,12 +94,8 @@ export default function ShowroomList({
           showroom.name.toLowerCase().includes(query) ||
           showroom.city.toLowerCase().includes(query) ||
           showroom.address.toLowerCase().includes(query) ||
-          showroom.pincode.includes(query)
+          showroom.postcode.includes(query)
       );
-    }
-
-    if (selectedState !== "All States") {
-      filtered = filtered.filter((showroom) => showroom.state === selectedState);
     }
 
     if (selectedCity !== "All Cities") {
@@ -129,7 +116,7 @@ export default function ShowroomList({
     });
 
     return filtered;
-  }, [showrooms, searchQuery, selectedState, selectedCity, sortBy]);
+  }, [showrooms, searchQuery, selectedCity, sortBy]);
 
   const handleClearFilters = () => {
     setSearchQuery("");
@@ -191,19 +178,6 @@ export default function ShowroomList({
                   !showFilterPanel && "hidden lg:grid"
                 )}
               >
-                <Select value={selectedState} onValueChange={setSelectedState}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select state" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {states.map((state) => (
-                      <SelectItem key={state} value={state}>
-                        {state}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
                 <Select value={selectedCity} onValueChange={setSelectedCity}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select city" />
@@ -321,7 +295,7 @@ export default function ShowroomList({
         >
           {filteredShowrooms.map((showroom) => (
             <ShowroomCard
-              key={showroom.id}
+              key={showroom.slug}
               showroom={showroom}
               onClick={() => onShowroomClick?.(showroom)}
               viewMode={viewMode}
@@ -374,13 +348,13 @@ export default function ShowroomList({
             </div>
             <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
               <Button variant="default" asChild>
-                <a href="tel:+919876543210">
+                <Link href="tel:+919876543210">
                   <Phone className="mr-2 h-4 w-4" />
                   Call Us
-                </a>
+                </Link>
               </Button>
               <Button variant="outline" asChild>
-                <a href="/contact">Contact Us</a>
+                <Link href="/contact">Contact Us</Link>
               </Button>
             </div>
           </div>

@@ -247,16 +247,16 @@ export default function BookingSuccessPage({ searchParams }: SuccessPageProps) {
               </div>
               <div className="flex flex-wrap gap-3">
                 <Button asChild variant="outline" size="sm">
-                  <a href="tel:+1234567890">
+                  <Link href="tel:+1234567890">
                     <Phone className="h-4 w-4 mr-2" />
                     Call Us
-                  </a>
+                  </Link>
                 </Button>
                 <Button asChild variant="outline" size="sm">
-                  <a href="mailto:info@lomashwood.com">
+                  <Link href="mailto:info@lomashwood.com">
                     <Mail className="h-4 w-4 mr-2" />
                     Email Us
-                  </a>
+                  </Link>
                 </Button>
               </div>
             </div>

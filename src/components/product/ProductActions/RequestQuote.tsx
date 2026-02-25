@@ -27,6 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import type { Product } from "@/types/product.types";
 import { formatCurrency } from "@/utils/formatters";
+import Link from "next/link";
 
 const quoteSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -357,9 +358,9 @@ export default function RequestQuote({
           {/* Footer Note */}
           <div className="text-xs text-muted-foreground text-center pt-2 border-t">
             By submitting this form, you agree to our{" "}
-            <a href="/privacy-policy" className="text-primary hover:underline">
+            <Link href="/privacy-policy" className="text-primary hover:underline">
               Privacy Policy
-            </a>
+            </Link>
             .
           </div>
         </DialogContent>

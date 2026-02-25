@@ -9,10 +9,129 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useFeaturedProducts } from "@/hooks/useProducts";
 
 import { CategoryCard } from "./CategoryCard";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+
+
+const productDemoData = [
+  {
+    id: "1",
+    slug: "cambridge-shaker-kitchen",
+    title: "Cambridge Shaker Kitchen",
+    description: "A classic shaker style kitchen with a modern twist. Featuring clean lines, soft-close drawers, and a range of finishes to suit any home.",
+    images: ["https://plus.unsplash.com/premium_photo-1683140941523-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
+    category: "kitchen" as const,
+    rangeName: "Cambridge",
+    style: "Traditional",
+    colours: [{id: "white", name: "White", hexCode: "#FFFFFF" }, { id: "grey", name: "Grey", hexCode: "#808080" }, { id: "blue", name: "Blue", hexCode: "#0000FF" }],
+    featured: true,
+    popular: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "2",
+    slug: "oslo-matt-graphite-kitchen",
+    title: "Oslo Matt Graphite Kitchen",
+    description: "A sleek, contemporary kitchen with a matte graphite finish. Designed for modern homes with clean lines and minimalist aesthetics.",
+    style: "Contemporary",
+    category: "kitchen" as const,
+    rangeName: "Oslo",
+    colours: [{ id: "black", name: "Black", hexCode: "#000000" }, { id: "white", name: "White", hexCode: "#FFFFFF" }, { id: "grey", name: "Grey", hexCode: "#808080" }],
+    images: ["https://plus.unsplash.com/premium_photo-1683140941523-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
+    featured: false,
+    popular: true,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "3",
+    slug: "milano-handleless-gloss-kitchen",
+    title: "Milano Handleless Gloss Kitchen",
+    description: "A modern kitchen with handleless gloss finishes. Perfect for contemporary homes seeking a clean, minimalist look.", 
+    style: "Modern",
+    category: "kitchen" as const,
+    rangeName: "Milano",
+      colours: [{ id: "white", name: "White", hexCode: "#FFFFFF" }, { id: "grey", name: "Grey", hexCode: "#808080" }, { id: "black", name: "Black", hexCode: "#000000" }],
+    images: ["https://plus.unsplash.com/premium_photo-1683140941523-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
+    featured: true,
+    popular: true,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "4",
+    slug: "cambridge-shaker-kitchen-2",
+    title: "Cambridge Shaker Kitchen",
+    description: "A classic shaker style kitchen with a modern twist. Featuring clean lines, soft-close drawers, and a range of finishes to suit any home.",
+    style: "Traditional",
+    category: "kitchen" as const,
+    rangeName: "Cambridge",
+      colours: [{ id: "white", name: "White", hexCode: "#FFFFFF" }, { id: "grey", name: "Grey", hexCode: "#808080" }, { id: "blue", name: "Blue", hexCode: "#0000FF" }],
+    images: ["https://plus.unsplash.com/premium_photo-1683140941523-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
+    featured: false,
+    popular: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "5",
+    slug: "oslo-matt-graphite-kitchen-2",
+    title: "Oslo Matt Graphite Kitchen",
+    description: "A sleek, contemporary kitchen with a matte graphite finish. Designed for modern homes with clean lines and minimalist aesthetics.",
+    style: "Contemporary",
+    category: "kitchen" as const,
+    rangeName: "Oslo",
+      colours: [{ id: "black", name: "Black", hexCode: "#000000" }, { id: "white", name: "White", hexCode: "#FFFFFF" }, { id: "grey", name: "Grey", hexCode: "#808080" }],
+    images: ["https://plus.unsplash.com/premium_photo-1683140941523-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
+    featured: false,
+    popular: true,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "6",
+    slug: "milano-handleless-gloss-kitchen-2",
+    title: "Milano Handleless Gloss Kitchen",
+    description: "A modern kitchen with handleless gloss finishes. Perfect for contemporary homes seeking a clean, minimalist look.",
+    style: "Modern",
+    category: "kitchen" as const,
+    rangeName: "Milano",
+      colours: [{ id: "white", name: "White", hexCode: "#FFFFFF" }, { id: "grey", name: "Grey", hexCode: "#808080" }, { id: "black", name: "Black", hexCode: "#000000" }],
+    images: ["https://plus.unsplash.com/premium_photo-1683140941523-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
+    featured: true,
+    popular: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "7",
+    slug: "cambridge-shaker-kitchen-3",
+    title: "Cambridge Shaker Kitchen",
+    description: "A classic shaker style kitchen with a modern twist. Featuring clean lines, soft-close drawers, and a range of finishes to suit any home.",
+    style: "Traditional",
+    category: "kitchen" as const,
+    rangeName: "Cambridge",
+    colours: [{ id: "white", name: "White", hexCode: "#FFFFFF" }, { id: "grey", name: "Grey", hexCode: "#808080" }, { id: "blue", name: "Blue", hexCode: "#0000FF" }],
+    images: ["https://plus.unsplash.com/premium_photo-1683140941523-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
+    featured: false,
+    popular: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "8",
+    slug: "oslo-matt-graphite-kitchen-3",
+    title: "Oslo Matt Graphite Kitchen",
+    description: "A sleek, contemporary kitchen with a matte graphite finish. Designed for modern homes with clean lines and minimalist aesthetics.",
+    style: "Contemporary",
+    category: "kitchen" as const,
+    rangeName: "Oslo",
+    colours: [{ id: "black", name: "Black", hexCode: "#000000" }, { id: "white", name: "White", hexCode: "#FFFFFF" }, { id: "grey", name: "Grey", hexCode: "#808080" }],
+    images: ["https://plus.unsplash.com/premium_photo-1683140941523-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
+    featured: true,
+    popular: true,
+    createdAt: new Date().toISOString(),
+  },
+];
 
 
 export function ExploreKitchen() {
   const { data: products, isLoading } = useFeaturedProducts("kitchen");
+
+    const productData = products && products.length > 0 ? products : productDemoData;
 
   return (
     <section className="section-padding bg-white 
@@ -39,6 +158,7 @@ export function ExploreKitchen() {
           </Link>
         </div>
 
+
         {/* Kitchen Grid */}
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -51,11 +171,30 @@ export function ExploreKitchen() {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {Array.isArray(products) && products.slice(0, 8).map((product) => (
-              <CategoryCard key={product.id} product={product} />
-            ))}
-          </div>
+          // We have to use the swiper 
+
+          <Carousel
+          opts={{
+            align:"start"
+          }}
+
+          >
+            <CarouselContent>
+              {Array.isArray(productData) && productData.slice(0, 8).map((product, index) => (
+<CarouselItem key={index} className="basis-1/2 lg:basis-1/3 pb-2">
+  <CategoryCard product={product} />
+</CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious/>
+            <CarouselNext/>
+          </Carousel>
+
+          // <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          //   {Array.isArray(productDemoData) && productDemoData.slice(0, 8).map((product) => (
+          //     <CategoryCard key={product.id} product={product} />
+          //   ))}
+          // </div>
         )}
 
         {/* Empty State */}

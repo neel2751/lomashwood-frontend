@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface Product {
   id: string;
@@ -198,7 +199,7 @@ export default function RelatedProducts({
       {products.length > 4 && (
         <div className="flex justify-center md:hidden">
           <Button variant="outline" asChild>
-            <a href={`/${category || "products"}`}>View All Products</a>
+            <Link href={`/${category || "products"}`}>View All Products</Link>
           </Button>
         </div>
       )}

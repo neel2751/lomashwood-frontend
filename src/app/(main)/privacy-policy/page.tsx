@@ -445,16 +445,16 @@ export default function PrivacyPolicyPage() {
             <div className="bg-white rounded-lg p-4 border border-purple-200">
               <Mail className="w-6 h-6 text-purple-600 mb-2" />
               <p className="text-sm font-semibold text-slate-900 mb-1">Email</p>
-              <a href={`mailto:${dataProtectionOfficer.email}`} className="text-sm text-purple-600 hover:underline">
+              <Link href={`mailto:${dataProtectionOfficer.email}`} className="text-sm text-purple-600 hover:underline">
                 {dataProtectionOfficer.email}
-              </a>
+              </Link>
             </div>
             <div className="bg-white rounded-lg p-4 border border-purple-200">
               <Smartphone className="w-6 h-6 text-purple-600 mb-2" />
               <p className="text-sm font-semibold text-slate-900 mb-1">Phone</p>
-              <a href={`tel:${dataProtectionOfficer.phone}`} className="text-sm text-purple-600 hover:underline">
+              <Link href={`tel:${dataProtectionOfficer.phone}`} className="text-sm text-purple-600 hover:underline">
                 {dataProtectionOfficer.phone}
-              </a>
+              </Link>
             </div>
             <div className="bg-white rounded-lg p-4 border border-purple-200">
               <Users className="w-6 h-6 text-purple-600 mb-2" />

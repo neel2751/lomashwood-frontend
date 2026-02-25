@@ -18,6 +18,7 @@ import Reviews from '@/components/product/Reviews';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import Link from 'next/link';
 
 
 interface ProductPageProps {
@@ -82,13 +83,13 @@ export default async function ProductDetailPage({
       <div className="border-t bg-muted/50">
         <div className="container mx-auto px-18 py-4">
           <nav className="flex items-center gap-2 text-sm text-muted-foreground">
-            <a href="/" className="hover:text-foreground transition-colors">
+            <Link href="/" className="hover:text-foreground transition-colors">
               Home
-            </a>
+            </Link>
             <span>/</span>
-            <a href="/kitchen" className="hover:text-foreground transition-colors">
+            <Link href="/kitchen" className="hover:text-foreground transition-colors">
               Kitchen
-            </a>
+            </Link>
             <span>/</span>
             <span className="text-foreground">Product Details</span>
           </nav>
@@ -267,18 +268,18 @@ export default async function ProductDetailPage({
             Book a free consultation or visit our showroom today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
+            <Link
               href="/book-appointment"
               className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
             >
               Book Free Consultation
-            </a>
-            <a 
+            </Link>
+            <Link 
               href="/showrooms"
               className="inline-flex items-center justify-center rounded-md border border-input bg-background px-6 py-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
             >
               Find a Showroom
-            </a>
+            </Link>
           </div>
         </Card>
       </div>

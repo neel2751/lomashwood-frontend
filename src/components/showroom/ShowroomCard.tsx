@@ -1,7 +1,8 @@
 "use client";
 
-import { MapPin, Phone, Clock, Navigation, Mail, ChevronRight, Star } from "lucide-react";
+import { MapPin, Phone, Navigation, Mail, ChevronRight, Star } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,32 +10,16 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 
+import { Showroom as ShowroomType } from "@/types/showrooms.types";
 
-export interface Showroom {
-  id: string;
-  name: string;
-  address: string;
-  city: string;
-  state: string;
-  pincode: string;
-  phone: string;
-  email?: string;
-  image?: string;
-  coordinates?: {
-    lat: number;
-    lng: number;
-  };
-  hours: {
-    weekdays: string;
-    saturday: string;
-    sunday: string;
-  };
-  features?: string[];
-  isOpen?: boolean;
-  distance?: number;
+
+// other rating and review count add in the showroom
+
+ interface Showroom extends Omit<ShowroomType, "openingHours"> {
   rating?: number;
   reviewCount?: number;
 }
+
 
 interface ShowroomCardProps {
   showroom: Showroom;
@@ -60,7 +45,7 @@ export default function ShowroomCard({
       window.open(url, "_blank");
     } else {
       const address = encodeURIComponent(
-        `${showroom.address}, ${showroom.city}, ${showroom.state} ${showroom.pincode}`
+        `${showroom.address}, ${showroom.city}, ${showroom.postcode}`
       );
       window.open(`https://www.google.com/maps/search/?api=1&query=${address}`, "_blank");
     }
@@ -70,12 +55,6 @@ export default function ShowroomCard({
     e.stopPropagation();
     window.location.href = `tel:${showroom.phone}`;
   };
-
-  const handleViewDetails = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onClick?.();
-  };
-
   if (viewMode === "grid") {
     return (
       <Card
@@ -94,12 +73,11 @@ export default function ShowroomCard({
               fill
               className="object-cover transition-transform group-hover:scale-105"
             />
-            {showroom.isOpen !== undefined && (
+            {showroom.openToday !== undefined && (
               <Badge
-                variant={showroom.isOpen ? "default" : "secondary"}
                 className="absolute top-3 right-3"
               >
-                {showroom.isOpen ? "Open Now" : "Closed"}
+                {showroom.openToday}
               </Badge>
             )}
             {showDistance && showroom.distance !== undefined && (
@@ -115,7 +93,7 @@ export default function ShowroomCard({
         <CardHeader className="pb-3">
           <div className="space-y-2">
             <div className="flex items-start justify-between gap-2">
-              <h3 className="font-semibold text-lg leading-tight group-hover:text-primary transition-colors">
+              <h3 className="font-semibold text-xl tracking-tight group-hover:text-primary transition-colors">
                 {showroom.name}
               </h3>
               {showroom.rating && (
@@ -130,10 +108,10 @@ export default function ShowroomCard({
                 </div>
               )}
             </div>
-            <div className="flex items-start gap-2 text-sm text-muted-foreground">
-              <MapPin className="h-4 w-4 flex-shrink-0 mt-0.5" />
+            <div className="flex items-start gap-2 text-base text-foreground">
+              <MapPin className="h-4 w-4 flex-shrink-0 mt-1 text-muted-foreground" />
               <p className="line-clamp-2">
-                {showroom.address}, {showroom.city}, {showroom.state} {showroom.pincode}
+                {showroom.address}, {showroom.city}, {showroom.postcode}
               </p>
             </div>
           </div>
@@ -141,38 +119,38 @@ export default function ShowroomCard({
 
         <CardContent className="space-y-3 pb-4">
           {/* Phone */}
-          <div className="flex items-center gap-2 text-sm">
-            <Phone className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-            <a
+          <div className="flex items-center gap-2 text-base text-foreground">
+            <Phone className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+            <Link
               href={`tel:${showroom.phone}`}
               onClick={handleCall}
-              className="text-primary hover:underline"
+              className="hover:underline"
             >
               {showroom.phone}
-            </a>
+            </Link>
           </div>
 
           {/* Hours */}
-          <div className="flex items-start gap-2 text-sm text-muted-foreground">
+          {/* <div className="flex items-start gap-2 text-sm text-muted-foreground">
             <Clock className="h-4 w-4 flex-shrink-0 mt-0.5" />
             <div className="space-y-0.5">
               <p>Mon-Fri: {showroom.hours.weekdays}</p>
               <p>Sat: {showroom.hours.saturday}</p>
               <p>Sun: {showroom.hours.sunday}</p>
             </div>
-          </div>
+          </div> */}
 
           {/* Features */}
-          {showroom.features && showroom.features.length > 0 && (
+          {showroom.facilities && showroom.facilities.length > 0 && (
             <div className="flex flex-wrap gap-1 pt-2">
-              {showroom.features.slice(0, 3).map((feature, index) => (
-                <Badge key={index} variant="outline" className="text-xs">
+              {showroom.facilities.slice(0, 3).map((feature, index) => (
+                <Badge key={index} variant="outline" className="text-xs text-muted-foreground">
                   {feature}
                 </Badge>
               ))}
-              {showroom.features.length > 3 && (
-                <Badge variant="outline" className="text-xs">
-                  +{showroom.features.length - 3} more
+              {showroom.facilities.length > 3 && (
+                <Badge variant="outline" className="text-xs text-muted-foreground">
+                  +{showroom.facilities.length - 3} more
                 </Badge>
               )}
             </div>
@@ -190,13 +168,15 @@ export default function ShowroomCard({
             Directions
           </Button>
           <Button
+          asChild
             variant="default"
             size="sm"
-            onClick={handleViewDetails}
             className="flex-1"
           >
+            <Link href={`/showrooms/${showroom.slug}`} className="flex items-center justify-center">
             View Details
             <ChevronRight className="ml-1 h-4 w-4" />
+            </Link>
           </Button>
         </CardFooter>
       </Card>
@@ -221,12 +201,12 @@ export default function ShowroomCard({
               fill
               className="object-cover transition-transform group-hover:scale-105"
             />
-            {showroom.isOpen !== undefined && (
+            {showroom.openToday !== undefined && (
               <Badge
-                variant={showroom.isOpen ? "default" : "secondary"}
+                variant={showroom.openToday.includes("Open") ? "default" : "secondary"}
                 className="absolute top-3 right-3"
               >
-                {showroom.isOpen ? "Open Now" : "Closed"}
+                {showroom.openToday.includes("Open") ? "Open Now" : "Closed"}
               </Badge>
             )}
             {showDistance && showroom.distance !== undefined && (
@@ -250,8 +230,7 @@ export default function ShowroomCard({
                 <div className="flex items-start gap-2 text-sm text-muted-foreground">
                   <MapPin className="h-4 w-4 flex-shrink-0 mt-0.5" />
                   <p>
-                    {showroom.address}, {showroom.city}, {showroom.state}{" "}
-                    {showroom.pincode}
+                    {showroom.address}, {showroom.city}, {showroom.postcode}
                   </p>
                 </div>
               </div>
@@ -299,22 +278,22 @@ export default function ShowroomCard({
               </div>
 
               {/* Hours */}
-              <div className="flex items-start gap-2 text-sm text-muted-foreground">
+              {/* <div className="flex items-start gap-2 text-sm text-muted-foreground">
                 <Clock className="h-4 w-4 flex-shrink-0 mt-0.5" />
                 <div className="space-y-0.5">
                   <p>Mon-Fri: {showroom.hours.weekdays}</p>
                   <p>Sat: {showroom.hours.saturday}</p>
                   <p>Sun: {showroom.hours.sunday}</p>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             {/* Features */}
-            {showroom.features && showroom.features.length > 0 && (
+            {showroom.facilities && showroom.facilities.length > 0 && (
               <>
                 <Separator className="my-4" />
                 <div className="flex flex-wrap gap-1">
-                  {showroom.features.map((feature, index) => (
+                  {showroom.facilities.map((feature, index) => (
                     <Badge key={index} variant="outline" className="text-xs">
                       {feature}
                     </Badge>
@@ -335,13 +314,15 @@ export default function ShowroomCard({
               Get Directions
             </Button>
             <Button
+              asChild
               variant="default"
               size="sm"
-              onClick={handleViewDetails}
               className="flex-1 sm:flex-initial"
             >
-              View Details
-              <ChevronRight className="ml-1 h-4 w-4" />
+              <Link href={`/showrooms/${showroom.slug}`}>
+                View Details
+                <ChevronRight className="ml-1 h-4 w-4" />
+              </Link>
             </Button>
           </CardFooter>
         </div>
@@ -373,7 +354,7 @@ export function ShowroomCardCompact({
             {showroom.name}
           </h4>
           <p className="text-sm text-muted-foreground line-clamp-1">
-            {showroom.city}, {showroom.state}
+            {showroom.city}, {showroom.postcode}
           </p>
         </div>
 
