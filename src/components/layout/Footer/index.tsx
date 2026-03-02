@@ -1,6 +1,7 @@
 "use client";
 
 import { Facebook, Instagram, Twitter, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -53,6 +54,7 @@ export function Footer() {
           {/* Brand & Newsletter */}
           <div className="lg:col-span-2">
             <Link href="/" className="inline-block mb-6">
+            <Image src="/logo.jpg" alt="Lomash Wood Logo" width={150} height={120} />
               <h3 className="text-2xl font-bold text-white">Lomash Wood</h3>
             </Link>
             <p className="text-lomash-gray-300 mb-6 max-w-sm">

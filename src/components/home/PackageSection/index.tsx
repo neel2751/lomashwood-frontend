@@ -20,6 +20,39 @@ import { QUERY_KEYS } from "@/lib/react-query";
 
 import { PackageCard } from "./PackageCard";
 
+const packagesDemoData = [
+  {
+    id: "1",
+    title: "Complete Kitchen Package",
+    description: "A comprehensive kitchen package including cabinets, countertops, and appliances. Perfect for a full kitchen renovation.",
+    image: "https://plus.unsplash.com/premium_photo-1683140941523-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    price: 9999,
+    products: [],
+    categories: ["kitchen"],
+    features: ["Cabinets", "Countertops", "Appliances"],
+  },
+  {
+    id: "2",
+    title: "Bedroom Makeover Bundle",
+    description: "Transform your bedroom with our makeover bundle. Includes bed frame, wardrobe, and bedside tables.",
+    image: "https://plus.unsplash.com/premium_photo-1683140941523-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    price: 4999,
+    products: [],
+    categories: ["bedroom"],
+    features: ["Bed Frame", "Wardrobe", "Bedside Tables"],
+  },
+  {
+    id: "3",
+    title: "Small Space Kitchen Solution",
+    description: "Ideal for apartments and small homes, this package includes space-saving kitchen essentials.",
+    image: "https://plus.unsplash.com/premium_photo-1683140941523-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    price: 5999,
+    products: [],
+    categories: ["kitchen"],
+    features: ["Space-Saving Design", "Essential Appliances"],
+  },
+];
+
 
 export function PackageSection() {
   const plugin = React.useRef(
@@ -31,7 +64,7 @@ export function PackageSection() {
     queryFn: () => apiClient.packages.getAll(),
   });
 
-  const packages = packagesData?.data || [];
+  const packages = packagesData?.data || packagesDemoData || [];
 
   return (
     <section className="section-padding bg-white

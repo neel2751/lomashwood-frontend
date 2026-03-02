@@ -68,7 +68,7 @@ const slides: Slide[] = [
 
 export function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+  // const [isPaused, setIsPaused] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const nextSlide = useCallback(() => {
@@ -96,14 +96,14 @@ export function Hero() {
   );
 
   useEffect(() => {
-    if (isPaused) return;
+    // if (isPaused) return;
 
     const interval = setInterval(() => {
       nextSlide();
-    }, 6000);
+    }, 8000);
 
     return () => clearInterval(interval);
-  }, [isPaused, nextSlide]);
+  }, [nextSlide]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -118,8 +118,8 @@ export function Hero() {
   return (
     <section
       className="relative h-screen w-full overflow-hidden bg-gray-900"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
+      // onMouseEnter={() => setIsPaused(true)}
+      // onMouseLeave={() => setIsPaused(false)}
       aria-label="Hero Slider"
     >
       {/* Slides */}

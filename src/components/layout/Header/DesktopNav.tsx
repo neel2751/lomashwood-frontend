@@ -24,7 +24,7 @@ export function DesktopNav({ className }: DesktopNavProps) {
             key={link.href}
             href={link.href}
             className={cn(
-              "relative text-base font-semibold transition-colors duration-200",
+              "relative text-lg font-semibold transition-colors duration-200",
               isActive
                 ? "text-lomash-primary"
                 : "text-lomash-dark hover:text-lomash-primary",

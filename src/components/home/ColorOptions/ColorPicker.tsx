@@ -18,9 +18,9 @@ export function ColorPicker({ colour, className }: ColorPickerProps) {
       className={cn("group flex flex-col items-center", className)}
     >
       {/* Color Circle */}
-      <div className="relative w-full aspect-square mb-2">
+      <div className="relative w-24 h-24 mb-2">
         <div
-          className="w-full h-full rounded-full shadow-md transition-all duration-300 group-hover:shadow-xl group-hover:scale-110 border-2 border-lomash-gray-200 group-hover:border-lomash-primary"
+          className="w-full h-full rounded-full shadow-md transition-all duration-300 group-hover:shadow-xl group-hover:scale-110 border-2 border-lomash-gray-200 group-hover:border-lomash-primary ring-2 ring-lomash-primary/20"
           style={{ backgroundColor: colour.hexCode }}
         >
           {/* Checkered pattern for light/white colors */}

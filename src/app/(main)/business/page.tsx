@@ -252,20 +252,20 @@ export default function BusinessPage() {
   return (
     <div className="space-y-6">
       {/* Hero Section */}
-      <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 border border-amber-200">
-        <CardContent className="pt-12 pb-12">
+      <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-lomash-primary/50 via-lomash-secondary/50 to-lomash-accent/40 border border-lomash-primary/20">
+        <CardContent className="pt-12 pb-12 container mx-auto px-6 md:px-20">
           <div className="max-w-3xl">
             <div className="flex items-center gap-3 mb-4">
-              <Briefcase className="w-10 h-10 text-amber-600" />
+              <Briefcase className="w-10 h-10 text-lomash-primary" />
               <h1 className="text-4xl md:text-5xl font-bold text-slate-900">
                 Business & Trade Solutions
               </h1>
             </div>
-            <p className="text-lg text-slate-700 mb-6">
+            <p className="text-lg text-slate-600 mb-6">
               Partner with Lomash Wood for your commercial furniture projects. We deliver exceptional craftsmanship, competitive pricing, and dedicated support for businesses across India. From hospitality to corporate offices, we create furniture that enhances your space and delights your customers.
             </p>
             <div className="flex flex-wrap gap-3">
-              <Button className="bg-amber-600 hover:bg-amber-700">
+              <Button className="bg-lomash-primary hover:bg-lomash-secondary text-white" size="lg">
                 <Calendar className="w-4 h-4 mr-2" />
                 Schedule Business Consultation
               </Button>
@@ -279,7 +279,21 @@ export default function BusinessPage() {
       </div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+     
+
+      {/* Business Sectors */}
+      <div className="container mx-auto px-6 md:px-20 space-y-12">
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
+            <Target className="w-6 h-6 text-lomash-primary" />
+            Industries We Serve
+          </h2>
+          <p className="text-slate-600">
+            Specialised furniture solutions for diverse commercial sectors
+          </p>
+        </div>
+
+         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
@@ -321,18 +335,6 @@ export default function BusinessPage() {
         </Card>
       </div>
 
-      {/* Business Sectors */}
-      <div>
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
-            <Target className="w-6 h-6 text-amber-600" />
-            Industries We Serve
-          </h2>
-          <p className="text-slate-600">
-            Specialized furniture solutions for diverse commercial sectors
-          </p>
-        </div>
-
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {businessSectors.map((sector, index) => {
             const Icon = sector.icon;
@@ -360,13 +362,13 @@ export default function BusinessPage() {
       </div>
 
       {/* Business Benefits */}
-      <Card>
+      <Card className="container mx-auto px-6 md:px-20 bg-gradient-to-br from-lomash-secondary to-lomash-accent border-lomash-secondary/20">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-2xl">
-            <Sparkles className="w-6 h-6 text-amber-600" />
+          <CardTitle className="flex items-center gap-2 text-2xl text-white">
+            <Sparkles className="w-6 h-6" />
             Why Partner With Us
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-white/80">
             Exclusive benefits for our business clients
           </CardDescription>
         </CardHeader>
@@ -376,13 +378,13 @@ export default function BusinessPage() {
               const Icon = benefit.icon;
               return (
                 <div key={index} className="flex gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
-                    <Icon className="w-6 h-6 text-amber-600" />
+                  <div className="w-12 h-12 rounded-lg bg-white flex items-center justify-center flex-shrink-0">
+                    <Icon className="w-6 h-6 text-lomash-primary" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-900 mb-1">{benefit.title}</h3>
-                    <p className="text-sm text-slate-600 mb-2">{benefit.description}</p>
-                    <span className="text-xs font-semibold text-amber-600 bg-amber-50 px-2 py-1 rounded-full">
+                    <h3 className="font-bold text-white mb-1">{benefit.title}</h3>
+                    <p className="text-sm text-white/80 mb-2">{benefit.description}</p>
+                    <span className="text-xs font-semibold text-lomash-primary bg-white px-2 py-1 rounded-full">
                       {benefit.stats}
                     </span>
                   </div>
@@ -394,10 +396,10 @@ export default function BusinessPage() {
       </Card>
 
       {/* Service Offerings */}
-      <Card>
+      <Card className="container mx-auto px-6 md:px-20">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-2xl">
-            <Package className="w-6 h-6 text-amber-600" />
+            <Package className="w-6 h-6 text-lomash-primary" />
             Our Business Services
           </CardTitle>
           <CardDescription>
@@ -407,13 +409,13 @@ export default function BusinessPage() {
         <CardContent>
           <div className="grid md:grid-cols-2 gap-6">
             {serviceOfferings.map((service, index) => (
-              <div key={index} className="p-6 rounded-lg border-2 border-slate-200 hover:border-amber-200 transition-colors">
+              <div key={index} className="p-6 rounded-lg border-2 border-slate-200 hover:border-lomash-primary transition-colors">
                 <h3 className="text-xl font-bold text-slate-900 mb-2">{service.title}</h3>
                 <p className="text-slate-600 mb-4">{service.description}</p>
                 <div className="space-y-2">
                   {service.features.map((feature, idx) => (
                     <div key={idx} className="flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                      <CheckCircle2 className="w-4 h-4 text-lomash-primary flex-shrink-0 mt-0.5" />
                       <p className="text-sm text-slate-700">{feature}</p>
                     </div>
                   ))}
@@ -425,10 +427,10 @@ export default function BusinessPage() {
       </Card>
 
       {/* Project Process */}
-      <Card>
+      <Card className="container mx-auto px-6 md:px-20">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-2xl">
-            <Layers className="w-6 h-6 text-amber-600" />
+            <Layers className="w-6 h-6 text-lomash-primary" />
             Our Commercial Project Process
           </CardTitle>
           <CardDescription>
@@ -443,18 +445,18 @@ export default function BusinessPage() {
                 <div key={index}>
                   <div className="flex gap-4">
                     <div className="flex flex-col items-center">
-                      <div className="w-12 h-12 rounded-full bg-amber-100 border-2 border-amber-600 flex items-center justify-center flex-shrink-0">
-                        <span className="text-sm font-bold text-amber-700">{phase.step}</span>
+                      <div className="w-12 h-12 rounded-full bg-lomash-primary/10 border-2 border-lomash-primary flex items-center justify-center flex-shrink-0">
+                        <span className="text-sm font-bold text-lomash-primary">{phase.step}</span>
                       </div>
                       {index < projectProcess.length - 1 && (
-                        <div className="w-0.5 h-full bg-amber-200 mt-2" />
+                        <div className="w-0.5 h-full bg-lomash-primary/20 mt-2" />
                       )}
                     </div>
 
                     <div className="pb-8 flex-1">
                       <div className="flex items-start gap-3 mb-2">
-                        <div className="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center">
-                          <Icon className="w-5 h-5 text-amber-600" />
+                        <div className="w-10 h-10 rounded-lg bg-lomash-primary/10 flex items-center justify-center">
+                          <Icon className="w-5 h-5 text-lomash-primary" />
                         </div>
                         <div>
                           <h3 className="font-bold text-lg text-slate-900">{phase.title}</h3>
@@ -471,27 +473,27 @@ export default function BusinessPage() {
       </Card>
 
       {/* Case Studies */}
-      <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
+      <Card className="bg-gradient-to-br from-lomash-secondary/50 to-lomash-accent/50 border-lomash-secondary/20 container mx-auto px-6 md:px-20">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-2xl">
-            <Award className="w-6 h-6 text-blue-600" />
+            <Award className="w-6 h-6 text-lomash-primary" />
             Recent Success Stories
           </CardTitle>
-          <CardDescription className="text-blue-800">
+          <CardDescription className="text-lomash-primary/80">
             Real projects from satisfied business clients
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-3 gap-4">
             {caseStudies.map((study, index) => (
-              <div key={index} className="bg-white rounded-lg p-6 border border-blue-200">
+              <div key={index} className="bg-white rounded-lg p-6 border border-lomash-primary/20 shadow-sm">
                 <div className="flex items-center gap-1 mb-3">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 text-amber-500 fill-amber-500" />
+                    <Star key={i} className="w-4 h-4 text-lomash-primary fill-lomash-primary" />
                   ))}
                 </div>
                 <h3 className="font-bold text-lg text-slate-900 mb-1">{study.client}</h3>
-                <p className="text-sm text-blue-600 font-semibold mb-3">{study.sector}</p>
+                <p className="text-sm text-lomash-primary font-semibold mb-3">{study.sector}</p>
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-600">Scope:</span>
@@ -511,12 +513,12 @@ export default function BusinessPage() {
       </Card>
 
       {/* Trade Program CTA */}
-      <Card className="border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-pink-50">
+      <Card className="border-2 border-lomash-primary/20 hover:shadow-lg transition-shadow container mx-auto px-6 md:px-20">
         <CardContent className="pt-8 pb-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-start gap-4">
-              <div className="w-16 h-16 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0">
-                <Handshake className="w-8 h-8 text-purple-600" />
+              <div className="w-16 h-16 rounded-lg bg-lomash-primary/10 flex items-center justify-center flex-shrink-0">
+                <Handshake className="w-8 h-8 text-lomash-primary" />
               </div>
               <div>
                 <h3 className="text-2xl font-bold text-slate-900 mb-2">Join Our Trade Program</h3>
@@ -525,14 +527,14 @@ export default function BusinessPage() {
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {['Trade Pricing', 'Priority Production', 'Marketing Materials', 'Referral Commissions'].map((benefit, idx) => (
-                    <span key={idx} className="text-xs px-3 py-1 bg-purple-100 text-purple-700 rounded-full font-semibold">
+                    <span key={idx} className="text-xs px-3 py-1 bg-lomash-primary/10 text-lomash-primary rounded-full font-semibold">
                       {benefit}
                     </span>
                   ))}
                 </div>
               </div>
             </div>
-            <Button size="lg" className="bg-purple-600 hover:bg-purple-700 flex-shrink-0">
+            <Button size="lg" className="bg-lomash-primary hover:bg-lomash-primary/90 flex-shrink-0">
               <ArrowRight className="w-5 h-5 mr-2" />
               Apply Now
             </Button>
@@ -541,7 +543,7 @@ export default function BusinessPage() {
       </Card>
 
       {/* Contact CTA */}
-      <Card className="bg-gradient-to-r from-amber-600 to-orange-600 text-white border-0">
+      <Card className="bg-gradient-to-r from-lomash-primary/50 to-lomash-secondary/50 border-lomash-primary/20 container mx-auto px-6 md:px-20">
         <CardContent className="pt-8 pb-8">
           <div className="text-center max-w-2xl mx-auto">
             <h2 className="text-3xl font-bold mb-4">Ready to Start Your Commercial Project?</h2>
@@ -549,11 +551,11 @@ export default function BusinessPage() {
               Let's discuss how we can furnish your commercial space with quality craftsmanship and exceptional service. Our business team is ready to help.
             </p>
             <div className="flex flex-wrap justify-center gap-3">
-              <Button size="lg" variant="secondary">
+              <Button size="lg" variant="secondary" className='bg-lomash-primary text-white hover:bg-lomash-secondary'>
                 <Phone className="w-5 h-5 mr-2" />
                 Call Business Line
               </Button>
-              <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white/10">
+              <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-lomash-primary hover:border-lomash-primary">
                 <Mail className="w-5 h-5 mr-2" />
                 Email Business Team
               </Button>

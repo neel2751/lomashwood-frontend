@@ -9,7 +9,6 @@ import {
   TrendingUp,
   CheckCircle2,
   Clock,
-  DollarSign,
   Trophy,
   Zap,
   Ruler,
@@ -23,6 +22,7 @@ import {
   Phone,
   BookOpen,
   MapPin,
+  PoundSterling,
 } from 'lucide-react';
 import type { Metadata } from 'next';
 import Image from 'next/image';
@@ -229,7 +229,7 @@ export default function WhyChooseUsPage() {
       <div className="fixed right-0 top-1/2 -translate-y-1/2 z-50">
         <Link
           href="/contact"
-          className="bg-lomash-primary text-white text-[10px] tracking-widest uppercase px-2 py-4 block hover:bg-lomash-secondary transition-colors"
+          className="bg-lomash-primary text-white text-[10px] tracking-widest uppercase px-2 py-4 block hover:bg-lomash-secondary transition-colors rounded-full"
           style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
         >
           Request A Callback
@@ -256,7 +256,7 @@ export default function WhyChooseUsPage() {
           </p>
           <Link
             href="/book-appointment"
-            className="inline-block border border-white text-white text-xs tracking-widest uppercase px-7 py-3 hover:bg-white hover:text-lomash-primary transition-colors duration-200"
+            className="inline-block border border-white text-white text-xs tracking-widest uppercase px-7 py-3 hover:bg-white hover:text-lomash-primary transition-colors duration-200 rounded-full"
           >
             Speak To A Designer →
           </Link>
@@ -264,7 +264,7 @@ export default function WhyChooseUsPage() {
       </section>
 
       {/* ─── Personalised Service ─── */}
-      <section className="py-20 px-6 md:px-20 max-w-7xl mx-auto">
+      <section className="py-28 px-6 md:px-20 mx-auto">
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <div>
             <h2 className="font-heading text-3xl md:text-4xl font-semibold text-lomash-dark mb-6 leading-snug">
@@ -279,7 +279,7 @@ export default function WhyChooseUsPage() {
             </p>
             <Link
               href="/inspiration"
-              className="inline-block border border-lomash-primary text-lomash-primary text-xs tracking-widest uppercase px-7 py-3 hover:bg-lomash-primary hover:text-white transition-colors duration-200"
+              className="inline-block border border-lomash-primary text-lomash-primary text-xs tracking-widest uppercase px-7 py-3 hover:bg-lomash-primary hover:text-white transition-colors duration-200 rounded-full"
             >
               Explore Our Projects →
             </Link>
@@ -296,7 +296,7 @@ export default function WhyChooseUsPage() {
       </section>
 
       {/* ─── 15 Years Experience Banner ─── */}
-      <section className="relative py-28 px-6 md:px-20">
+      <section className="relative py-28 px-6 md:px-20 ">
         <div className="absolute inset-0 bg-lomash-dark">
           <Image
             src="/images/projects/experience.jpg"
@@ -318,7 +318,7 @@ export default function WhyChooseUsPage() {
           </p>
           <Link
             href="/showrooms"
-            className="inline-block border border-white text-white text-xs tracking-widest uppercase px-7 py-3 hover:bg-white hover:text-lomash-primary transition-colors duration-200"
+            className="inline-block border border-white text-white text-xs tracking-widest uppercase px-7 py-3 hover:bg-white hover:text-lomash-primary transition-colors duration-200 rounded-full"
           >
             Arrange Your Visit →
           </Link>
@@ -326,7 +326,7 @@ export default function WhyChooseUsPage() {
       </section>
 
       {/* ─── Award Winning ─── */}
-      <section className="py-20 px-6 md:px-20 max-w-7xl mx-auto">
+      <section className="py-28 px-6 md:px-20">
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <div className="relative h-80 md:h-[450px] rounded-sm overflow-hidden shadow-md bg-lomash-gray-200 order-last md:order-first">
             <Image
@@ -350,7 +350,7 @@ export default function WhyChooseUsPage() {
             </p>
             <Link
               href="/contact"
-              className="inline-block border border-lomash-primary text-lomash-primary text-xs tracking-widest uppercase px-7 py-3 hover:bg-lomash-primary hover:text-white transition-colors duration-200"
+              className="inline-block border border-lomash-primary text-lomash-primary text-xs tracking-widest uppercase px-7 py-3 hover:bg-lomash-primary hover:text-white transition-colors duration-200 rounded-full"
             >
               Get In Touch →
             </Link>
@@ -360,7 +360,7 @@ export default function WhyChooseUsPage() {
 
       {/* ─── What Makes Us Different – Cards ─── */}
       <section className="py-16 px-6 md:px-20 bg-lomash-gray-50">
-        <div className="max-w-7xl mx-auto">
+        <div className="container  mx-auto">
           <div className="text-center mb-12">
             <h2 className="font-heading text-3xl md:text-4xl font-semibold text-lomash-dark mb-3">
               What Makes Us Different
@@ -375,7 +375,7 @@ export default function WhyChooseUsPage() {
               return (
                 <Card
                   key={index}
-                  className="border-2 border-lomash-gray-200 hover:border-lomash-accent hover:shadow-product-card-hover transition-all duration-200"
+                  className="border-2 border-lomash-gray-200 hover:border-lomash-accent hover:shadow-product-card-hover transition-all duration-200 rounded-lg"
                 >
                   <CardContent className="pt-6">
                     <div className="w-14 h-14 rounded-lg bg-lomash-primary/10 flex items-center justify-center mb-4">
@@ -400,8 +400,8 @@ export default function WhyChooseUsPage() {
       </section>
 
       {/* ─── The Lomash Advantage ─── */}
-      <section className="py-16 px-6 md:px-20 max-w-7xl mx-auto">
-        <div className="mb-10">
+      <section className="py-16 px-6 md:px-20">
+        <div className="mb-10 container mx-auto">
           <h2 className="font-heading text-3xl md:text-4xl font-semibold text-lomash-dark mb-3">
             The Lomash Advantage
           </h2>
@@ -415,7 +415,7 @@ export default function WhyChooseUsPage() {
             return (
               <div
                 key={index}
-                className="border border-lomash-gray-200 rounded-sm p-6 bg-white hover:border-lomash-accent transition-colors duration-200"
+                className="border border-lomash-gray-200 rounded-lg p-6 bg-white hover:border-lomash-accent transition-colors duration-200"
               >
                 <div className="flex items-center gap-3 mb-5">
                   <div className="w-10 h-10 rounded-lg bg-lomash-primary/10 flex items-center justify-center">
@@ -441,12 +441,12 @@ export default function WhyChooseUsPage() {
 
       {/* ─── Comparison Table ─── */}
       <section className="py-16 px-6 md:px-20 bg-lomash-gray-50">
-        <div className="max-w-7xl mx-auto">
+        <div className="container mx-auto">
           <div className="mb-10">
-            <h2 className="font-heading text-3xl md:text-4xl font-semibold text-lomash-dark mb-3">
+            <h2 className="font-heading text-4xl md:text-5xl font-semibold text-lomash-dark mb-3">
               How We Compare
             </h2>
-            <p className="text-lomash-gray-500 text-sm md:text-base">
+            <p className="text-lomash-gray-500 text-base md:text-lg">
               See the difference between custom craftsmanship and mass production
             </p>
           </div>
@@ -454,7 +454,7 @@ export default function WhyChooseUsPage() {
             <table className="w-full bg-white">
               <thead>
                 <tr className="border-b-2 border-lomash-gray-200">
-                  <th className="text-left py-4 px-6 font-heading font-semibold text-lomash-dark text-sm">
+                  <th className="text-left py-4 px-6 font-heading font-semibold text-lomash-dark text-base">
                     Feature
                   </th>
                   <th className="text-left py-4 px-6 font-heading font-semibold text-lomash-primary bg-lomash-primary/5 text-sm">
@@ -498,7 +498,7 @@ export default function WhyChooseUsPage() {
       </section>
 
       {/* ─── Testimonials ─── */}
-      <section className="py-16 px-6 md:px-20 max-w-7xl mx-auto">
+      <section className="py-16 px-6 md:px-20 container mx-auto">
         <div className="mb-10">
           <h2 className="font-heading text-3xl md:text-4xl font-semibold text-lomash-dark mb-3">
             What Our Customers Say
@@ -534,7 +534,7 @@ export default function WhyChooseUsPage() {
 
       {/* ─── Our Guarantees ─── */}
       <section className="py-16 px-6 md:px-20 bg-lomash-gray-50">
-        <div className="max-w-7xl mx-auto">
+        <div className="container mx-auto">
           <div className="mb-10">
             <h2 className="font-heading text-3xl md:text-4xl font-semibold text-lomash-dark mb-3">
               Our Guarantees To You
@@ -570,7 +570,7 @@ export default function WhyChooseUsPage() {
       </section>
 
       {/* ─── Investment Value ─── */}
-      <section className="py-16 px-6 md:px-20 max-w-7xl mx-auto">
+      <section className="py-16 px-6 md:px-20 container mx-auto">
         <div className="mb-8">
           <h2 className="font-heading text-3xl md:text-4xl font-semibold text-lomash-dark mb-3">
             An Investment in Quality
@@ -587,7 +587,7 @@ export default function WhyChooseUsPage() {
         <div className="grid md:grid-cols-2 gap-6">
           <div className="border border-lomash-gray-200 rounded-sm p-6 bg-white">
             <h3 className="font-heading font-semibold text-lomash-dark mb-4 flex items-center gap-2 text-sm">
-              <DollarSign className="w-5 h-5 text-lomash-secondary" />
+              <PoundSterling className="w-5 h-5 text-lomash-secondary" />
               Long-Term Value
             </h3>
             <ul className="space-y-3 text-sm text-lomash-gray-600">
@@ -628,7 +628,7 @@ export default function WhyChooseUsPage() {
 
       {/* ─── Latest Projects ─── */}
       <section className="py-16 px-6 md:px-20 bg-lomash-gray-50">
-        <div className="max-w-7xl mx-auto">
+        <div className="container mx-auto">
           <div className="text-center mb-10">
             <h2 className="font-heading text-3xl md:text-4xl font-semibold text-lomash-dark mb-4">
               Discover Some Of Our Latest Projects…

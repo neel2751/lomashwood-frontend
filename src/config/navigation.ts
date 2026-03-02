@@ -2,12 +2,12 @@ import type { NavLink } from "@/types";
 
 export const mainNavigation: NavLink[] = [
   {
-    label: "Bedroom",
-    href: "/bedroom",
-  },
-  {
     label: "Kitchen",
     href: "/kitchen",
+  },
+  {
+    label: "Bedroom",
+    href: "/bedroom",
   },
   {
     label: "Offers",

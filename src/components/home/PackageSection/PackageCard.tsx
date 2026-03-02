@@ -51,7 +51,7 @@ export function PackageCard({ package: pkg, className }: PackageCardProps) {
         {pkg.price && (
           <div className="absolute bottom-4 left-4 text-white">
             <p className="text-sm font-medium mb-1">Starting from</p>
-            <p className="text-3xl font-bold">{formatCurrency(pkg.price)}</p>
+            <p className="text-3xl font-bold">{formatCurrency(pkg.price, "GBP")}</p>
           </div>
         )}
       </div>

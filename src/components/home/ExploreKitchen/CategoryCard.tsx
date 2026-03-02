@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -62,20 +63,21 @@ export function CategoryCard({ product, className }: CategoryCardProps) {
           </h3>
 
           {/* Description */}
-          <p className="text-sm text-lomash-gray-600 mb-2 line-clamp-2">
+          {/* <p className="text-sm text-lomash-gray-600 mb-2 line-clamp-2">
             {product.description}
-          </p>
+          </p> */}
 
           {/* Range Name */}
-          <div className="flex items-center justify-between">
-            <p className="text-sm font-medium text-lomash-gray-700">
+          <div className="flex items-center justify-between mt-2">
+            {/* <p className="text-sm font-medium text-lomash-gray-700">
               {product.rangeName}
-            </p>
+            </p> */}
             
             {/* View Details Link */}
-            <span className="text-sm text-lomash-primary font-medium group-hover:underline">
-              View Details
+            <span className="text-base text-lomash-primary font-semibold">
+              View Details 
             </span>
+              <ArrowRight className="ml-1 h-5 w-5 inline-block transition-transform group-hover:translate-x-1 group-hover:scale-110 group-hover:text-lomash-primary" />
           </div>
         </div>
       </div>

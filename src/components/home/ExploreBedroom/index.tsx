@@ -177,7 +177,7 @@ export function ExploreBedroom() {
           >
             <CarouselContent>
               {Array.isArray(productData) && productData.slice(0, 8).map((product, index) => (
-<CarouselItem key={index} className="basis-1/2 lg:basis-1/3 pb-2">
+<CarouselItem key={index} className="basis-1/2 lg:basis-1/4 pb-2">
   <CategoryCard product={product} />
 </CarouselItem>
               ))}

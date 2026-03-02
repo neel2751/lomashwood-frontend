@@ -1,6 +1,7 @@
 "use client";
 
 import { Menu, User } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
@@ -9,7 +10,7 @@ import { cn } from "@/lib/utils";
 
 import { DesktopNav } from "./DesktopNav";
 import { MobileNav } from "./MobileNav";
-import Image from "next/image";
+
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -31,15 +32,15 @@ export function Header() {
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-10",
           isScrolled
             ? "bg-white shadow-md"
-            : "bg-white/95 backdrop-blur-sm"
+            : "bg-white"
         )}
       >
         <div className="container-custom">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-24">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2">
               <div className="text-2xl font-bold text-lomash-primary">
-                <Image src="/logo.jpg" alt="Lomash Wood Logo" width={150} height={120} />
+                <Image src="/logo.svg" alt="Lomash Wood Logo" width={150} height={120} />
               </div>
             </Link>
 

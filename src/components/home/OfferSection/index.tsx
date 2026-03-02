@@ -20,6 +20,42 @@ import { QUERY_KEYS } from "@/lib/react-query";
 
 import { OfferCard } from "./OfferCard";
 
+const salesDemoData = [
+  {
+    id: "1",
+    title: "Spring Sale - Up to 30% Off!",
+    description: "Refresh your home with our exclusive spring sale. Enjoy up to 30% off on selected kitchen and bedroom ranges. Limited time offer, shop now!",
+    imageUrl: "https://plus.unsplash.com/premium_photo-1683140941523-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "https://plus.unsplash.com/premium_photo-1683140941523-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    validUntil: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+    products: [],
+    categories: [],
+    termsAndConditions: "",
+  },
+  {
+    id: "2",
+    title: "Exclusive Bedroom Bundle - Save £500",
+    description: "Transform your bedroom with our exclusive bundle offer. Save £ 500 when you purchase a bedroom set including bed, wardrobe, and bedside tables. Limited stock available!",
+    imageUrl: "https://plus.unsplash.com/premium_photo-1683140941523-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "https://plus.unsplash.com/premium_photo-1683140941523-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    validUntil: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+    products: [],
+    categories: [],
+    termsAndConditions: "",
+  },
+  {
+    id: "3",
+    title: "Kitchen Clearance - Up to 50% Off!",
+    description: "Don't miss our kitchen clearance event! Enjoy up to 50% off on selected kitchen ranges. Perfect opportunity to upgrade your kitchen at unbeatable prices. Shop now while stocks last!",
+    imageUrl: "https://plus.unsplash.com/premium_photo-1683140943-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "https://plus.unsplash.com/premium_photo-1683140943-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    validUntil: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
+    products: [],
+    categories: [],
+    termsAndConditions: "",
+  },
+];
+
 
 export function OfferSection() {
   const plugin = React.useRef(
@@ -31,7 +67,7 @@ export function OfferSection() {
     queryFn: () => apiClient.sales.getAll(),
   });
 
-  const sales = salesData?.data || [];
+  const sales = salesData?.data || salesDemoData || [];
 
   return (
     <section className="section-padding bg-lomash-gray-50
