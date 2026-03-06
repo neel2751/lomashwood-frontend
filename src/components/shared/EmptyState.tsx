@@ -1,7 +1,6 @@
 import type { LucideIcon} from "lucide-react";
 import { Search, ShoppingBag, Calendar, Heart, FileX } from "lucide-react";
 import Link from "next/link";
-import React from "react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";

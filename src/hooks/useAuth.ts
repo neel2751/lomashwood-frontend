@@ -179,7 +179,7 @@ export const useAuth = (): UseAuthReturn => {
         error: null,
       });
 
-      router.push('/account');
+      router.push('/my-account');
     } catch (error) {
       setState((prev) => ({
         ...prev,
@@ -218,7 +218,7 @@ export const useAuth = (): UseAuthReturn => {
         error: null,
       });
 
-      router.push('/account');
+      router.push('/my-account');
     } catch (error) {
       setState((prev) => ({
         ...prev,

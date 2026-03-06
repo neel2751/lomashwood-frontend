@@ -3,8 +3,6 @@
 import { X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
-
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {

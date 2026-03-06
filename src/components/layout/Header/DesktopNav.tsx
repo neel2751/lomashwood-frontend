@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
 
 import { mainNavigation } from "@/config/navigation";
 import { cn } from "@/lib/utils";

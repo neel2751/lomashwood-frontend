@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+
 const protectedRoutes = [
   "/my-account",
   "/my-account/profile",
@@ -12,7 +13,7 @@ const protectedRoutes = [
 
 const authRoutes = ["/login", "/register", "/forgot-password"];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const token = request.cookies.get("auth_token")?.value;

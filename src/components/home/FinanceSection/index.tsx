@@ -2,7 +2,6 @@
 
 import { CreditCard, Calculator, ShieldCheck, Clock, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import React from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";

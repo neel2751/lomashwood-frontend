@@ -3,7 +3,6 @@
 import { ArrowRight, Phone, Calendar } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 
 import { Button } from "@/components/ui/button";
 
@@ -18,12 +17,12 @@ export function MainCTA() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left - Image */}
           <div className="relative order-2 lg:order-1">
-            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
+            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl group">
               <Image
                 src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt="Lomash Wood Showroom"
                 fill
-                className="object-cover"
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
 

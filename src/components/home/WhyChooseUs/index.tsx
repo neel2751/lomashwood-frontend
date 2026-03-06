@@ -2,7 +2,6 @@
 
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import React from "react";
 
 import { Button } from "@/components/ui/button";
 import { WHY_CHOOSE_US_FEATURES } from "@/lib/constants";

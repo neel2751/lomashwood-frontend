@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
   const startTime = Date.now();
   
   try {
-    const headersList = headers();
+    const headersList = await headers();
     const signature = headersList.get('x-webhook-signature');
     const webhookId = headersList.get('x-webhook-id');
     const timestamp = headersList.get('x-webhook-timestamp');

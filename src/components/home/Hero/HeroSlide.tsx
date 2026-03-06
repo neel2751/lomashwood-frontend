@@ -23,28 +23,31 @@ export default function HeroSlide({
   return (
     <div className="relative h-full w-full">
       {/* Background Image */}
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        priority={priority}
-        quality={90}
-        sizes="100vw"
-        className={cn(
-          'object-cover transition-all duration-700',
-          isLoaded ? 'scale-100 opacity-100' : 'scale-105 opacity-0'
-        )}
-        onLoadingComplete={() => setIsLoaded(true)}
-      />
+      <div className="relative h-full w-full group">
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          priority={priority}
+          quality={90}
+          sizes="100vw"
+          className={cn(
+            'object-cover transition-all duration-700',
+            isLoaded ? 'scale-100 opacity-100' : 'scale-105 opacity-0',
+            'group-hover:scale-110'
+          )}
+          onLoadingComplete={() => setIsLoaded(true)}
+        />
 
-      {/* Gradient Overlay */}
-      <div
-        className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"
-        style={{ opacity: overlayOpacity }}
-      />
+        {/* Gradient Overlay */}
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"
+          style={{ opacity: overlayOpacity }}
+        />
 
-      {/* Additional Bottom Gradient for better text readability */}
-      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/60 to-transparent" />
+        {/* Additional Bottom Gradient for better text readability */}
+        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/60 to-transparent" />
+      </div>
     </div>
   );
 }

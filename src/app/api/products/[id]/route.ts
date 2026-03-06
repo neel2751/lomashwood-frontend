@@ -212,10 +212,10 @@ const mockProducts = [
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     const product = mockProducts.find((p) => p.id === id);
     
@@ -270,10 +270,9 @@ export async function GET(
 
 export async function PUT(
   _request: NextRequest,
-  _context: { params: { id: string } }
+  _context: { params: Promise<{ id: string }> }
 ) {
   try {
-
     return NextResponse.json(
       {
         success: false,
@@ -296,10 +295,9 @@ export async function PUT(
 
 export async function DELETE(
   _request: NextRequest,
-  _context: { params: { id: string } }
+  _context: { params: Promise<{ id: string }> }
 ) {
   try {
-
     return NextResponse.json(
       {
         success: false,

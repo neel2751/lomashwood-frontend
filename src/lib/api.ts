@@ -21,7 +21,7 @@ import type {
 } from "@/types";
 
 const api: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "/api",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001",
   timeout: 30000,
   headers: {
     "Content-Type": "application/json",

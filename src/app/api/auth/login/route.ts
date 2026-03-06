@@ -39,11 +39,9 @@ export async function POST(request: NextRequest) {
       {
         success: true,
         message: 'Login successful',
-        data: {
-          user: mockUser,
-          token,
-          refreshToken,
-        },
+        user: mockUser,
+        token,
+        refreshToken,
       },
       { status: 200 }
     );

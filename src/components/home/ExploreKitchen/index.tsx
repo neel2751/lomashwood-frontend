@@ -2,7 +2,6 @@
 
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import React from "react";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -175,19 +174,20 @@ export function ExploreKitchen() {
 
           <Carousel
           opts={{
-            align:"start"
+            align: "start",
+            slidesToScroll: 1
           }}
-
+          className="w-full"
           >
             <CarouselContent>
               {Array.isArray(productData) && productData.slice(0, 8).map((product, index) => (
-<CarouselItem key={index} className="basis-1/3 lg:basis-1/4 pb-2">
-  <CategoryCard product={product} />
-</CarouselItem>
+                <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/4 pb-2">
+                  <CategoryCard product={product} />
+                </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious/>
-            <CarouselNext/>
+            <CarouselPrevious className="hidden sm:flex" />
+            <CarouselNext className="hidden sm:flex" />
           </Carousel>
 
           // <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

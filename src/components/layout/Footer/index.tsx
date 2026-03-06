@@ -3,7 +3,6 @@
 import { Facebook, Instagram, Twitter, Linkedin, Mail, Phone, MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 
 import { Separator } from "@/components/ui/separator";
 import { footerNavigation, socialLinks } from "@/config/navigation";

@@ -1,135 +1,315 @@
-import type { Metadata } from 'next';
-import Link from 'next/link';
+"use client";
+
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-export const metadata: Metadata = {
-  title: 'Create Account | Lomash Wood',
-  description: 'Create your Lomash Wood account to book consultations, save designs, and track your orders.',
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
+const registerSchema = z.object({
+  firstName: z.string().min(2, "First name must be at least 2 characters"),
+  lastName: z.string().min(2, "Last name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+    .regex(/[0-9]/, "Password must contain at least one number"),
+  confirmPassword: z.string(),
+  acceptTerms: z.boolean().refine((val) => val === true, {
+    message: "You must accept the terms and conditions",
+  }),
+  newsletter: z.boolean().default(false),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
+
+type RegisterFormValues = z.infer<typeof registerSchema>;
 
 function RegisterForm() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const { toast } = useToast();
+  const { register } = useAuth();
+
+  const form = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      password: "",
+      confirmPassword: "",
+      acceptTerms: false,
+      newsletter: false,
+    },
+  });
+
+  const onSubmit = async (data: RegisterFormValues) => {
+    setIsLoading(true);
+
+    try {
+      await register({
+        name: `${data.firstName} ${data.lastName}`,
+        email: data.email,
+        password: data.password,
+        phone: data.phone,
+        acceptTerms: data.acceptTerms,
+      });
+      
+      toast({
+        title: "Success",
+        description: "Your account has been created successfully!",
+      });
+
+      router.push("/my-account");
+    } catch (error: any) {
+      toast({
+        variant: "error",
+        title: "Error",
+        description: error.message || "Registration failed. Please try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <form className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <label htmlFor="firstName" className="text-sm font-medium text-stone-700">
-            First Name
-          </label>
-          <input
-            id="firstName"
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control as any}
             name="firstName"
-            type="text"
-            required
-            placeholder="John"
-            className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>First Name</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="John"
+                    disabled={isLoading}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
 
-        <div className="space-y-2">
-          <label htmlFor="lastName" className="text-sm font-medium text-stone-700">
-            Last Name
-          </label>
-          <input
-            id="lastName"
+          <FormField
+            control={form.control as any}
             name="lastName"
-            type="text"
-            required
-            placeholder="Doe"
-            className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Last Name</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Doe"
+                    disabled={isLoading}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
         </div>
-      </div>
 
-      <div className="space-y-2">
-        <label htmlFor="email" className="text-sm font-medium text-stone-700">
-          Email Address
-        </label>
-        <input
-          id="email"
+        <FormField
+          control={form.control as any}
           name="email"
-          type="email"
-          required
-          placeholder="you@example.com"
-          className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email Address</FormLabel>
+              <FormControl>
+                <Input
+                  type="email"
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                  disabled={isLoading}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <div className="space-y-2">
-        <label htmlFor="phone" className="text-sm font-medium text-stone-700">
-          Phone Number
-        </label>
-        <input
-          id="phone"
+        <FormField
+          control={form.control as any}
           name="phone"
-          type="tel"
-          required
-          placeholder="+91 123 456 7890"
-          className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Phone Number</FormLabel>
+              <FormControl>
+                <Input
+                  type="tel"
+                  placeholder="+91 123 456 7890"
+                  autoComplete="tel"
+                  disabled={isLoading}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <div className="space-y-2">
-        <label htmlFor="password" className="text-sm font-medium text-stone-700">
-          Password
-        </label>
-        <input
-          id="password"
+        <FormField
+          control={form.control as any}
           name="password"
-          type="password"
-          required
-          placeholder="••••••••"
-          className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    autoComplete="new-password"
+                    disabled={isLoading}
+                    {...field}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
+              </FormControl>
+              <FormMessage />
+              <p className="text-xs text-gray-500 mt-1">
+                Must be at least 8 characters with uppercase, lowercase, and numbers
+              </p>
+            </FormItem>
+          )}
         />
-        <p className="text-xs text-stone-500 mt-1">
-          Must be at least 8 characters with uppercase, lowercase, and numbers
-        </p>
-      </div>
 
-      <div className="space-y-2">
-        <label htmlFor="confirmPassword" className="text-sm font-medium text-stone-700">
-          Confirm Password
-        </label>
-        <input
-          id="confirmPassword"
+        <FormField
+          control={form.control as any}
           name="confirmPassword"
-          type="password"
-          required
-          placeholder="••••••••"
-          className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirm Password</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <Input
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    autoComplete="new-password"
+                    disabled={isLoading}
+                    {...field}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    tabIndex={-1}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <div className="flex items-start gap-2">
-        <input
-          id="terms"
-          name="terms"
-          type="checkbox"
-          required
-          className="mt-1 h-4 w-4 rounded border-stone-300 text-amber-700 focus:ring-amber-500"
+        <FormField
+          control={form.control as any}
+          name="acceptTerms"
+          render={({ field }) => (
+            <FormItem className="flex items-start space-x-2 space-y-0">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  disabled={isLoading}
+                />
+              </FormControl>
+              <FormLabel className="text-sm font-normal cursor-pointer">
+                I agree to the{' '}
+                <Link href="/terms-conditions" className="text-primary hover:underline">
+                  Terms of Service
+                </Link>{' '}
+                and{' '}
+                <Link href="/privacy-policy" className="text-primary hover:underline">
+                  Privacy Policy
+                </Link>
+              </FormLabel>
+            </FormItem>
+          )}
         />
-        <label htmlFor="terms" className="text-sm text-stone-600">
-          I agree to the{' '}
-          <Link href="/terms" className="text-amber-700 hover:text-amber-800 underline">
-            Terms of Service
-          </Link>{' '}
-          and{' '}
-          <Link href="/privacy" className="text-amber-700 hover:text-amber-800 underline">
-            Privacy Policy
-          </Link>
-        </label>
-      </div>
 
-      <button
-        type="submit"
-        className="w-full bg-amber-700 hover:bg-amber-800 text-white font-medium py-2.5 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
-      >
-        Create Account
-      </button>
-    </form>
+        <FormField
+          control={form.control as any}
+          name="newsletter"
+          render={({ field }) => (
+            <FormItem className="flex items-start space-x-2 space-y-0">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  disabled={isLoading}
+                />
+              </FormControl>
+              <FormLabel className="text-sm font-normal cursor-pointer">
+                I'd like to receive newsletters and updates
+              </FormLabel>
+            </FormItem>
+          )}
+        />
+
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Creating Account...
+            </>
+          ) : (
+            "Create Account"
+          )}
+        </Button>
+      </form>
+    </Form>
   );
 }
 

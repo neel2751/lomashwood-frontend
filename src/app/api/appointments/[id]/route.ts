@@ -99,10 +99,10 @@ const mockAppointments = [
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     const appointment = mockAppointments.find((a) => a.id === id);
     
@@ -140,10 +140,10 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
     const validatedData = updateAppointmentSchema.parse(body);
 
@@ -183,25 +183,6 @@ export async function PUT(
     const isRescheduling =
       (validatedData.preferredDate && validatedData.preferredDate !== appointment.preferredDate) ||
       (validatedData.preferredTime && validatedData.preferredTime !== appointment.preferredTime);
-    
-    if (isRescheduling) {
-      // TODO: Check availability for new date/time
-      // const isAvailable = await checkAvailability(
-      //   validatedData.preferredDate || appointment.preferredDate,
-      //   validatedData.preferredTime || appointment.preferredTime,
-      //   appointment.showroomId
-      // );
-      
-      // if (!isAvailable) {
-      //   return NextResponse.json(
-      //     {
-      //       success: false,
-      //       message: 'Selected time slot is not available',
-      //     },
-      //     { status: 409 }
-      //   );
-      // }
-    }
 
     const updatedAppointment = {
       ...appointment,
@@ -222,22 +203,18 @@ export async function PUT(
       switch (validatedData.status) {
         case 'confirmed':
           // TODO: Send confirmation email
-          // await sendAppointmentConfirmationEmail(updatedAppointment);
           break;
         case 'cancelled':
           // TODO: Send cancellation email
-          // await sendAppointmentCancellationEmail(updatedAppointment);
           break;
         case 'completed':
           // TODO: Send follow-up email
-          // await sendAppointmentFollowUpEmail(updatedAppointment);
           break;
       }
     }
     
     if (isRescheduling) {
       // TODO: Send reschedule notification
-      // await sendAppointmentRescheduleEmail(updatedAppointment);
     }
     
     return NextResponse.json(
@@ -279,12 +256,11 @@ export async function PUT(
 
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     
-    // TODO: Replace with actual database query
     const appointment = mockAppointments.find((a) => a.id === id);
     
     if (!appointment) {
@@ -297,11 +273,6 @@ export async function DELETE(
       );
     }
     
-    // TODO: Check authorization
-    // const authToken = request.cookies.get('auth_token')?.value;
-    // const user = await verifyToken(authToken);
-    
-    // Only allow deletion of pending or cancelled appointments
     if (appointment.status !== 'pending' && appointment.status !== 'cancelled') {
       return NextResponse.json(
         {
@@ -311,16 +282,6 @@ export async function DELETE(
         { status: 400 }
       );
     }
-    
-    // TODO: Soft delete or hard delete from database
-    // await db.appointments.delete(id);
-    
-    // TODO: Send cancellation notification
-    // await sendAppointmentCancellationEmail({
-    //   ...appointment,
-    //   status: 'cancelled',
-    //   cancellationReason: 'Deleted by user',
-    // });
     
     return NextResponse.json(
       {
@@ -344,7 +305,7 @@ export async function DELETE(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   return PUT(request, { params });
 }

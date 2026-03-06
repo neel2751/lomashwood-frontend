@@ -77,19 +77,16 @@ export async function POST(request: NextRequest) {
       {
         success: true,
         message: 'Registration successful. Please check your email to verify your account.',
-        data: {
-          user: {
-            id: newUser.id,
-            firstName: newUser.firstName,
-            lastName: newUser.lastName,
-            email: newUser.email,
-            phone: newUser.phone,
-            role: newUser.role,
-            emailVerified: newUser.emailVerified,
-          },
-          token,
-          refreshToken,
+        user: {
+          id: newUser.id,
+          name: `${newUser.firstName} ${newUser.lastName}`,
+          email: newUser.email,
+          phone: newUser.phone,
+          role: newUser.role,
+          emailVerified: newUser.emailVerified,
         },
+        token,
+        refreshToken,
       },
       { status: 201 }
     );
