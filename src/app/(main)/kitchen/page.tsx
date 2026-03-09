@@ -4,73 +4,23 @@ import KitchenPageCom from './kitchenPage';
 
 export const metadata: Metadata = {
   title: 'Kitchen Design & Consultation | Lomash Wood',
-  description: 'Explore our premium kitchen designs with customizable colours, styles, and finishes. Book a free consultation today.',
+  description: 'Discover our stunning kitchen designs with bespoke furniture and custom storage solutions. Book your free consultation today.',
   openGraph: {
     title: 'Kitchen Design & Consultation | Lomash Wood',
-    description: 'Explore our premium kitchen designs with customizable colours, styles, and finishes.',
+    description: 'Discover our stunning kitchen designs with bespoke furniture and custom storage solutions.',
     type: 'website',
   },
 };
 
-// Kitchen styles
-const kitchenStyles = [
-  { id: 'modern', label: 'Modern', icon: '✨' },
-  { id: 'shaker', label: 'Shaker', icon: '🏠' },
-  { id: 'traditional', label: 'Traditional', icon: '👑' },
-  { id: 'industrial', label: 'Industrial', icon: '⚙️' },
-  { id: 'contemporary', label: 'Contemporary', icon: '🎨' },
-];
-
-// Kitchen colours
-const kitchenColours = [
-  { id: 'white', label: 'Whites', hex: '#FFFFFF' },
-  { id: 'black', label: 'Blacks', hex: '#000000' },
-  { id: 'grey', label: 'Greys', hex: '#808080' },
-  { id: 'cream', label: 'Creams', hex: '#FFFDD0' },
-  { id: 'blue', label: 'Blues', hex: '#4169E1' },
-  { id: 'green', label: 'Greens', hex: '#228B22' },
-];
-
-// Customer kitchen showcases
-const kitchenShowcases = [
-  {
-    id: 'showcase-1',
-    customerName: "Sarah's Kitchen",
-    style: 'Modern White',
-    location: 'Jaipur',
-    image: 'https://images.unsplash.com/photo-1600489000022-c2086d79f9d4?q=80&w=1035&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-  {
-    id: 'showcase-2',
-    customerName: "Rajesh's Kitchen",
-    style: 'Classic Oak',
-    location: 'Delhi',
-    image: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-  {
-    id: 'showcase-3',
-    customerName: "Priya's Kitchen",
-    style: 'Sleek Black',
-    location: 'Mumbai',
-    image: 'https://plus.unsplash.com/premium_photo-1680382578857-c331ead9ed51?q=80&w=2232&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-  {
-    id: 'showcase-4',
-    customerName: "Amit's Kitchen",
-    style: 'Minimalist Grey',
-    location: 'Bangalore',
-    image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-];
-
 const products = [
   {
     id: '1',
+    slug: 'modern-white-kitchen',
     name: 'Modern White Kitchen',
     category: 'kitchen',
     style: 'modern',
     finish: 'gloss',
-    image: 'https://images.unsplash.com/photo-1600489000022-c2086d79f9d4?q=80&w=1035&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0',
     price: { from: 50000 },
     colors: ['white', 'gray'],
     inStock: true,
@@ -81,10 +31,11 @@ const products = [
   {
     id: '2',
     name: 'Classic Oak Kitchen',
+    slug: 'classic-oak-kitchen',
     category: 'kitchen',
     style: 'traditional',
     finish: 'wood-grain',
-    image: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    image: 'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0',
     price: { from: 75000 },
     colors: ['oak', 'beige'],
     inStock: true,
@@ -96,10 +47,11 @@ const products = [
   {
     id: '3',
     name: 'Sleek Black Kitchen',
+    slug: 'sleek-black-kitchen',
     category: 'kitchen',
     style: 'industrial',
     finish: 'matt',
-    image: 'https://plus.unsplash.com/premium_photo-1680382578857-c331ead9ed51?q=80&w=2232&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    image: 'https://images.unsplash.com/photo-1556909172-54557c7e4fb7?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0',
     price: { from: 60000 },
     colors: ['black', 'charcoal'],
     inStock: false,
@@ -110,11 +62,6 @@ const products = [
 
 export default function KitchenPage() {
   return (
-    <KitchenPageCom 
-      products={products}
-      styles={kitchenStyles}
-      colours={kitchenColours}
-      showcases={kitchenShowcases}
-    />
+    <KitchenPageCom products={products} />
   );
 }

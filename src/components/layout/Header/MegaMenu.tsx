@@ -5,8 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 interface MegaMenuProps {
@@ -80,7 +78,7 @@ const bedroomCategories = [
 const kitchenFeatured = {
   title: "Premium Collection",
   description: "Explore our latest kitchen designs",
-  image: "/images/products/kitchen/featured.jpg",
+  image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=600&auto=format&fit=crop",
   href: "/kitchen?collection=premium",
   badge: "New Collection",
 };
@@ -88,7 +86,7 @@ const kitchenFeatured = {
 const bedroomFeatured = {
   title: "Luxury Wardrobes",
   description: "Transform your bedroom space",
-  image: "/images/products/bedroom/featured.jpg",
+  image: "https://images.unsplash.com/photo-1615874959474-d609969a20ed?q=80&w=600&auto=format&fit=crop",
   href: "/bedroom?collection=luxury",
   badge: "Popular",
 };
@@ -105,113 +103,101 @@ export function MegaMenu({
   return (
     <div
       className={cn(
-        "absolute left-0 top-full w-full bg-background border-b shadow-lg transition-all duration-300 ease-in-out origin-top",
+        "fixed left-0 right-0 top-24 z-50 bg-white border-t border-gray-200 shadow-xl transition-all duration-200 ease-in-out origin-top",
         isOpen
-          ? "opacity-100 visible scale-y-100"
-          : "opacity-0 invisible scale-y-95 pointer-events-none"
+          ? "opacity-100 visible translate-y-0"
+          : "opacity-0 invisible -translate-y-2 pointer-events-none"
       )}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-12 gap-8">
-          {/* Categories Grid */}
-          <div className="col-span-9">
-            <div className="grid grid-cols-3 gap-8">
-              {categories.map((category) => (
-                <div key={category.title}>
-                  <h3 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-4">
-                    {category.title}
-                  </h3>
-                  <ul className="space-y-3">
-                    {category.items.map((item) => (
-                      <li key={item.label}>
-                        <Link
-                          href={item.href}
-                          className="group flex items-center gap-2 text-sm hover:text-primary transition-colors"
-                        >
-                          <span className="group-hover:translate-x-1 transition-transform">
-                            {item.label}
-                          </span>
-                          {item.isNew && (
-                            <Badge
-                              variant="secondary"
-                              className="text-xs px-1.5 py-0"
-                            >
-                              New
-                            </Badge>
-                          )}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+      <div className="container mx-auto px-8 lg:px-18 py-6">
+        <div className="flex gap-8">
 
-            {/* Bottom Links */}
-            <div className="mt-8 pt-6 border-t">
-              <div className="flex items-center gap-6">
-                <Link
-                  href={type === "kitchen" ? "/kitchen" : "/bedroom"}
-                  className="text-sm font-medium text-primary hover:underline inline-flex items-center gap-2"
-                >
-                  View All {type === "kitchen" ? "Kitchens" : "Bedrooms"}
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  href={`/${type}/inspiration`}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-2"
-                >
-                  <Sparkles className="h-4 w-4" />
-                  Get Inspired
-                </Link>
-                <Link
-                  href="/book-appointment"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Book Free Consultation
-                </Link>
+          {/* Categories */}
+          <div className="flex flex-1 gap-10">
+            {categories.map((category) => (
+              <div key={category.title} className="min-w-0">
+                <h3 className="font-bold text-xs uppercase tracking-widest text-lomash-primary mb-3">
+                  {category.title}
+                </h3>
+                <ul className="space-y-2">
+                  {category.items.map((item) => (
+                    <li key={item.label}>
+                      <Link
+                        href={item.href}
+                        className="group flex items-center gap-2 text-sm text-gray-700 hover:text-lomash-primary transition-colors"
+                      >
+                        <ArrowRight className="h-3 w-3 text-lomash-primary flex-shrink-0" />
+                        <span className="group-hover:translate-x-0.5 transition-transform whitespace-nowrap">
+                          {item.label}
+                        </span>
+                        {item.isNew && (
+                          <Badge variant="secondary" className="text-xs px-1.5 py-0 h-4">
+                            New
+                          </Badge>
+                        )}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
+            ))}
           </div>
+
+          {/* Divider */}
+          <div className="w-px bg-gray-100 flex-shrink-0" />
 
           {/* Featured Card */}
-          <div className="col-span-3">
-            <Card className="overflow-hidden group hover:shadow-xl transition-all duration-300">
-              <Link href={featured.href}>
-                <div className="relative aspect-[3/4] overflow-hidden bg-muted">
-                  <Image
-                    src={featured.image}
-                    alt={featured.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute top-3 right-3">
-                    <Badge className="bg-primary/90 backdrop-blur-sm">
-                      {featured.badge}
-                    </Badge>
-                  </div>
+          <div className="w-48 flex-shrink-0">
+            <Link href={featured.href} className="group block">
+              <div className="relative w-full h-36 rounded-lg overflow-hidden bg-gray-100 mb-3">
+                <Image
+                  src={featured.image}
+                  alt={featured.title}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute top-2 right-2">
+                  <Badge className="bg-lomash-primary text-white text-xs px-2 py-0.5">
+                    {featured.badge}
+                  </Badge>
                 </div>
-                <div className="p-4">
-                  <h4 className="font-semibold text-base mb-1 group-hover:text-primary transition-colors">
-                    {featured.title}
-                  </h4>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    {featured.description}
-                  </p>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-full group/btn"
-                  >
-                    Explore Collection
-                    <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-                  </Button>
-                </div>
-              </Link>
-            </Card>
+              </div>
+              <h4 className="font-semibold text-sm text-gray-900 group-hover:text-lomash-primary transition-colors mb-1">
+                {featured.title}
+              </h4>
+              <p className="text-xs text-gray-500 mb-2">{featured.description}</p>
+              <span className="inline-flex items-center gap-1 text-xs font-semibold text-lomash-primary group-hover:underline">
+                Explore Collection
+                <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
+              </span>
+            </Link>
           </div>
+        </div>
+
+        {/* Bottom Links */}
+        <div className="mt-5 pt-4 border-t border-gray-100 flex items-center gap-6">
+          <Link
+            href={type === "kitchen" ? "/kitchen" : "/bedroom"}
+            className="text-sm font-semibold text-lomash-primary hover:underline inline-flex items-center gap-1.5"
+          >
+            View All {type === "kitchen" ? "Kitchens" : "Bedrooms"}
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+          <Link
+            href={`/${type}/inspiration`}
+            className="text-sm text-gray-500 hover:text-gray-900 transition-colors inline-flex items-center gap-1.5"
+          >
+            <Sparkles className="h-3.5 w-3.5" />
+            Get Inspired
+          </Link>
+          <Link
+            href="/book-appointment"
+            className="text-sm text-gray-500 hover:text-gray-900 transition-colors"
+          >
+            Book Free Consultation
+          </Link>
         </div>
       </div>
     </div>

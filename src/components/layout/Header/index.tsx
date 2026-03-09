@@ -40,7 +40,7 @@ export function Header() {
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2">
               <div className="text-2xl font-bold text-lomash-primary">
-                <Image src="/logo.svg" alt="Lomash Wood Logo" width={150} height={120} />
+                <Image src="/Logo.svg" alt="Lomash Wood Logo" width={150} height={120} />
               </div>
             </Link>
 
