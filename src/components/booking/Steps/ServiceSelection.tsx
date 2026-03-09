@@ -8,7 +8,8 @@ import {
   Ruler,
   Home,
   CheckCircle2,
-  Info
+  Info,
+  MapPin
 } from 'lucide-react';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -18,6 +19,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 
 interface ServiceOption {
   id: string;
@@ -32,6 +35,13 @@ interface AdditionalService {
   label: string;
   description: string;
   icon: React.ReactNode;
+}
+
+interface Showroom {
+  id: string;
+  name: string;
+  city: string;
+  address: string;
 }
 
 const serviceOptions: ServiceOption[] = [
@@ -78,20 +88,58 @@ const additionalServices: AdditionalService[] = [
   },
 ];
 
-export default function ServiceSelection({category}: {category?: string}) {
+const showrooms: Showroom[] = [
+  {
+    id: 'showroom-1',
+    name: 'Downtown Showroom',
+    city: 'Jaipur',
+    address: '123 Main Street, Jaipur',
+  },
+  {
+    id: 'showroom-2',
+    name: 'City Center Showroom',
+    city: 'Jaipur',
+    address: '456 Market Road, Jaipur',
+  },
+  {
+    id: 'showroom-3',
+    name: 'Mall Showroom',
+    city: 'Delhi',
+    address: '789 Shopping Mall, Delhi',
+  },
+  {
+    id: 'showroom-4',
+    name: 'Rajasthan Showroom',
+    city: 'Udaipur',
+    address: '321 Lake View, Udaipur',
+  },
+];
+
+export default function ServiceSelection({ category }: { category?: string }) {
   const { setValue, watch } = useFormContext();
 
-  // ✅ FIX 1: was watch('service'), must match schema field name 'serviceType'
-  const selectedService            = watch('serviceType');
+  const selectedService = watch('serviceType');
   const selectedAdditionalServices = watch('additionalServices') || [];
+  const selectedShowroom = watch('selectedShowroom') || '';
+  const isShowroomVisit = watch('isShowroomVisit') || false;
+  
   const [showAdditional, setShowAdditional] = useState(false);
-  const [showTooltip, setShowTooltip]       = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const handleServiceChange = (value: string) => {
-    // ✅ FIX 2: was setValue('service', value) — wrong field name
-    // FIX 3: schema defines serviceType as z.array(z.string()), so wrap in array
     setValue('serviceType', [value], { shouldValidate: true });
     setShowAdditional(true);
+  };
+
+  const handleShowroomVisitToggle = (checked: boolean) => {
+    setValue('isShowroomVisit', checked, { shouldValidate: true });
+    if (!checked) {
+      setValue('selectedShowroom', '', { shouldValidate: true });
+    }
+  };
+
+  const handleShowroomSelect = (showroomId: string) => {
+    setValue('selectedShowroom', showroomId, { shouldValidate: true });
   };
 
   const handleAdditionalServiceToggle = (serviceId: string) => {
@@ -106,11 +154,10 @@ export default function ServiceSelection({category}: {category?: string}) {
     return (selectedAdditionalServices as string[]).includes(serviceId);
   };
 
-  // ✅ FIX 4: serviceType is now an array, so check first element for selected display we have category from URL query params
-  const selectedServiceId = 
+  const selectedServiceId =
     selectedService && selectedService.length > 0
       ? selectedService[0]
-      : category || ''; // default to category from URL if available
+      : category || '';
 
   return (
     <div className="space-y-8">
@@ -145,11 +192,13 @@ export default function ServiceSelection({category}: {category?: string}) {
                   )}
 
                   <div className="flex items-start justify-between">
-                    <div className={`p-3 rounded-lg ${
-                      selectedServiceId === option.id
-                        ? 'bg-primary/10 text-primary'
-                        : 'bg-gray-100 text-gray-600'
-                    }`}>
+                    <div
+                      className={`p-3 rounded-lg ${
+                        selectedServiceId === option.id
+                          ? 'bg-primary/10 text-primary'
+                          : 'bg-gray-100 text-gray-600'
+                      }`}
+                    >
                       {option.icon}
                     </div>
                     {selectedServiceId === option.id && (
@@ -166,6 +215,77 @@ export default function ServiceSelection({category}: {category?: string}) {
             </button>
           ))}
         </div>
+      </div>
+
+      {/* Showroom Visit Section */}
+      <div className="space-y-4 bg-blue-50 border border-blue-200 rounded-lg p-6">
+        <div className="flex items-center gap-3">
+          <Checkbox
+            id="showroom-visit"
+            checked={isShowroomVisit}
+            onCheckedChange={handleShowroomVisitToggle}
+            className="w-5 h-5"
+          />
+          <div className="flex-1">
+            <Label
+              htmlFor="showroom-visit"
+              className="text-base font-semibold text-gray-900 cursor-pointer"
+            >
+              Visit Our Showroom
+            </Label>
+            <p className="text-sm text-gray-600 mt-1">
+              Visit one of our showrooms to see our products in person and get expert advice
+            </p>
+          </div>
+        </div>
+
+        {/* Showroom Locations */}
+        {isShowroomVisit && (
+          <div className="space-y-4 mt-4 pl-8">
+            <h4 className="font-semibold text-gray-900 flex items-center gap-2">
+              <MapPin className="h-4 w-4" />
+              Select a Showroom Location
+            </h4>
+            <RadioGroup value={selectedShowroom} onValueChange={handleShowroomSelect}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {showrooms.map((showroom) => (
+                  <Card
+                    key={showroom.id}
+                    className={`transition-all cursor-pointer ${
+                      selectedShowroom === showroom.id
+                        ? 'ring-2 ring-green-600 border-green-600 bg-green-50'
+                        : 'border-gray-200 hover:border-green-400'
+                    }`}
+                    onClick={() => handleShowroomSelect(showroom.id)}
+                  >
+                    <CardContent className="p-4">
+                      <div className="flex items-start gap-3">
+                        <RadioGroupItem
+                          value={showroom.id}
+                          id={showroom.id}
+                          className="mt-1"
+                        />
+                        <div className="flex-1">
+                          <Label
+                            htmlFor={showroom.id}
+                            className="font-semibold text-gray-900 cursor-pointer"
+                          >
+                            {showroom.name}
+                          </Label>
+                          <p className="text-sm text-gray-600 mt-1">{showroom.city}</p>
+                          <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                            <MapPin className="h-3 w-3" />
+                            {showroom.address}
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </RadioGroup>
+          </div>
+        )}
       </div>
 
       {showAdditional && (
@@ -218,11 +338,13 @@ export default function ServiceSelection({category}: {category?: string}) {
                         className="mt-1"
                       />
                       <div className="flex-1 flex items-start gap-3">
-                        <div className={`p-2 rounded-lg shrink-0 ${
-                          isAdditionalServiceSelected(service.id)
-                            ? 'bg-primary/10 text-primary'
-                            : 'bg-gray-100 text-gray-600'
-                        }`}>
+                        <div
+                          className={`p-2 rounded-lg shrink-0 ${
+                            isAdditionalServiceSelected(service.id)
+                              ? 'bg-primary/10 text-primary'
+                              : 'bg-gray-100 text-gray-600'
+                          }`}
+                        >
                           {service.icon}
                         </div>
                         <div className="space-y-1 flex-1">
@@ -254,17 +376,25 @@ export default function ServiceSelection({category}: {category?: string}) {
               <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
               <div className="space-y-1">
                 <h4 className="font-medium text-gray-900">Your Selection</h4>
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium">
-                    {serviceOptions.find(opt => opt.id === selectedServiceId)?.label}
-                  </span>
-                  {selectedAdditionalServices.length > 0 && (
-                    <span>
-                      {' '}+ {selectedAdditionalServices.length} additional service
-                      {selectedAdditionalServices.length > 1 ? 's' : ''}
+                <div className="text-sm text-gray-600 space-y-1">
+                  <p>
+                    <span className="font-medium">
+                      {serviceOptions.find((opt) => opt.id === selectedServiceId)?.label}
                     </span>
+                  </p>
+                  {isShowroomVisit && selectedShowroom && (
+                    <p>
+                      <span className="font-medium">Showroom:</span>{' '}
+                      {showrooms.find((s) => s.id === selectedShowroom)?.name}
+                    </p>
                   )}
-                </p>
+                  {selectedAdditionalServices.length > 0 && (
+                    <p>
+                      <span className="font-medium">+ {selectedAdditionalServices.length}</span> additional service
+                      {selectedAdditionalServices.length > 1 ? 's' : ''}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </CardContent>

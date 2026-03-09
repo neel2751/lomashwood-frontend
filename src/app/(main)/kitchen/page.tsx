@@ -1,8 +1,6 @@
-
 import type { Metadata } from 'next';
 
 import KitchenPageCom from './kitchenPage';
-
 
 export const metadata: Metadata = {
   title: 'Kitchen Design & Consultation | Lomash Wood',
@@ -13,6 +11,57 @@ export const metadata: Metadata = {
     type: 'website',
   },
 };
+
+// Kitchen styles
+const kitchenStyles = [
+  { id: 'modern', label: 'Modern', icon: '✨' },
+  { id: 'shaker', label: 'Shaker', icon: '🏠' },
+  { id: 'traditional', label: 'Traditional', icon: '👑' },
+  { id: 'industrial', label: 'Industrial', icon: '⚙️' },
+  { id: 'contemporary', label: 'Contemporary', icon: '🎨' },
+];
+
+// Kitchen colours
+const kitchenColours = [
+  { id: 'white', label: 'Whites', hex: '#FFFFFF' },
+  { id: 'black', label: 'Blacks', hex: '#000000' },
+  { id: 'grey', label: 'Greys', hex: '#808080' },
+  { id: 'cream', label: 'Creams', hex: '#FFFDD0' },
+  { id: 'blue', label: 'Blues', hex: '#4169E1' },
+  { id: 'green', label: 'Greens', hex: '#228B22' },
+];
+
+// Customer kitchen showcases
+const kitchenShowcases = [
+  {
+    id: 'showcase-1',
+    customerName: "Sarah's Kitchen",
+    style: 'Modern White',
+    location: 'Jaipur',
+    image: 'https://images.unsplash.com/photo-1600489000022-c2086d79f9d4?q=80&w=1035&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  },
+  {
+    id: 'showcase-2',
+    customerName: "Rajesh's Kitchen",
+    style: 'Classic Oak',
+    location: 'Delhi',
+    image: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  },
+  {
+    id: 'showcase-3',
+    customerName: "Priya's Kitchen",
+    style: 'Sleek Black',
+    location: 'Mumbai',
+    image: 'https://plus.unsplash.com/premium_photo-1680382578857-c331ead9ed51?q=80&w=2232&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  },
+  {
+    id: 'showcase-4',
+    customerName: "Amit's Kitchen",
+    style: 'Minimalist Grey',
+    location: 'Bangalore',
+    image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  },
+];
 
 const products = [
   {
@@ -59,9 +108,13 @@ const products = [
   },
 ];
 
-
 export default function KitchenPage() {
   return (
-    <KitchenPageCom products={products} />
+    <KitchenPageCom 
+      products={products}
+      styles={kitchenStyles}
+      colours={kitchenColours}
+      showcases={kitchenShowcases}
+    />
   );
 }

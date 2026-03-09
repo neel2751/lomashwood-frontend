@@ -1,7 +1,6 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -12,28 +11,18 @@ import { QUERY_KEYS } from "@/lib/react-query";
 import { ColorPicker } from "./ColorPicker";
 
 const coloursDemoData = [
-  { id: "white", name: "White", hexCode: "#FFFFFF" },
-  { id: "grey", name: "Grey", hexCode: "#808080" },
-  { id: "black", name: "Black", hexCode: "#000000" },
-  { id: "blue", name: "Blue", hexCode: "#0000FF" },
-  { id: "red", name: "Red", hexCode: "#FF0000" },
-  { id: "green", name: "Green", hexCode: "#00FF00" },
-  { id: "yellow", name: "Yellow", hexCode: "#FFFF00" },
-  { id: "purple", name: "Purple", hexCode: "#800080" },
-  { id: "orange", name: "Orange", hexCode: "#FFA500" },
-  { id: "pink", name: "Pink", hexCode: "#FFC0CB" },
-  { id: "brown", name: "Brown", hexCode: "#A52A2A" },
-  { id: "cyan", name: "Cyan", hexCode: "#00FFFF" },
-  { id: "magenta", name: "Magenta", hexCode: "#FF00FF" },
-  { id: "lime", name: "Lime", hexCode: "#00FF00" },
-  { id: "navy", name: "Navy", hexCode: "#000080" },
-  { id: "teal", name: "Teal", hexCode: "#008080" },
-  { id: "olive", name: "Olive", hexCode: "#808000" },
-  { id: "maroon", name: "Maroon", hexCode: "#800000" },
-  { id: "silver", name: "Silver", hexCode: "#C0C0C0" },
-  { id: "gold", name: "Gold", hexCode: "#FFD700" },
+  { id: "green", name: "Green", hexCode: "#6B7F6B" },      
+  { id: "blue", name: "Blue", hexCode: "#3D4F5C" },        
+  { id: "neutral", name: "Neutral", hexCode: "#D4C4B0" }, 
+  { id: "white", name: "White", hexCode: "#FFFFFF" },      
+  { id: "wood", name: "Wood", hexCode: "#9B8B7B" },       
+  { id: "grey", name: "Grey", hexCode: "#D0D0D0" },       
+  { id: "cream", name: "Cream", hexCode: "#EBE3D5" },     
+  { id: "black", name: "Black", hexCode: "#1A1A1A" },      
+  { id: "cashmere", name: "Cashmere", hexCode: "#F5E6DC" },
+  { id: "pink", name: "Pink", hexCode: "#D4A5A5" },       
+  { id: "red", name: "Red", hexCode: "#6B3E3E" },          
 ];
-
 
 export function ColorOptions() {
   const { data: coloursData, isLoading } = useQuery({
@@ -44,46 +33,50 @@ export function ColorOptions() {
   const colours = coloursData?.data || coloursDemoData;
 
   return (
-    <section className="section-padding bg-white
-     px-6 sm:px-10 lg:px-18
-    pt-12 md:pt-16 lg:pt-20
-    pb-16 md:pb-20 lg:pb-24
-    ">
-      <div className="container-custom">
+    <section className="w-full bg-gradient-to-br from-[#F5F0E8] via-[#F9F6F1] to-[#F5F0E8] py-16 md:py-24 lg:py-32">
+      <div className="container-custom px-6 sm:px-10 lg:px-18">
         {/* Section Header */}
-        <div className="text-center mb-8 md:mb-12">
-          <h2 className="heading-2 text-lomash-dark mb-4">
-            Colour Options
+        <div className="mb-8 md:mb-12 lg:mb-16">
+          <h2 className="font-serif text-4xl md:text-5xl lg:text-5xl font-bold text-slate-900 mb-4 leading-tight">
+            Explore kitchens by colour
           </h2>
-          <p className="text-lg text-lomash-gray-600 max-w-2xl mx-auto">
-            Choose from our extensive range of premium colours to create your perfect kitchen or bedroom
+          <p className="text-base md:text-lg text-slate-600 leading-relaxed">
+            Explore our kitchen collections and discover unrivalled quality
           </p>
+          <div className="mt-6 w-16 h-1 bg-gradient-to-r from-green-600 to-transparent"></div>
         </div>
 
-        {/* Colors Grid */}
+        {/* Colors Grid - Single Row Horizontal Scroll on Mobile */}
         {isLoading ? (
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-4 md:gap-6">
-            {Array.from({ length: 20 }).map((_, i) => (
-              <div key={i} className="space-y-2">
-                <Skeleton className="w-full aspect-square rounded-lg" />
-                <Skeleton className="h-3 w-full" />
+          <div className="flex gap-6 md:gap-8 overflow-x-auto pb-6 md:pb-0">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div key={i} className="flex-shrink-0">
+                <Skeleton className="w-24 h-24 md:w-28 md:h-28 rounded-full" />
+                <Skeleton className="h-3 w-20 mt-4 mx-auto" />
               </div>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-4 md:gap-6">
-            {colours.slice(0, 20).map((colour) => (
+          <div className="flex flex-wrap gap-6 md:gap-8 justify-start md:justify-center">
+            {colours.slice(0, 11).map((colour) => (
               <ColorPicker key={colour.id} colour={colour} />
             ))}
           </div>
         )}
 
+        {/* Divider */}
+        <div className="my-10 md:my-12 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
+
         {/* CTA Button */}
-        <div className="mt-10 flex justify-center">
+        <div className="flex justify-center">
           <Link href="/kitchen">
-            <Button size="lg" variant="outline" className="group">
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="border-green-600 text-green-600 hover:bg-green-50 rounded-full px-8 font-medium transition-all duration-300"
+            >
               View All Colours
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              <span className="ml-2">→</span>
             </Button>
           </Link>
         </div>

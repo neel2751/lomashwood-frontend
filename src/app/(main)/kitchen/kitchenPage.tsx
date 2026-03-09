@@ -1,203 +1,267 @@
-"use client";
-import { Phone } from 'lucide-react';
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
-import { Suspense, useState } from 'react';
+import Image from 'next/image';
+import { ChevronRight, ArrowRight } from 'lucide-react';
 
-import CategoryHero from '@/components/category/CategoryHero';
-import HelpSidebar from '@/components/category/HelpSidebar';
-import Filters from '@/components/products/Filters';
-import ProductGrid from '@/components/products/ProductGrid';
-import ProductSort from '@/components/products/ProductSort';
-import ViewToggle from '@/components/products/ViewToggle';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
-
-
-export default function KitchenPageCom({products}: {products: any[]}) {
-
-    const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-
-    const handleViewChange = (mode: 'grid' | 'list') => {
-        setViewMode(mode);
-    };
-
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Category Hero */}
-      <CategoryHero
-        title="Kitchen Design & Consultation"
-        description="Transform your kitchen into the heart of your home with our expertly crafted designs"
-        image="https://plus.unsplash.com/premium_photo-1683140941523-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        category="kitchen"
-        className="px-4 sm:px-6 lg:px-18
-    pt-12 md:pt-16 lg:pt-20
-    pb-16 md:pb-20 lg:pb-24"
-      />
-
-      <div className="container mx-auto px-8 lg:px-18 py-8 lg:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
-          {/* Filters Sidebar - Desktop */}
-          <aside className="hidden lg:block lg:col-span-1">
-            <div className="sticky top-24 space-y-6">
-              <Filters />
-              <HelpSidebar />
-            </div>
-          </aside>
-
-          {/* Main Content */}
-          <main className="lg:col-span-3">
-            {/* Toolbar */}
-            <div className="mb-6 space-y-4">
-              {/* Mobile Filters & Sort */}
-              <div className="flex items-center justify-between gap-4 lg:hidden">
-                <Filters />
-                <ProductSort />
-                <ViewToggle
-                view={viewMode}
-                onChange={
-                  (view) => {
-                    handleViewChange(view);
-                  }
-                }
-                 />
-              </div>
-
-              {/* Desktop Toolbar */}
-              <div className="hidden lg:flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <h1 className="text-2xl font-semibold">Kitchen Products</h1>
-                  <span className="text-sm text-muted-foreground">
-                    Showing {products.length} results
-                  </span>
-                </div>
-                <div className="flex items-center gap-4">
-                  <ProductSort />
-                  <ViewToggle
-                    view={viewMode}
-                    onChange={(view) => {
-                      handleViewChange(view);
-                    }}
-                   />
-                </div>
-              </div>
-            </div>
-
-            {/* Products Grid */}
-            <Suspense fallback={<ProductGridSkeleton />}>
-              <ProductGrid products={products} viewMode={viewMode} />
-            </Suspense>
-
-            {/* CTA Section */}
-            <div className="mt-12 bg-primary/5 rounded-lg p-6 lg:p-8 text-center">
-              <h2 className="text-2xl font-semibold mb-3">
-                Need Help Choosing Your Kitchen?
-              </h2>
-              <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                Our expert designers are here to guide you through every step of your kitchen journey. 
-                Book a free consultation today.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button asChild size="lg">
-                  <Link href="/book-appointment">
-                    Book Free Consultation
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" size="lg">
-                  <Link href="tel:+1234567890" className="flex items-center gap-2">
-                    <Phone className="h-4 w-4" />
-                    Call Us Now
-                  </Link>
-                </Button>
-              </div>
-            </div>
-
-            {/* Info Section */}
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center p-6 border rounded-lg">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg
-                    className="w-6 h-6 text-primary"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                </div>
-                <h3 className="font-semibold mb-2">Quality Assured</h3>
-                <p className="text-sm text-muted-foreground">
-                  Premium materials with lifetime warranty
-                </p>
-              </div>
-
-              <div className="text-center p-6 border rounded-lg">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg
-                    className="w-6 h-6 text-primary"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="font-semibold mb-2">Free Design Service</h3>
-                <p className="text-sm text-muted-foreground">
-                  Expert designers at your service
-                </p>
-              </div>
-
-              <div className="text-center p-6 border rounded-lg">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg
-                    className="w-6 h-6 text-primary"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="font-semibold mb-2">Flexible Finance</h3>
-                <p className="text-sm text-muted-foreground">
-                  0% finance options available
-                </p>
-              </div>
-            </div>
-          </main>
-        </div>
-      </div>
-    </div>
-  );
+interface Product {
+  id: string;
+  name: string;
+  category: string;
+  style: string;
+  finish: string;
+  image: string;
+  price: { from: number };
+  colors: string[];
+  inStock: boolean;
+  isNew?: boolean;
+  isSale?: boolean;
+  discount?: number;
+  rating: number;
+  reviewCount: number;
 }
 
-function ProductGridSkeleton() {
+interface KitchenStyle {
+  id: string;
+  label: string;
+  icon: string;
+}
+
+interface KitchenColour {
+  id: string;
+  label: string;
+  hex: string;
+}
+
+interface KitchenShowcase {
+  id: string;
+  customerName: string;
+  style: string;
+  location: string;
+  image: string;
+}
+
+interface KitchenPageComProps {
+  products?: Product[];
+  styles?: KitchenStyle[];
+  colours?: KitchenColour[];
+  showcases?: KitchenShowcase[];
+}
+
+export default function KitchenPageCom({  
+  styles = [],
+  colours = [],
+  showcases = [],
+}: KitchenPageComProps) {
+  const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
+  const [selectedColour, setSelectedColour] = useState<string | null>(null);
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {[...Array(9)].map((_, i) => (
-        <div key={i} className="space-y-4">
-          <div className="aspect-[4/3] bg-muted animate-pulse rounded-lg" />
-          <div className="space-y-2">
-            <div className="h-4 bg-muted animate-pulse rounded w-3/4" />
-            <div className="h-3 bg-muted animate-pulse rounded w-1/2" />
+    <div className="min-h-screen bg-white">
+      {/* Main Content - 3 Column Layout */}
+      <div className="container mx-auto px-6 lg:px-20 py-12">
+        <div className="grid grid-cols-12 gap-12">
+          
+          {/* LEFT COLUMN - Filters */}
+          <div className="col-span-3">
+            {/* OUR KITCHENS */}
+            <div className="mb-12">
+              <h2 className="text-sm font-bold text-teal-600 tracking-wider mb-6">
+                OUR KITCHENS
+              </h2>
+              <Link href="#" className="flex items-center gap-2 text-gray-900 hover:text-teal-600 transition-colors group">
+                <ChevronRight className="h-5 w-5 text-teal-600 group-hover:translate-x-1 transition-transform" />
+                <span className="text-xl font-bold">All kitchens</span>
+              </Link>
+            </div>
+
+            {/* STYLE SECTION */}
+            <div className="mb-12">
+              <h3 className="text-sm font-bold text-teal-600 tracking-wider mb-6">
+                STYLE
+              </h3>
+              <div className="space-y-4">
+                {styles.map((style) => (
+                  <button
+                    key={style.id}
+                    onClick={() =>
+                      setSelectedStyle(
+                        selectedStyle === style.id ? null : style.id
+                      )
+                    }
+                    className={`flex items-center gap-2 text-left transition-all ${ selectedStyle === style.id
+                        ? 'text-teal-600 font-bold'
+                        : 'text-gray-700 hover:text-teal-600'
+                    }`}
+                  >
+                    <ChevronRight className={`h-4 w-4 transition-all ${selectedStyle === style.id ? 'opacity-100' : 'opacity-0'}`} />
+                    <span className="text-base">{style.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* COLOUR SECTION */}
+            <div>
+              <h3 className="text-sm font-bold text-teal-600 tracking-wider mb-6">
+                COLOUR
+              </h3>
+              <div className="space-y-4">
+                {colours.map((colour) => (
+                  <button
+                    key={colour.id}
+                    onClick={() =>
+                      setSelectedColour(
+                        selectedColour === colour.id ? null : colour.id
+                      )
+                    }
+                    className="flex items-center gap-3 w-full transition-all"
+                  >
+                    <div
+                      className={`w-4 h-4 rounded-full border-2 transition-all flex-shrink-0 ${
+                        selectedColour === colour.id
+                          ? 'border-gray-900'
+                          : 'border-gray-400'
+                      }`}
+                      style={{ backgroundColor: colour.hex }}
+                    />
+                    <span
+                      className={`text-left transition-all text-base ${
+                        selectedColour === colour.id
+                          ? 'text-gray-900 font-bold'
+                          : 'text-gray-700'
+                      }`}
+                    >
+                      {colour.label}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* MIDDLE COLUMN - Kitchen Renovations */}
+          <div className="col-span-3">
+            <h3 className="text-sm font-bold text-teal-600 tracking-wider mb-2 flex items-center gap-2">
+              <ChevronRight className="h-4 w-4" />
+              #WRENOVATION
+            </h3>
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 leading-tight">
+              Kitchen makeovers &<br />renovations
+            </h2>
+
+            <div className="space-y-5">
+              {showcases.map((showcase) => (
+                <Link key={showcase.id} href="#">
+                  <Card className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer border-0 bg-gray-50">
+                    <div className="flex gap-4">
+                      <div className="relative h-28 w-28 flex-shrink-0 overflow-hidden rounded-sm">
+                        <Image
+                          src={showcase.image}
+                          alt={showcase.customerName}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <CardContent className="p-0 py-2 flex-1 flex flex-col justify-center">
+                        <h4 className="font-bold text-gray-900 text-base">
+                          {showcase.customerName}
+                        </h4>
+                        <p className="text-xs text-gray-600 mt-1">
+                          {showcase.style}
+                        </p>
+                      </CardContent>
+                    </div>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN - Finishing Touches & Offers */}
+          <div className="col-span-3">
+            {/* FINISHING TOUCHES */}
+            <div className="mb-12">
+              <h3 className="text-sm font-bold text-teal-600 tracking-wider mb-2 flex items-center gap-2">
+                <ChevronRight className="h-4 w-4" />
+                FINISHING TOUCHES
+              </h3>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                All accessories &<br />appliances
+              </h2>
+              <p className="text-gray-700 text-sm mb-6 leading-relaxed">
+                Explore our extensive collection of kitchen accessories and appliances and discover the perfect pieces to bring your dream kitchen to life.
+              </p>
+
+              {/* Accessories Links */}
+              <div className="space-y-3 mb-8">
+                <Link href="#" className="flex items-center gap-2 text-gray-900 hover:text-teal-600 transition-colors group text-base">
+                  <ChevronRight className="h-4 w-4 text-teal-600 group-hover:translate-x-1 transition-transform" />
+                  <span>Kitchen worktops</span>
+                </Link>
+                <Link href="#" className="flex items-center gap-2 text-gray-900 hover:text-teal-600 transition-colors group text-base">
+                  <ChevronRight className="h-4 w-4 text-teal-600 group-hover:translate-x-1 transition-transform" />
+                  <span>Kitchen sinks</span>
+                </Link>
+                <Link href="#" className="flex items-center gap-2 text-gray-900 hover:text-teal-600 transition-colors group text-base">
+                  <ChevronRight className="h-4 w-4 text-teal-600 group-hover:translate-x-1 transition-transform" />
+                  <span>Kitchen taps</span>
+                </Link>
+                <Link href="#" className="flex items-center gap-2 text-gray-900 hover:text-teal-600 transition-colors group text-base">
+                  <ChevronRight className="h-4 w-4 text-teal-600 group-hover:translate-x-1 transition-transform" />
+                  <span>Kitchen handles</span>
+                </Link>
+                <Link href="#" className="flex items-center gap-2 text-gray-900 hover:text-teal-600 transition-colors group text-base">
+                  <ChevronRight className="h-4 w-4 text-teal-600 group-hover:translate-x-1 transition-transform" />
+                  <span>Kitchen flooring</span>
+                </Link>
+              </div>
+            </div>
+
+            {/* EXCLUSIVE OFFERS */}
+            <div className="space-y-4">
+              {/* Offer 1 - Red */}
+              <Card className="bg-red-600 border-0 text-white overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
+                <CardContent className="p-6">
+                  <h3 className="text-xs font-bold tracking-widest mb-2">
+                    EXCLUSIVE OFFERS
+                  </h3>
+                  <h2 className="text-4xl font-bold mb-1">
+                    End soon
+                  </h2>
+                  <p className="text-sm mb-4 text-red-100">
+                    End of season savings
+                  </p>
+                  <Link href="#" className="inline-flex items-center gap-2 text-white hover:underline">
+                    <ArrowRight className="h-5 w-5" />
+                  </Link>
+                </CardContent>
+              </Card>
+
+              {/* Offer 2 - Blue */}
+              <Card className="bg-blue-600 border-0 text-white overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
+                <CardContent className="p-6">
+                  <h3 className="text-xs font-bold tracking-widest mb-2">
+                    UP TO
+                  </h3>
+                  <h2 className="text-5xl font-bold mb-1">
+                    7 years
+                  </h2>
+                  <p className="text-sm mb-4 text-blue-100">
+                    interest free credit
+                  </p>
+                  <Link href="#" className="inline-flex items-center gap-2 text-white hover:underline">
+                    <ArrowRight className="h-5 w-5" />
+                  </Link>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
-      ))}
+      </div>
     </div>
   );
 }
