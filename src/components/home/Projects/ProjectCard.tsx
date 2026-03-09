@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPin, Calendar, Eye } from "lucide-react";
+import { MapPin, Calendar, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -15,10 +15,10 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project, className }: ProjectCardProps) {
   return (
-    <Link href={`/projects/${project.id}`} className="group">
+    <Link href={`/projects/${project.id}`} className="group block">
       <div
         className={cn(
-          "relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all duration-300",
+          "overflow-hidden rounded-xl bg-white shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100",
           className
         )}
       >
@@ -28,72 +28,61 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
             src={project.image || "/images/placeholder.jpg"}
             alt={project.title}
             fill
-            className="object-cover transition-transform duration-700 group-hover:scale-110"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
 
-          {/* Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
           {/* Category Badge */}
-          <div className="absolute top-4 left-4">
-            <Badge variant="default" className="capitalize shadow-md">
+          <div className="absolute top-3 left-3">
+            <Badge
+              variant="default"
+              className="capitalize bg-white text-lomash-dark border-0 shadow-sm font-medium text-xs"
+            >
               {project.category}
             </Badge>
           </div>
-
-          {/* View Button (appears on hover) */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Eye className="h-6 w-6 text-lomash-primary" />
-            </div>
-          </div>
-
-          {/* Bottom Info (appears on hover) */}
-          <div className="absolute bottom-0 left-0 right-0 p-5 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-            <h3 className="text-xl font-bold text-white mb-2">
-              {project.title}
-            </h3>
-            
-            <p className="text-sm text-white/90 mb-3 line-clamp-2">
-              {project.description}
-            </p>
-
-            <div className="flex flex-wrap items-center gap-3 text-white/80 text-xs">
-              {project.location && (
-                <div className="flex items-center space-x-1">
-                  <MapPin className="h-3 w-3" />
-                  <span>{project.location}</span>
-                </div>
-              )}
-              
-              {project.completedAt && (
-                <div className="flex items-center space-x-1">
-                  <Calendar className="h-3 w-3" />
-                  <span>
-                    {new Date(project.completedAt).toLocaleDateString('en-US', {
-                      month: 'short',
-                      year: 'numeric',
-                    })}
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
         </div>
 
-        {/* Default Content (when not hovering) */}
-        <div className="p-4 bg-white group-hover:opacity-0 transition-opacity duration-300">
-          <h3 className="font-semibold text-lomash-dark mb-1 line-clamp-1">
+        {/* Content */}
+        <div className="p-5">
+          {/* Title */}
+          <h3 className="text-base font-bold text-lomash-dark mb-2 line-clamp-1 group-hover:text-lomash-primary transition-colors duration-200">
             {project.title}
           </h3>
-          
-          {project.location && (
-            <div className="flex items-center text-sm text-lomash-gray-600">
-              <MapPin className="h-4 w-4 mr-1" />
-              <span>{project.location}</span>
-            </div>
+
+          {/* Description */}
+          {project.description && (
+            <p className="text-sm text-lomash-gray-500 mb-3 line-clamp-2">
+              {project.description}
+            </p>
           )}
+
+          {/* Meta Info */}
+          <div className="flex items-center gap-4 text-xs text-lomash-gray-400 mb-4">
+            {project.location && (
+              <div className="flex items-center gap-1">
+                <MapPin className="h-3 w-3 flex-shrink-0" />
+                <span>{project.location}</span>
+              </div>
+            )}
+            {project.completedAt && (
+              <div className="flex items-center gap-1">
+                <Calendar className="h-3 w-3 flex-shrink-0" />
+                <span>
+                  {new Date(project.completedAt).toLocaleDateString("en-US", {
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* View Project Link */}
+          <div className="flex items-center gap-1 text-sm font-semibold text-lomash-primary group-hover:gap-2 transition-all duration-200">
+            <span>View Project</span>
+            <ArrowRight className="h-4 w-4" />
+          </div>
         </div>
       </div>
     </Link>

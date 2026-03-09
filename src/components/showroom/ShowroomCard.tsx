@@ -12,14 +12,10 @@ import { cn } from "@/lib/utils";
 
 import { Showroom as ShowroomType } from "@/types/showrooms.types";
 
-
-// other rating and review count add in the showroom
-
- interface Showroom extends Omit<ShowroomType, "openingHours"> {
+interface Showroom extends Omit<ShowroomType, "openingHours"> {
   rating?: number;
   reviewCount?: number;
 }
-
 
 interface ShowroomCardProps {
   showroom: Showroom;
@@ -55,6 +51,7 @@ export default function ShowroomCard({
     e.stopPropagation();
     window.location.href = `tel:${showroom.phone}`;
   };
+
   if (viewMode === "grid") {
     return (
       <Card
@@ -74,9 +71,7 @@ export default function ShowroomCard({
               className="object-cover transition-transform group-hover:scale-105"
             />
             {showroom.openToday !== undefined && (
-              <Badge
-                className="absolute top-3 right-3"
-              >
+              <Badge className="absolute top-3 right-3">
                 {showroom.openToday}
               </Badge>
             )}
@@ -130,16 +125,6 @@ export default function ShowroomCard({
             </Link>
           </div>
 
-          {/* Hours */}
-          {/* <div className="flex items-start gap-2 text-sm text-muted-foreground">
-            <Clock className="h-4 w-4 flex-shrink-0 mt-0.5" />
-            <div className="space-y-0.5">
-              <p>Mon-Fri: {showroom.hours.weekdays}</p>
-              <p>Sat: {showroom.hours.saturday}</p>
-              <p>Sun: {showroom.hours.sunday}</p>
-            </div>
-          </div> */}
-
           {/* Features */}
           {showroom.facilities && showroom.facilities.length > 0 && (
             <div className="flex flex-wrap gap-1 pt-2">
@@ -168,14 +153,14 @@ export default function ShowroomCard({
             Directions
           </Button>
           <Button
-          asChild
+            asChild
             variant="default"
             size="sm"
             className="flex-1"
           >
-            <Link href={`/showrooms/${showroom.slug}`} className="flex items-center justify-center">
-            View Details
-            <ChevronRight className="ml-1 h-4 w-4" />
+            <Link href={`/showrooms/${showroom.slug}`} className="flex items-center justify-center gap-1">
+              <span>Book Showroom Appointment</span>
+              <ChevronRight className="h-4 w-4" />
             </Link>
           </Button>
         </CardFooter>
@@ -254,38 +239,28 @@ export default function ShowroomCard({
                 {/* Phone */}
                 <div className="flex items-center gap-2 text-sm">
                   <Phone className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                  <a
+                  <Link
                     href={`tel:${showroom.phone}`}
                     onClick={handleCall}
                     className="text-primary hover:underline"
                   >
                     {showroom.phone}
-                  </a>
+                  </Link>
                 </div>
 
                 {/* Email */}
                 {showroom.email && (
                   <div className="flex items-center gap-2 text-sm">
                     <Mail className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                    <a
+                    <Link
                       href={`mailto:${showroom.email}`}
                       className="text-primary hover:underline truncate"
                     >
                       {showroom.email}
-                    </a>
+                    </Link>
                   </div>
                 )}
               </div>
-
-              {/* Hours */}
-              {/* <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                <Clock className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                <div className="space-y-0.5">
-                  <p>Mon-Fri: {showroom.hours.weekdays}</p>
-                  <p>Sat: {showroom.hours.saturday}</p>
-                  <p>Sun: {showroom.hours.sunday}</p>
-                </div>
-              </div> */}
             </div>
 
             {/* Features */}
@@ -319,9 +294,9 @@ export default function ShowroomCard({
               size="sm"
               className="flex-1 sm:flex-initial"
             >
-              <Link href={`/showrooms/${showroom.slug}`}>
-                View Details
-                <ChevronRight className="ml-1 h-4 w-4" />
+              <Link href={`/showrooms/${showroom.slug}`} className="flex items-center justify-center gap-1">
+                <span>Book Showroom Appointment</span>
+                <ChevronRight className="h-4 w-4" />
               </Link>
             </Button>
           </CardFooter>

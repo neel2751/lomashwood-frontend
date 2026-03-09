@@ -26,13 +26,11 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-
 
 import Link from "next/link";
 
@@ -146,7 +144,6 @@ export default function ShowroomDetail({
   const currentDayStatus = () => {
     const now = new Date();
     const day = now.getDay();
-    
     if (day === 0) return { label: "Sunday", hours: showroom.hours.sunday };
     if (day === 6) return { label: "Saturday", hours: showroom.hours.saturday };
     return { label: "Today", hours: showroom.hours.weekdays };
@@ -350,6 +347,26 @@ export default function ShowroomDetail({
                   )}
                 </CardContent>
               </Card>
+
+              {/* TEAM SECTION - Commented out as per request */}
+              {/* 
+              {showroom.team && showroom.team.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Our Team</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {showroom.team.map((member, index) => (
+                        <div key={index} className="flex items-center gap-3 p-3 rounded-lg border">
+                          <span>{member}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+              */}
             </TabsContent>
 
             <TabsContent value="services" className="space-y-6">
@@ -540,9 +557,9 @@ export default function ShowroomDetail({
                 <Navigation className="mr-2 h-4 w-4" />
                 Get Directions
               </Button>
-              <Button 
-                variant="outline" 
-                className="w-full" 
+              <Button
+                variant="outline"
+                className="w-full"
                 onClick={() => window.location.href = `tel:${showroom.phone}`}
               >
                 <Phone className="mr-2 h-4 w-4" />
@@ -570,28 +587,28 @@ export default function ShowroomDetail({
                 <p className="text-sm font-medium">Follow on Social Media</p>
                 <div className="flex gap-2">
                   {showroom.socialMedia.facebook && (
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={() => window.open(showroom.socialMedia!.facebook, '_blank')}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => window.open(showroom.socialMedia!.facebook, "_blank")}
                     >
                       Facebook
                     </Button>
                   )}
                   {showroom.socialMedia.instagram && (
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={() => window.open(showroom.socialMedia!.instagram, '_blank')}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => window.open(showroom.socialMedia!.instagram, "_blank")}
                     >
                       Instagram
                     </Button>
                   )}
                   {showroom.socialMedia.twitter && (
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={() => window.open(showroom.socialMedia!.twitter, '_blank')}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => window.open(showroom.socialMedia!.twitter, "_blank")}
                     >
                       Twitter
                     </Button>

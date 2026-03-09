@@ -12,6 +12,7 @@ interface MegaMenuProps {
   isOpen: boolean;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
+  onToggle?: () => void;
 }
 
 const kitchenCategories = [
@@ -37,10 +38,12 @@ const kitchenCategories = [
   {
     title: "By Color",
     items: [
-      { label: "White Kitchens", href: "/kitchen?color=white", isNew: false },
-      { label: "Grey Kitchens", href: "/kitchen?color=grey", isNew: false },
-      { label: "Black Kitchens", href: "/kitchen?color=black", isNew: false },
-      { label: "Blue Kitchens", href: "/kitchen?color=blue", isNew: false },
+      { label: "White Kitchens", href: "/kitchen?color=white", isNew: false, swatch: "#FFFFFF" },
+      { label: "Grey Kitchens", href: "/kitchen?color=grey", isNew: false, swatch: "#9CA3AF" },
+      { label: "Black Kitchens", href: "/kitchen?color=black", isNew: false, swatch: "#1A1A1A" },
+      { label: "Blue Kitchens", href: "/kitchen?color=blue", isNew: false, swatch: "#3B82F6" },
+      { label: "Green Kitchens", href: "/kitchen?color=green", isNew: false, swatch: "#77c117" },
+      { label: "Cream Kitchens", href: "/kitchen?color=cream", isNew: false, swatch: "#F5F0E8" },
     ],
   },
 ];
@@ -65,12 +68,14 @@ const bedroomCategories = [
     ],
   },
   {
-    title: "By Finish",
+    title: "By Color",
     items: [
-      { label: "Gloss Finish", href: "/bedroom?finish=gloss", isNew: false },
-      { label: "Matt Finish", href: "/bedroom?finish=matt", isNew: false },
-      { label: "Wood Grain", href: "/bedroom?finish=wood-grain", isNew: false },
-      { label: "Mirror Doors", href: "/bedroom?finish=mirror", isNew: true },
+      { label: "White", href: "/bedroom?color=white", isNew: false, swatch: "#FFFFFF" },
+      { label: "Grey", href: "/bedroom?color=grey", isNew: false, swatch: "#9CA3AF" },
+      { label: "Black", href: "/bedroom?color=black", isNew: false, swatch: "#1A1A1A" },
+      { label: "Oak / Wood", href: "/bedroom?color=oak", isNew: false, swatch: "#C4962A" },
+      { label: "Ivory", href: "/bedroom?color=ivory", isNew: false, swatch: "#FFFFF0" },
+      { label: "Navy Blue", href: "/bedroom?color=navy", isNew: false, swatch: "#1E3A5F" },
     ],
   },
 ];
@@ -96,6 +101,7 @@ export function MegaMenu({
   isOpen,
   onMouseEnter,
   onMouseLeave,
+
 }: MegaMenuProps) {
   const categories = type === "kitchen" ? kitchenCategories : bedroomCategories;
   const featured = type === "kitchen" ? kitchenFeatured : bedroomFeatured;
@@ -128,7 +134,15 @@ export function MegaMenu({
                         href={item.href}
                         className="group flex items-center gap-2 text-sm text-gray-700 hover:text-lomash-primary transition-colors"
                       >
-                        <ArrowRight className="h-3 w-3 text-lomash-primary flex-shrink-0" />
+                        {/* Color swatch if available */}
+                        {"swatch" in item && item.swatch ? (
+                          <span
+                            className="h-4 w-4 rounded-full flex-shrink-0 border border-gray-200 shadow-sm"
+                            style={{ backgroundColor: item.swatch }}
+                          />
+                        ) : (
+                          <ArrowRight className="h-3 w-3 text-lomash-primary flex-shrink-0" />
+                        )}
                         <span className="group-hover:translate-x-0.5 transition-transform whitespace-nowrap">
                           {item.label}
                         </span>

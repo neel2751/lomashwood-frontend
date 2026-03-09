@@ -266,7 +266,6 @@ export default function FinancePage() {
     const calculatorTab = document.querySelector('[value="calculator"]');
     if (calculatorTab) {
       (calculatorTab as HTMLElement).click();
-
       setTimeout(() => {
         const tabsSection = document.getElementById('finance-tabs');
         if (tabsSection) {
@@ -277,20 +276,15 @@ export default function FinancePage() {
   };
 
   const handleFormSubmit = async (data: any) => {
-    // Here you would typically send the data to your backend API for processing
     console.log('Form submitted with data:', data);
   };
 
   const handleEMIApply = (details: any) => {
-    
-
     const formSection = document.getElementById('application-form');
     if (formSection) {
       formSection.scrollIntoView({ behavior: 'smooth' });
     }
-
     alert(`You have calculated an EMI of £${details.emi} for a loan amount of £${details.amount} at an interest rate of ${details.rate}% over a tenure of ${details.tenure} months. Click OK to proceed with your application.`);
-
   };
 
   return (
@@ -306,9 +300,9 @@ export default function FinancePage() {
               Make your dream kitchen or bedroom a reality with our competitive finance packages
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
-                variant="secondary" 
+              <Button
+                size="lg"
+                variant="secondary"
                 className="text-lg bg-lomash-primary text-white hover:bg-lomash-secondary shadow-md hover:shadow-lg"
                 onClick={() => {
                   const calculatorTab = document.querySelector('[value="calculator"]');
@@ -326,9 +320,9 @@ export default function FinancePage() {
                 <Calculator className="mr-2 h-5 w-5" />
                 Calculate EMI
               </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
+              <Button
+                size="lg"
+                variant="outline"
                 className="text-lg bg-white text-primary-600 hover:bg-lomash-primary hover:text-white shadow-md hover:shadow-lg"
                 onClick={() => {
                   const formSection = document.getElementById('application-form');
@@ -354,19 +348,16 @@ export default function FinancePage() {
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-100 text-primary-600 mb-4">
                   <feature.icon className="h-8 w-8 text-lomash-primary" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-neutral-600 text-sm">
-                  {feature.description}
-                </p>
+                <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
+                <p className="text-neutral-600 text-sm">{feature.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Finance Options Tabs */}
+      {/* "Choose Your Finance Plan" - Commented out as per request */}
+      
       <section id="finance-tabs" className="py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -379,20 +370,14 @@ export default function FinancePage() {
           </div>
 
           <Tabs defaultValue="calculator" className="max-w-6xl mx-auto">
-             <TabsList className="flex justify-center gap-2 bg-lomash-light backdrop-blur-md py-7 px-1 max-w-max mx-auto rounded-2xl border border-lomash-dark/20 mb-10">
-              <TabsTrigger 
-               className="flex items-center gap-2 rounded-xl px-4 py-3 text-base font-semibold text-muted-foreground data-[state=active]:bg-lomash-primary data-[state=active]:text-white"
-              value="calculator">EMI Calculator</TabsTrigger>
-              <TabsTrigger 
-                className="flex items-center gap-2 rounded-xl px-4 py-3 text-base font-semibold text-muted-foreground data-[state=active]:bg-lomash-primary data-[state=active]:text-white"
-              value="options">Finance Options</TabsTrigger>
-              <TabsTrigger 
-                className="flex items-center gap-2 rounded-xl px-4 py-3 text-base font-semibold text-muted-foreground data-[state=active]:bg-lomash-primary data-[state=active]:text-white"
-              value="compare">Compare Plans</TabsTrigger>
+            <TabsList className="flex justify-center gap-2 bg-lomash-light backdrop-blur-md py-7 px-1 max-w-max mx-auto rounded-2xl border border-lomash-dark/20 mb-10">
+              <TabsTrigger className="flex items-center gap-2 rounded-xl px-4 py-3 text-base font-semibold text-muted-foreground data-[state=active]:bg-lomash-primary data-[state=active]:text-white" value="calculator">EMI Calculator</TabsTrigger>
+              <TabsTrigger className="flex items-center gap-2 rounded-xl px-4 py-3 text-base font-semibold text-muted-foreground data-[state=active]:bg-lomash-primary data-[state=active]:text-white" value="options">Finance Options</TabsTrigger>
+              <TabsTrigger className="flex items-center gap-2 rounded-xl px-4 py-3 text-base font-semibold text-muted-foreground data-[state=active]:bg-lomash-primary data-[state=active]:text-white" value="compare">Compare Plans</TabsTrigger>
             </TabsList>
 
             <TabsContent value="calculator">
-              <EMICalculator 
+              <EMICalculator
                 defaultAmount={5000}
                 defaultRate={3.5}
                 defaultTenure={24}
@@ -407,7 +392,7 @@ export default function FinancePage() {
             </TabsContent>
 
             <TabsContent value="options">
-              <FinanceOptions 
+              <FinanceOptions
                 options={financeOptionsData}
                 onApply={handleApply}
                 onCalculate={handleCalculate}
@@ -416,7 +401,7 @@ export default function FinancePage() {
             </TabsContent>
 
             <TabsContent value="compare">
-              <FinanceComparison 
+              <FinanceComparison
                 options={financeOptionsData}
                 maxCompare={4}
                 defaultSelected={['1', '2']}
@@ -426,6 +411,7 @@ export default function FinancePage() {
           </Tabs>
         </div>
       </section>
+      
 
       {/* Application Process */}
       <section className="py-16 bg-white">
@@ -446,29 +432,17 @@ export default function FinancePage() {
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-lomash-primary text-white text-2xl font-bold mb-4">
                     {step.number}
                   </div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">
-                    {step.title}
-                  </h3>
-                  <p className="text-neutral-600 text-sm">
-                    {step.description}
-                  </p>
+                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">{step.title}</h3>
+                  <p className="text-neutral-600 text-sm">{step.description}</p>
                 </div>
-                {/* {index < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-8 left-full w-full h-0.5 bg-neutral-200 -z-10">
-                    <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-2 h-2 rounded-full bg-lomash-primary">
-                    </div>
-                  </div>
-                )} */}
               </div>
             ))}
           </div>
 
           <div className="text-center mt-12">
-            <Button 
+            <Button
               size="lg"
-              className='bg-lomash-primary hover:bg-lomash-secondary
-              px-8 py-4 text-lg font-semibold
-               text-white shadow-md hover:shadow-lg rounded-full'
+              className="bg-lomash-primary hover:bg-lomash-secondary px-8 py-4 text-lg font-semibold text-white shadow-md hover:shadow-lg rounded-full"
               onClick={() => {
                 const formSection = document.getElementById('application-form');
                 if (formSection) {
@@ -495,15 +469,13 @@ export default function FinancePage() {
                 Complete the form below to get started with your finance application
               </p>
             </div>
-
-            <ApplyForm 
-              onSubmit={handleFormSubmit}
-            />
+            <ApplyForm onSubmit={handleFormSubmit} />
           </div>
         </div>
       </section>
 
-      {/* Representative Example */}
+      {/* "Representative Example" - Commented out as per request */}
+      
       <section className="py-12 bg-lomash-light">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
@@ -541,6 +513,7 @@ export default function FinancePage() {
           </div>
         </div>
       </section>
+      
 
       {/* FAQs */}
       <section className="py-16 bg-white">
@@ -559,10 +532,7 @@ export default function FinancePage() {
             <Accordion type="single" collapsible className="w-full">
               {faqs.map((faq, index) => (
                 <AccordionItem key={index} value={`item-${index}`}>
-                  <AccordionTrigger className={`
-                  text-left text-xl text-lomash-dark font-semibold hover:text-lomash-primary
-                  data-[state=open]:text-lomash-primary
-                  `}>
+                  <AccordionTrigger className="text-left text-xl text-lomash-dark font-semibold hover:text-lomash-primary data-[state=open]:text-lomash-primary">
                     {faq.question}
                   </AccordionTrigger>
                   <AccordionContent className="text-lg font-medium text-neutral-700">
@@ -585,17 +555,17 @@ export default function FinancePage() {
             Speak to our finance experts today or start your online application
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               variant="secondary"
               className="text-lg bg-white text-lomash-primary hover:bg-lomash-primary hover:text-white shadow-md hover:shadow-lg font-semibold"
               onClick={() => window.location.href = 'tel:+919876543210'}
             >
               Call +91 98765 43210
             </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
+            <Button
+              size="lg"
+              variant="outline"
               className="text-lg bg-transparent border-white text-white hover:bg-white hover:text-lomash-primary shadow-md hover:shadow-lg"
               onClick={() => {
                 const formSection = document.getElementById('application-form');

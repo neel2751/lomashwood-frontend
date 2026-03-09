@@ -24,9 +24,7 @@ const config: Config = {
     extend: {
       colors: {
         lomash: {
-          // primary: "#2D5016",
-          // secondary: "#4A7C28",  
-          primary: "#4A7C28",
+          primary: "#77c117",
           secondary: "#2D5016",
           accent: "#6B9D3C",
           dark: "#1A1A1A",
@@ -50,8 +48,9 @@ const config: Config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#2D5016",
+          DEFAULT: "#77c117",
           foreground: "#FFFFFF",
+          hover: "#69a914",
         },
         secondary: {
           DEFAULT: "#F3F4F6",

@@ -6,7 +6,6 @@ import {
   Phone,
   MapPin,
   Home,
-  Building2,
   FileText,
   Shield,
   InfoIcon,
@@ -74,7 +73,6 @@ export default function CustomerDetails() {
               <label htmlFor="title" className="text-sm font-medium">
                 Title <span className="text-red-500">*</span>
               </label>
-
               <Select onValueChange={(value) => setValue('title', value, { shouldValidate: true })}>
                 <SelectTrigger className={`w-full h-10 pl-3 pr-3 py-2 border rounded-md ${
                   errors.title ? 'border-red-500' : 'border-gray-300'
@@ -122,7 +120,7 @@ export default function CustomerDetails() {
               id="lastName"
               type="text"
               placeholder="Enter your last name"
-              className={errors.lastName ? 'border-red-500' : ''} 
+              className={errors.lastName ? 'border-red-500' : ''}
               {...register('lastName')}
             />
             {errors.lastName && (
@@ -141,9 +139,11 @@ export default function CustomerDetails() {
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
+            {/* Email - now OPTIONAL */}
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium">
-                Email Address <span className="text-red-500">*</span>
+                Email Address{' '}
+                <span className="text-gray-400 text-sm">(Optional)</span>
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -211,86 +211,46 @@ export default function CustomerDetails() {
             <h3 className="text-lg font-semibold text-gray-900">Address Information</h3>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-2">
-              <label htmlFor="houseNumber" className="text-sm font-medium">
-                House Number/Name <span className="text-red-500">*</span>
-              </label>
-              <div className="relative">
-                <Home className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  id="houseNumber"
-                  type="text"
-                  placeholder="e.g., 123 or Apartment A"
-                  className={`w-full h-10 pl-10 pr-3 py-2 border rounded-md ${
-                    errors.houseNumber ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  {...register('houseNumber')}
-                />
-              </div>
-              {errors.houseNumber && (
-                <p className="text-sm text-red-500">{errors.houseNumber.message as string}</p>
-              )}
-            </div>
+          {/* Removed: House Number, Street, City/Town */}
+          {/* Added: Full Address + Postcode */}
 
-            <div className="space-y-2">
-              <label htmlFor="street" className="text-sm font-medium">
-                Street <span className="text-red-500">*</span>
-              </label>
-              <Input
-                id="street"
-                type="text"
-                placeholder="Street name"
-                className={`w-full h-10 pl-3 pr-3 py-2 border rounded-md ${
-                  errors.street ? 'border-red-500' : 'border-gray-300'
+          <div className="space-y-2">
+            <label htmlFor="fullAddress" className="text-sm font-medium">
+              Full Address <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <Home className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Textarea
+                id="fullAddress"
+                placeholder="Enter your full address"
+                rows={3}
+                className={`w-full pl-10 pr-3 py-2 border rounded-md resize-none ${
+                  errors.fullAddress ? 'border-red-500' : 'border-gray-300'
                 }`}
-                {...register('street')}
+                {...register('fullAddress')}
               />
-              {errors.street && (
-                <p className="text-sm text-red-500">{errors.street.message as string}</p>
-              )}
             </div>
+            {errors.fullAddress && (
+              <p className="text-sm text-red-500">{errors.fullAddress.message as string}</p>
+            )}
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-2">
-              <label htmlFor="city" className="text-sm font-medium">
-                City/Town <span className="text-red-500">*</span>
-              </label>
-              <div className="relative">
-                <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  id="city"
-                  type="text"
-                  placeholder="City or town"
-                  className={`w-full h-10 pl-10 pr-3 py-2 border rounded-md ${
-                    errors.city ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  {...register('city')}
-                />
-              </div>
-              {errors.city && (
-                <p className="text-sm text-red-500">{errors.city.message as string}</p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <label htmlFor="postcode" className="text-sm font-medium">
-                Postcode <span className="text-red-500">*</span>
-              </label>
-              <Input
-                id="postcode"
-                type="text"
-                placeholder="e.g., SW1A 1AA"
-                className={`w-full h-10 pl-3 pr-3 py-2 border rounded-md ${
-                  errors.postcode ? 'border-red-500' : 'border-gray-300'
-                }`}
-                {...register('postcode')}
-              />
-              {errors.postcode && (
-                <p className="text-sm text-red-500">{errors.postcode.message as string}</p>
-              )}
-            </div>
+          <div className="space-y-2">
+            <label htmlFor="postcode" className="text-sm font-medium">
+              Postcode <span className="text-red-500">*</span>
+            </label>
+            <Input
+              id="postcode"
+              type="text"
+              placeholder="e.g., SW1A 1AA"
+              className={`w-full h-10 pl-3 pr-3 py-2 border rounded-md ${
+                errors.postcode ? 'border-red-500' : 'border-gray-300'
+              }`}
+              {...register('postcode')}
+            />
+            {errors.postcode && (
+              <p className="text-sm text-red-500">{errors.postcode.message as string}</p>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -368,7 +328,7 @@ export default function CustomerDetails() {
           <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
             <Checkbox
               id="marketingConsent"
-              className='mt-1.5'
+              className="mt-1.5"
               checked={marketingConsent}
               onCheckedChange={(checked: boolean) =>
                 setValue('marketingConsent', checked, { shouldValidate: true })

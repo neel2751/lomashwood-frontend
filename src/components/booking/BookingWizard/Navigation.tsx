@@ -14,6 +14,7 @@ interface NavigationProps {
   isLoading?: boolean;
   nextButtonText?: string;
   backButtonText?: string;
+  isCustomerDetailsStep?: boolean;
   className?: string;
 }
 
@@ -26,10 +27,16 @@ export default function Navigation({
   isLoading = false,
   nextButtonText = "Continue",
   backButtonText = "Back",
+  isCustomerDetailsStep = false,
   className,
 }: NavigationProps) {
   const isFirstStep = currentStep === 1;
   const isLastStep = currentStep === totalSteps;
+
+  // On "Your Details" step, button is NEVER disabled — validation errors show on click instead
+  const isButtonDisabled = isCustomerDetailsStep
+    ? isLoading
+    : isNextDisabled || isLoading;
 
   return (
     <div className={cn("flex items-center justify-between gap-4", className)}>
@@ -49,7 +56,7 @@ export default function Navigation({
       <Button
         type="button"
         onClick={onNext}
-        disabled={isNextDisabled || isLoading}
+        disabled={isButtonDisabled}
         className="ml-auto gap-2 text-lg font-medium"
       >
         {isLoading ? (
