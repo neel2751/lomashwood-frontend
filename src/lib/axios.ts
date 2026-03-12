@@ -1,7 +1,5 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosError } from "axios";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
-const API_TIMEOUT = 30000;
+import { API_BASE_URL, API_TIMEOUT } from "@/config/api";
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -71,33 +69,26 @@ axiosInstance.interceptors.response.use(
         case 401:
           if (typeof window !== "undefined") {
             localStorage.removeItem("auth_token");
-
           }
           break;
-
         case 403:
           console.error("Access forbidden");
           break;
-
         case 404:
           console.error("Resource not found");
           break;
-
         case 422:
           console.error("Validation error:", error.response.data);
           break;
-
         case 429:
           console.error("Rate limit exceeded");
           break;
-
         case 500:
         case 502:
         case 503:
         case 504:
           console.error("Server error");
           break;
-
         default:
           console.error("Unexpected error");
       }
@@ -115,7 +106,7 @@ axiosInstance.interceptors.response.use(
 );
 
 export const api = {
-  get: <T = any>(url: string, config?: AxiosRequestConfig) => 
+  get: <T = any>(url: string, config?: AxiosRequestConfig) =>
     axiosInstance.get<T>(url, config),
 
   post: <T = any>(url: string, data?: any, config?: AxiosRequestConfig) =>
@@ -159,47 +150,23 @@ export const handleApiError = (error: AxiosError<ApiError>): string => {
   if (error.response?.data?.message) {
     return error.response.data.message;
   }
-
-  if (error.response?.status === 401) {
-    return "Unauthorized. Please log in again.";
-  }
-
-  if (error.response?.status === 403) {
-    return "You don't have permission to perform this action.";
-  }
-
-  if (error.response?.status === 404) {
-    return "The requested resource was not found.";
-  }
-
-  if (error.response?.status === 422) {
-    return "Please check your input and try again.";
-  }
-
-  if (error.response?.status === 429) {
-    return "Too many requests. Please try again later.";
-  }
-
-  if (error.response?.status && error.response.status >= 500) {
-    return "Server error. Please try again later.";
-  }
-
-  if (error.request) {
-    return "Network error. Please check your internet connection.";
-  }
-
+  if (error.response?.status === 401) return "Unauthorized. Please log in again.";
+  if (error.response?.status === 403) return "You don't have permission to perform this action.";
+  if (error.response?.status === 404) return "The requested resource was not found.";
+  if (error.response?.status === 422) return "Please check your input and try again.";
+  if (error.response?.status === 429) return "Too many requests. Please try again later.";
+  if (error.response?.status && error.response.status >= 500) return "Server error. Please try again later.";
+  if (error.request) return "Network error. Please check your internet connection.";
   return "An unexpected error occurred. Please try again.";
 };
 
 export const getValidationErrors = (error: AxiosError<ApiError>): Record<string, string> => {
   const errors: Record<string, string> = {};
-
   if (error.response?.data?.errors) {
     Object.entries(error.response.data.errors).forEach(([field, messages]) => {
       errors[field] = Array.isArray(messages) ? messages[0] : messages;
     });
   }
-
   return errors;
 };
 

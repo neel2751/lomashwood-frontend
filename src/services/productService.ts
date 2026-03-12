@@ -1,4 +1,5 @@
-import { apiClient } from "@/lib/api";
+import { api } from "@/lib/axios";
+import { API_ENDPOINTS } from "@/config/api";
 import type { Product, ProductFilters, PaginatedResponse } from "@/types";
 import axios from "axios";
 
@@ -34,8 +35,8 @@ export const productService = {
     sort?: string;
   }): Promise<PaginatedResponse<Product>> {
     try {
-      const response = await apiClient.products.getAll(params);
-      return response;
+      const { data } = await api.get(API_ENDPOINTS.products.base, { params });
+      return data;
     } catch (error) {
       return handleError("getProducts", error);
     }
@@ -48,8 +49,8 @@ export const productService = {
     sort?: string;
   }): Promise<PaginatedResponse<Product>> {
     try {
-      const response = await apiClient.products.getKitchens(params);
-      return response;
+      const { data } = await api.get(API_ENDPOINTS.products.byCategory("kitchen"), { params });
+      return data;
     } catch (error) {
       return handleError("getKitchens", error);
     }
@@ -62,8 +63,8 @@ export const productService = {
     sort?: string;
   }): Promise<PaginatedResponse<Product>> {
     try {
-      const response = await apiClient.products.getBedrooms(params);
-      return response;
+      const { data } = await api.get(API_ENDPOINTS.products.byCategory("bedroom"), { params });
+      return data;
     } catch (error) {
       return handleError("getBedrooms", error);
     }
@@ -75,10 +76,9 @@ export const productService = {
       console.error("[getProductById] Validation Error:", error.message);
       throw error;
     }
-    
     try {
-      const response = await apiClient.products.getById(id);
-      return response.data;
+      const { data } = await api.get(API_ENDPOINTS.products.byId(id));
+      return data;
     } catch (error) {
       return handleError("getProductById", error);
     }
@@ -86,12 +86,10 @@ export const productService = {
 
   async getFeaturedProducts(category?: "kitchen" | "bedroom"): Promise<Product[]> {
     try {
-      const response = await apiClient.products.getAll({
-        category,
-        filters: { featured: true } as any,
-        limit: 8,
+      const { data } = await api.get(API_ENDPOINTS.products.featured, {
+        params: { category, limit: 8 },
       });
-      return response.data;
+      return data;
     } catch (error) {
       return handleError("getFeaturedProducts", error);
     }
@@ -99,12 +97,10 @@ export const productService = {
 
   async getPopularProducts(category?: "kitchen" | "bedroom"): Promise<Product[]> {
     try {
-      const response = await apiClient.products.getAll({
-        category,
-        sort: "popular",
-        limit: 8,
+      const { data } = await api.get(API_ENDPOINTS.products.base, {
+        params: { category, sort: "popular", limit: 8 },
       });
-      return response.data;
+      return data;
     } catch (error) {
       return handleError("getPopularProducts", error);
     }
@@ -115,13 +111,11 @@ export const productService = {
       console.warn("[searchProducts] Search query is empty");
       return [];
     }
-
     try {
-      const response = await apiClient.products.getAll({
-        category,
-        filters: { search: query } as any,
+      const { data } = await api.get(API_ENDPOINTS.products.search, {
+        params: { query, category },
       });
-      return response.data;
+      return data;
     } catch (error) {
       return handleError("searchProducts", error);
     }
@@ -133,19 +127,32 @@ export const productService = {
       console.error("[getRelatedProducts] Validation Error:", error.message);
       throw error;
     }
-
     try {
-      const product = await this.getProductById(productId);
-      
-      const response = await apiClient.products.getAll({
-        category: product.category,
-        filters: { style: product.style } as any,
-        limit: limit + 1,
+      const { data } = await api.get(API_ENDPOINTS.products.related(productId), {
+        params: { limit },
       });
-
-      return response.data.filter((p) => p.id !== productId).slice(0, limit);
+      return data;
     } catch (error) {
       return handleError("getRelatedProducts", error);
+    }
+  },
+
+
+  async getCategories() {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.products.categories);
+      return data;
+    } catch (error) {
+      return handleError("getCategories", error);
+    }
+  },
+
+  async getColours() {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.products.colours);
+      return data;
+    } catch (error) {
+      return handleError("getColours", error);
     }
   },
 
@@ -155,15 +162,56 @@ export const productService = {
       console.error("[getProductsByColour] Validation Error:", error.message);
       throw error;
     }
-
     try {
-      const response = await apiClient.products.getAll({
-        category,
-        filters: { colours: [colourId] } as any,
+      const { data } = await api.get(API_ENDPOINTS.products.base, {
+        params: { category, colours: colourId },
       });
-      return response.data;
+      return data;
     } catch (error) {
       return handleError("getProductsByColour", error);
+    }
+  },
+
+  async getSizes() {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.products.sizes);
+      return data;
+    } catch (error) {
+      return handleError("getSizes", error);
+    }
+  },
+
+  async getFinish() {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.products.finish);
+      return data;
+    } catch (error) {
+      return handleError("getFinish", error);
+    }
+  },
+
+  async getProductsByFinish(finish: string, category?: "kitchen" | "bedroom"): Promise<Product[]> {
+    if (!finish) {
+      const error = new Error("Finish is required");
+      console.error("[getProductsByFinish] Validation Error:", error.message);
+      throw error;
+    }
+    try {
+      const { data } = await api.get(API_ENDPOINTS.products.base, {
+        params: { category, finish },
+      });
+      return data;
+    } catch (error) {
+      return handleError("getProductsByFinish", error);
+    }
+  },
+
+  async getPackages() {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.products.packages);
+      return data;
+    } catch (error) {
+      return handleError("getPackages", error);
     }
   },
 
@@ -173,13 +221,11 @@ export const productService = {
       console.error("[getProductsByRange] Validation Error:", error.message);
       throw error;
     }
-
     try {
-      const response = await apiClient.products.getAll({
-        category,
-        filters: { ranges: [rangeName] } as any,
+      const { data } = await api.get(API_ENDPOINTS.products.base, {
+        params: { category, range: rangeName },
       });
-      return response.data;
+      return data;
     } catch (error) {
       return handleError("getProductsByRange", error);
     }
@@ -191,33 +237,13 @@ export const productService = {
       console.error("[getProductsByStyle] Validation Error:", error.message);
       throw error;
     }
-
     try {
-      const response = await apiClient.products.getAll({
-        category,
-        filters: { styles: [style] } as any,
+      const { data } = await api.get(API_ENDPOINTS.products.base, {
+        params: { category, style },
       });
-      return response.data;
+      return data;
     } catch (error) {
       return handleError("getProductsByStyle", error);
-    }
-  },
-
-  async getProductsByFinish(finish: string, category?: "kitchen" | "bedroom"): Promise<Product[]> {
-    if (!finish) {
-      const error = new Error("Finish is required");
-      console.error("[getProductsByFinish] Validation Error:", error.message);
-      throw error;
-    }
-
-    try {
-      const response = await apiClient.products.getAll({
-        category,
-        filters: { finishes: [finish] } as any,
-      });
-      return response.data;
-    } catch (error) {
-      return handleError("getProductsByFinish", error);
     }
   },
 };

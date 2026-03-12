@@ -1,9 +1,8 @@
 'use client';
-import { Calculator, CreditCard, FileText, CheckCircle2, BadgePercent, Clock, ShieldCheck, HelpCircle } from 'lucide-react';
+import { CreditCard, FileText, CheckCircle2, BadgePercent, Clock, ShieldCheck, HelpCircle } from 'lucide-react';
 import Link from 'next/link';
 
 import ApplyForm from '@/components/finance/ApplyForm';
-import EMICalculator from '@/components/finance/EMICalculator';
 import FinanceComparison from '@/components/finance/FinanceComparison';
 import FinanceOptions from '@/components/finance/FinanceOptions';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -263,28 +262,14 @@ export default function FinancePage() {
   };
 
   const handleCalculate = (_optionId: string) => {
-    const calculatorTab = document.querySelector('[value="calculator"]');
-    if (calculatorTab) {
-      (calculatorTab as HTMLElement).click();
-      setTimeout(() => {
-        const tabsSection = document.getElementById('finance-tabs');
-        if (tabsSection) {
-          tabsSection.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
+    const optionsTab = document.querySelector('[value="options"]');
+    if (optionsTab) {
+      (optionsTab as HTMLElement).click();
     }
   };
 
   const handleFormSubmit = async (data: any) => {
     console.log('Form submitted with data:', data);
-  };
-
-  const handleEMIApply = (details: any) => {
-    const formSection = document.getElementById('application-form');
-    if (formSection) {
-      formSection.scrollIntoView({ behavior: 'smooth' });
-    }
-    alert(`You have calculated an EMI of £${details.emi} for a loan amount of £${details.amount} at an interest rate of ${details.rate}% over a tenure of ${details.tenure} months. Click OK to proceed with your application.`);
   };
 
   return (
@@ -305,26 +290,6 @@ export default function FinancePage() {
                 variant="secondary"
                 className="text-lg bg-lomash-primary text-white hover:bg-lomash-secondary shadow-md hover:shadow-lg"
                 onClick={() => {
-                  const calculatorTab = document.querySelector('[value="calculator"]');
-                  if (calculatorTab) {
-                    (calculatorTab as HTMLElement).click();
-                    setTimeout(() => {
-                      const tabsSection = document.getElementById('finance-tabs');
-                      if (tabsSection) {
-                        tabsSection.scrollIntoView({ behavior: 'smooth' });
-                      }
-                    }, 100);
-                  }
-                }}
-              >
-                <Calculator className="mr-2 h-5 w-5" />
-                Calculate EMI
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="text-lg bg-white text-primary-600 hover:bg-lomash-primary hover:text-white shadow-md hover:shadow-lg"
-                onClick={() => {
                   const formSection = document.getElementById('application-form');
                   if (formSection) {
                     formSection.scrollIntoView({ behavior: 'smooth' });
@@ -333,6 +298,20 @@ export default function FinancePage() {
               >
                 <FileText className="mr-2 h-5 w-5" />
                 Apply Now
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="text-lg bg-white text-primary-600 hover:bg-lomash-primary hover:text-white shadow-md hover:shadow-lg"
+                onClick={() => {
+                  const tabsSection = document.getElementById('finance-tabs');
+                  if (tabsSection) {
+                    tabsSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+              >
+                <CreditCard className="mr-2 h-5 w-5" />
+                View Finance Plans
               </Button>
             </div>
           </div>
@@ -356,8 +335,7 @@ export default function FinancePage() {
         </div>
       </section>
 
-      {/* "Choose Your Finance Plan" - Commented out as per request */}
-      
+      {/* Finance Plans Tabs — EMI Calculator tab removed */}
       <section id="finance-tabs" className="py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -369,27 +347,12 @@ export default function FinancePage() {
             </p>
           </div>
 
-          <Tabs defaultValue="calculator" className="max-w-6xl mx-auto">
+          {/* ✅ defaultValue changed to "options", EMI Calculator tab removed */}
+          <Tabs defaultValue="options" className="max-w-6xl mx-auto">
             <TabsList className="flex justify-center gap-2 bg-lomash-light backdrop-blur-md py-7 px-1 max-w-max mx-auto rounded-2xl border border-lomash-dark/20 mb-10">
-              <TabsTrigger className="flex items-center gap-2 rounded-xl px-4 py-3 text-base font-semibold text-muted-foreground data-[state=active]:bg-lomash-primary data-[state=active]:text-white" value="calculator">EMI Calculator</TabsTrigger>
               <TabsTrigger className="flex items-center gap-2 rounded-xl px-4 py-3 text-base font-semibold text-muted-foreground data-[state=active]:bg-lomash-primary data-[state=active]:text-white" value="options">Finance Options</TabsTrigger>
               <TabsTrigger className="flex items-center gap-2 rounded-xl px-4 py-3 text-base font-semibold text-muted-foreground data-[state=active]:bg-lomash-primary data-[state=active]:text-white" value="compare">Compare Plans</TabsTrigger>
             </TabsList>
-
-            <TabsContent value="calculator">
-              <EMICalculator
-                defaultAmount={5000}
-                defaultRate={3.5}
-                defaultTenure={24}
-                minAmount={5000}
-                maxAmount={50000}
-                minRate={0.5}
-                maxRate={18}
-                minTenure={2}
-                maxTenure={60}
-                onApply={handleEMIApply}
-              />
-            </TabsContent>
 
             <TabsContent value="options">
               <FinanceOptions
@@ -411,43 +374,34 @@ export default function FinancePage() {
           </Tabs>
         </div>
       </section>
-      
 
       {/* Application Process */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
-              How to Apply
-            </h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">How to Apply</h2>
             <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
               Our simple 4-step process makes financing your dream space easy
             </p>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
             {steps.map((step, index) => (
-              <div key={index} className="relative">
-                <div className="text-center">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-lomash-primary text-white text-2xl font-bold mb-4">
-                    {step.number}
-                  </div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">{step.title}</h3>
-                  <p className="text-neutral-600 text-sm">{step.description}</p>
+              <div key={index} className="text-center">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-lomash-primary text-white text-2xl font-bold mb-4">
+                  {step.number}
                 </div>
+                <h3 className="text-xl font-semibold text-neutral-900 mb-2">{step.title}</h3>
+                <p className="text-neutral-600 text-sm">{step.description}</p>
               </div>
             ))}
           </div>
-
           <div className="text-center mt-12">
             <Button
               size="lg"
               className="bg-lomash-primary hover:bg-lomash-secondary px-8 py-4 text-lg font-semibold text-white shadow-md hover:shadow-lg rounded-full"
               onClick={() => {
                 const formSection = document.getElementById('application-form');
-                if (formSection) {
-                  formSection.scrollIntoView({ behavior: 'smooth' });
-                }
+                if (formSection) formSection.scrollIntoView({ behavior: 'smooth' });
               }}
             >
               <FileText className="mr-2 h-5 w-5" />
@@ -457,14 +411,12 @@ export default function FinancePage() {
         </div>
       </section>
 
-      {/* Apply Form Section */}
+      {/* Apply Form */}
       <section id="application-form" className="py-16 bg-neutral-100">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
-                Apply for Finance
-              </h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">Apply for Finance</h2>
               <p className="text-lg text-neutral-600">
                 Complete the form below to get started with your finance application
               </p>
@@ -474,14 +426,11 @@ export default function FinancePage() {
         </div>
       </section>
 
-      {/* "Representative Example" - Commented out as per request */}
-      
+      {/* Representative Example */}
       <section className="py-12 bg-lomash-light">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h3 className="text-xl font-semibold mb-4">
-              Representative Example
-            </h3>
+            <h3 className="text-xl font-semibold mb-4">Representative Example</h3>
             <div className="bg-white rounded-lg p-6 shadow-sm">
               <p className="text-sm text-neutral-600 mb-4">
                 If you borrow £4,50,000 over 36 months at a representative APR of 9.9%, you would make 36 monthly payments of £14,420. The total amount payable would be £5,69,120.
@@ -506,14 +455,13 @@ export default function FinancePage() {
               </ul>
               <p className="text-xs text-neutral-500 mt-4">
                 This is a representative example. The rate you are offered will depend on your individual circumstances.
-                Finance is subject to status and available to UK residents aged 18 or over. Minimum income requirements apply. See full terms and conditions on our website.
+                Finance is subject to status and available to UK residents aged 18 or over. Minimum income requirements apply.
                 <Link href="/finance/terms" className="text-lomash-primary hover:underline"> Read more</Link>.
               </p>
             </div>
           </div>
         </div>
       </section>
-      
 
       {/* FAQs */}
       <section className="py-16 bg-white">
@@ -521,14 +469,9 @@ export default function FinancePage() {
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-12">
               <HelpCircle className="h-12 w-12 text-lomash-primary mx-auto mb-4" />
-              <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
-                Frequently Asked Questions
-              </h2>
-              <p className="text-lg text-neutral-600">
-                Find answers to common questions about our finance options
-              </p>
+              <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">Frequently Asked Questions</h2>
+              <p className="text-lg text-neutral-600">Find answers to common questions about our finance options</p>
             </div>
-
             <Accordion type="single" collapsible className="w-full">
               {faqs.map((faq, index) => (
                 <AccordionItem key={index} value={`item-${index}`}>
@@ -548,9 +491,7 @@ export default function FinancePage() {
       {/* CTA Section */}
       <section className="py-16 bg-gradient-to-br from-lomash-primary to-lomash-secondary text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready to Get Started?
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Get Started?</h2>
           <p className="text-xl text-lomash-primary-100 mb-8 max-w-2xl mx-auto">
             Speak to our finance experts today or start your online application
           </p>
@@ -569,9 +510,7 @@ export default function FinancePage() {
               className="text-lg bg-transparent border-white text-white hover:bg-white hover:text-lomash-primary shadow-md hover:shadow-lg"
               onClick={() => {
                 const formSection = document.getElementById('application-form');
-                if (formSection) {
-                  formSection.scrollIntoView({ behavior: 'smooth' });
-                }
+                if (formSection) formSection.scrollIntoView({ behavior: 'smooth' });
               }}
             >
               Apply Online

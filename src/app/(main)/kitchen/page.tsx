@@ -62,6 +62,11 @@ const products = [
 
 export default function KitchenPage() {
   return (
-    <KitchenPageCom products={products} />
+    <div className="w-full min-h-screen bg-white">
+      {/* Pass products */}
+      <KitchenPageCom 
+        products={products}
+      />
+    </div>
   );
 }

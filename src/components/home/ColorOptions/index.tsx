@@ -20,8 +20,7 @@ const coloursDemoData = [
   { id: "cream", name: "Cream", hexCode: "#EBE3D5" },     
   { id: "black", name: "Black", hexCode: "#1A1A1A" },      
   { id: "cashmere", name: "Cashmere", hexCode: "#F5E6DC" },
-  { id: "pink", name: "Pink", hexCode: "#D4A5A5" },       
-  { id: "red", name: "Red", hexCode: "#6B3E3E" },          
+  { id: "pink", name: "Pink", hexCode: "#D4A5A5" },                
 ];
 
 export function ColorOptions() {
@@ -33,11 +32,12 @@ export function ColorOptions() {
   const colours = coloursData?.data || coloursDemoData;
 
   return (
-    <section className="w-full bg-gradient-to-br from-[#F5F0E8] via-[#F9F6F1] to-[#F5F0E8] py-16 md:py-24 lg:py-32">
+    <section className="w-full bg-gradient-to-br from-[#E8F3F5] via-[#F1F9FB] to-[#E8F3F5] py-16 md:py-24 lg:py-32">
       <div className="container-custom px-6 sm:px-10 lg:px-18">
         {/* Section Header */}
         <div className="mb-8 md:mb-12 lg:mb-16">
-          <h2 className="font-serif text-4xl md:text-5xl lg:text-5xl font-bold text-slate-900 mb-4 leading-tight">
+          {/* ✅ Removed font-serif — now matches ExploreBedroom bold sans-serif style */}
+          <h2 className="text-4xl md:text-5xl lg:text-5xl font-bold text-slate-900 mb-4 leading-tight">
             Explore kitchens by colour
           </h2>
           <p className="text-base md:text-lg text-slate-600 leading-relaxed">
@@ -46,7 +46,7 @@ export function ColorOptions() {
           <div className="mt-6 w-16 h-1 bg-gradient-to-r from-green-600 to-transparent"></div>
         </div>
 
-        {/* Colors Grid - Single Row Horizontal Scroll on Mobile */}
+        {/* Colors Grid */}
         {isLoading ? (
           <div className="flex gap-6 md:gap-8 overflow-x-auto pb-6 md:pb-0">
             {Array.from({ length: 12 }).map((_, i) => (

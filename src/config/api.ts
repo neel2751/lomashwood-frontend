@@ -1,4 +1,3 @@
-
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
 
@@ -26,12 +25,11 @@ export const RATE_LIMIT = {
 
 export const CACHE_CONFIG = {
   enabled: process.env.NODE_ENV === "production",
-  ttl: 300, 
+  ttl: 300,
   maxSize: 100,
 };
 
 export const API_ENDPOINTS = {
- 
   auth: {
     login: "/auth/login",
     register: "/auth/register",
@@ -67,6 +65,11 @@ export const API_ENDPOINTS = {
     related: (id: string) => `/products/${id}/related`,
     reviews: (id: string) => `/products/${id}/reviews`,
     addReview: (id: string) => `/products/${id}/reviews`,
+    categories: "/products/categories",
+    colours: "/products/colours",
+    sizes: "/products/sizes",
+    finish: "/products/finish",
+    packages: "/products/packages",
   },
 
   categories: {
@@ -145,6 +148,11 @@ export const API_ENDPOINTS = {
     cancelAppointment: (id: string) => `/showrooms/appointments/${id}/cancel`,
     reviews: (id: string) => `/showrooms/${id}/reviews`,
     addReview: (id: string) => `/showrooms/${id}/reviews`,
+  },
+  appointments: {
+    create: "/appointments",
+    slots: "/appointments/slots",
+    slotsCount: "/appointments/slots/count",
   },
 
   contact: {
@@ -311,6 +319,11 @@ export const QUERY_KEYS = {
     category: (categoryId: string) => ["products", "category", categoryId],
     related: (id: string) => ["products", "related", id],
     reviews: (id: string) => ["products", "reviews", id],
+    categories: ["products", "categories"],
+    colours: ["products", "colours"],
+    sizes: ["products", "sizes"],
+    finish: ["products", "finish"],
+    packages: ["products", "packages"],
   },
   categories: {
     all: ["categories"],
@@ -346,6 +359,10 @@ export const QUERY_KEYS = {
     nearby: (coords: unknown) => ["showrooms", "nearby", coords],
     appointments: ["showrooms", "appointments"],
   },
+  appointments: {
+    slots: (params: unknown) => ["appointments", "slots", params],
+    slotsCount: (params: unknown) => ["appointments", "slots-count", params],
+  },
   search: {
     query: (q: string) => ["search", q],
     suggestions: (q: string) => ["search", "suggestions", q],
@@ -354,7 +371,7 @@ export const QUERY_KEYS = {
 
 export const STALE_TIME = {
   INSTANT: 0,
-  SHORT: 30000, 
+  SHORT: 30000,
   MEDIUM: 300000,
   LONG: 600000,
   VERY_LONG: 3600000,
@@ -409,18 +426,25 @@ export function getFullUrl(endpoint: string): string {
 
 export function getErrorMessage(error: unknown): string {
   if (typeof error === "string") return error;
-  
+
   if (error && typeof error === "object" && "response" in error) {
-    const response = (error as { response?: { data?: { message?: string; error?: string }; status?: number } }).response;
-    
+    const response = (
+      error as {
+        response?: {
+          data?: { message?: string; error?: string };
+          status?: number;
+        };
+      }
+    ).response;
+
     if (response?.data?.message) {
       return response.data.message;
     }
-    
+
     if (response?.data?.error) {
       return response.data.error;
     }
-    
+
     if (response?.status !== undefined) {
       switch (response.status) {
         case HTTP_STATUS.UNAUTHORIZED:
@@ -440,11 +464,11 @@ export function getErrorMessage(error: unknown): string {
       }
     }
   }
-  
+
   if (error && typeof error === "object" && "message" in error) {
     return String((error as { message: string }).message);
   }
-  
+
   return API_ERROR_MESSAGES.UNKNOWN_ERROR;
 }
 

@@ -1,13 +1,10 @@
-import type { Metadata } from "next";
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, MapPin } from "lucide-react";
+import { useState, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
-
-export const metadata: Metadata = {
-  title: "Projects | Lomash Wood",
-  description: "Browse our completed kitchen and bedroom projects across the UK.",
-};
 
 const categories = ["All", "Kitchen", "Bedroom", "Media Wall"];
 
@@ -87,6 +84,14 @@ const projects = [
 ];
 
 export default function ProjectsPage() {
+  const [activeCategory, setActiveCategory] = useState("All");
+
+  // ── Filter projects by active category ─────────────────────────────────────
+  const filteredProjects = useMemo(() => {
+    if (activeCategory === "All") return projects;
+    return projects.filter((p) => p.category === activeCategory);
+  }, [activeCategory]);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero */}
@@ -108,8 +113,9 @@ export default function ProjectsPage() {
             {categories.map((cat) => (
               <button
                 key={cat}
+                onClick={() => setActiveCategory(cat)} // ← wired up
                 className={`flex-shrink-0 px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                  cat === "All"
+                  activeCategory === cat        // ← reflects actual state
                     ? "bg-lomash-primary text-white"
                     : "bg-gray-100 text-gray-600 hover:bg-lomash-primary/10 hover:text-lomash-primary"
                 }`}
@@ -121,52 +127,89 @@ export default function ProjectsPage() {
         </div>
       </section>
 
+      {/* Results count */}
+      <div className="container mx-auto px-4 pt-6">
+        <p className="text-sm text-gray-500">
+          Showing{" "}
+          <span className="font-semibold text-lomash-dark">
+            {filteredProjects.length}
+          </span>{" "}
+          of{" "}
+          <span className="font-semibold text-lomash-dark">{projects.length}</span>{" "}
+          projects
+          {activeCategory !== "All" && (
+            <span className="ml-1">
+              in{" "}
+              <span className="font-semibold text-lomash-primary">
+                {activeCategory}
+              </span>
+            </span>
+          )}
+        </p>
+      </div>
+
       {/* Projects Grid */}
-      <section className="container mx-auto px-4 py-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((project) => (
-            <Link
-              key={project.id}
-              href={`/projects/${project.id}`}
-              className="group block"
+      <section className="container mx-auto px-4 py-6">
+        {filteredProjects.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <h3 className="text-lg font-semibold text-gray-700 mb-2">
+              No projects found
+            </h3>
+            <p className="text-sm text-gray-400 mb-6">
+              No projects in this category yet. Check back soon!
+            </p>
+            <button
+              onClick={() => setActiveCategory("All")}
+              className="px-5 py-2 rounded-full bg-lomash-primary text-white text-sm font-medium hover:opacity-90 transition"
             >
-              <div className="bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300">
-                {/* Image */}
-                <div className="relative aspect-[4/3] overflow-hidden">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute top-3 left-3">
-                    <Badge className="bg-white text-lomash-dark text-xs font-medium border-0 shadow-sm">
-                      {project.category}
-                    </Badge>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-4">
-                  <h3 className="font-bold text-lomash-dark text-base mb-1 group-hover:text-lomash-primary transition-colors">
-                    {project.title}
-                  </h3>
-
-                  <div className="flex items-center justify-between mt-2">
-                    <div className="flex items-center gap-1 text-xs text-gray-400">
-                      <MapPin className="h-3 w-3" />
-                      <span>{project.location}</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-xs font-semibold text-lomash-primary group-hover:gap-2 transition-all">
-                      <span>View</span>
-                      <ArrowRight className="h-3 w-3" />
+              View All Projects
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProjects.map((project) => (
+              <Link
+                key={project.id}
+                href={`/projects/${project.id}`}
+                className="group block"
+              >
+                <div className="bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300">
+                  {/* Image */}
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute top-3 left-3">
+                      <Badge className="bg-white text-lomash-dark text-xs font-medium border-0 shadow-sm">
+                        {project.category}
+                      </Badge>
                     </div>
                   </div>
+
+                  {/* Content */}
+                  <div className="p-4">
+                    <h3 className="font-bold text-lomash-dark text-base mb-1 group-hover:text-lomash-primary transition-colors">
+                      {project.title}
+                    </h3>
+                    <div className="flex items-center justify-between mt-2">
+                      <div className="flex items-center gap-1 text-xs text-gray-400">
+                        <MapPin className="h-3 w-3" />
+                        <span>{project.location}</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-xs font-semibold text-lomash-primary group-hover:gap-2 transition-all">
+                        <span>View</span>
+                        <ArrowRight className="h-3 w-3" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

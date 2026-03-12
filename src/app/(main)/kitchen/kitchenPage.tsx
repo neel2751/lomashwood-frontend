@@ -1,103 +1,172 @@
 "use client";
-import { Phone } from 'lucide-react';
+import { Phone, Shield, Paintbrush, CreditCard, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
-import { Suspense, useState } from 'react';
+import { Suspense, useState, useMemo } from 'react';
 
 import CategoryHero from '@/components/category/CategoryHero';
 import HelpSidebar from '@/components/category/HelpSidebar';
-import Filters from '@/components/products/Filters';
+import Filters, { ActiveFilter } from '@/components/products/Filters';
 import ProductGrid from '@/components/products/ProductGrid';
 import ProductSort from '@/components/products/ProductSort';
 import ViewToggle from '@/components/products/ViewToggle';
 import { Button } from '@/components/ui/button';
 
+interface KitchenPageComProps {
+  products: any[];
+  filterBarSpacing?: string;
+  productsSpacing?: string;
+}
 
-export default function KitchenPageCom({ products }: { products: any[] }) {
-
+export default function KitchenPageCom({ 
+  products,
+  filterBarSpacing = "pt-10 pb-6",
+  productsSpacing = "pb-16"
+}: KitchenPageComProps) {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [activeFilters, setActiveFilters] = useState<ActiveFilter[]>([]);
+  const [sortBy, setSortBy] = useState("popular");
 
-  const handleViewChange = (mode: 'grid' | 'list') => {
-    setViewMode(mode);
+  // ── Filter + Sort logic ────────────────────────────────────────────────────
+  const filteredProducts = useMemo(() => {
+    let result = [...products];
+
+    if (activeFilters.length > 0) {
+      // Group filters by category (OR within category, AND across categories)
+      const filtersByGroup: Record<string, string[]> = {};
+      activeFilters.forEach(({ filterId, optionId }) => {
+        if (!filtersByGroup[filterId]) filtersByGroup[filterId] = [];
+        filtersByGroup[filterId].push(optionId);
+      });
+
+      result = result.filter((product) =>
+        Object.entries(filtersByGroup).every(([filterId, optionIds]) => {
+          if (filterId === "colour") {
+            return optionIds.some((id) =>
+              product.colors?.some((c: string) => c.toLowerCase().includes(id.toLowerCase()))
+            );
+          }
+          if (filterId === "style") {
+            return optionIds.some((id) =>
+              product.style?.toLowerCase().includes(id.toLowerCase())
+            );
+          }
+          if (filterId === "finish") {
+            return optionIds.some((id) =>
+              product.finish?.toLowerCase().replace(" ", "-").includes(id.toLowerCase())
+            );
+          }
+          if (filterId === "range") {
+            return optionIds.some((id) => {
+              const price = product.price?.from ?? 0;
+              if (id === "budget") return price < 50000;
+              if (id === "mid-range") return price >= 50000 && price < 75000;
+              if (id === "premium") return price >= 75000 && price < 150000;
+              if (id === "luxury") return price >= 150000;
+              return true;
+            });
+          }
+          return true;
+        })
+      );
+    }
+
+    // Sort
+    switch (sortBy) {
+      case "price-low":
+        result.sort((a, b) => (a.price?.from ?? 0) - (b.price?.from ?? 0));
+        break;
+      case "price-high":
+        result.sort((a, b) => (b.price?.from ?? 0) - (a.price?.from ?? 0));
+        break;
+      case "rating":
+        result.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+        break;
+      case "newest":
+        result.sort((a) => (a.isNew ? -1 : 1));
+        break;
+      default:
+        break;
+    }
+
+    return result;
+  }, [products, activeFilters, sortBy]);
+
+  const handleFiltersChange = (filters: ActiveFilter[], sort: string) => {
+    setActiveFilters(filters);
+    setSortBy(sort);
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Category Hero */}
+    <div className="min-h-screen bg-white">
       <CategoryHero
         title="Kitchen Design & Consultation"
         description="Create your perfect kitchen with our luxurious designs tailored to your lifestyle"
-        image='https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0'
+        image="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0"
         category="kitchen"
-        className="px-4 sm:px-6 lg:px-18
-    pt-12 md:pt-16 lg:pt-20
-    pb-16 md:pb-20 lg:pb-24"
+        className="px-4 sm:px-6 lg:px-18 pt-12 md:pt-16 lg:pt-20 pb-16 md:pb-20 lg:pb-24"
       />
 
       <div className="container mx-auto px-8 lg:px-18 py-8 lg:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
-          {/* Filters Sidebar - Desktop */}
+
+          {/* Sidebar */}
           <aside className="hidden lg:block lg:col-span-1">
             <div className="sticky top-24 space-y-6">
-              <Filters />
               <HelpSidebar />
             </div>
           </aside>
 
           {/* Main Content */}
           <main className="lg:col-span-3">
-            {/* Toolbar */}
-            <div className="mb-6 space-y-4">
-              {/* Mobile Filters & Sort */}
-              <div className="flex items-center justify-between gap-4 lg:hidden">
-                <Filters />
-                <ProductSort />
-                <ViewToggle
-                  view={viewMode}
-                  onChange={(view) => {
-                    handleViewChange(view);
-                  }}
-                />
-              </div>
 
-              {/* Desktop Toolbar */}
+            {/* Single Filters instance — passes state up via onFiltersChange */}
+            <div className={`w-full ${filterBarSpacing} border-b border-gray-200 mb-6`}>
+              <Filters
+                resultCount={filteredProducts.length}
+                onFiltersChange={handleFiltersChange}
+              />
+            </div>
+
+            {/* Toolbar */}
+            <div className={`mb-6 space-y-4 ${productsSpacing}`}>
+              <div className="flex items-center justify-between gap-4 lg:hidden">
+                <ProductSort />
+                <ViewToggle view={viewMode} onChange={(view) => setViewMode(view)} />
+              </div>
               <div className="hidden lg:flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <h1 className="text-2xl font-semibold">Kitchen Products</h1>
-                  <span className="text-sm text-muted-foreground">
-                    Showing results
+                  <h1 className="text-2xl font-semibold text-gray-900">Kitchen Products</h1>
+                  <span className="text-sm text-gray-500">
+                    Showing {filteredProducts.length} of {products.length} results
                   </span>
                 </div>
                 <div className="flex items-center gap-4">
                   <ProductSort />
-                  <ViewToggle view={viewMode} onChange={handleViewChange} />
+                  <ViewToggle view={viewMode} onChange={setViewMode} />
                 </div>
               </div>
             </div>
 
-            {/* Products Grid */}
+            {/* Products Grid — receives filtered products */}
             <Suspense fallback={<ProductGridSkeleton />}>
-              <ProductGrid
-                products={products}
-                viewMode={viewMode}
-              />
+              <ProductGrid products={filteredProducts} viewMode={viewMode} />
             </Suspense>
 
             {/* CTA Section */}
-            <div className="mt-12 bg-primary/5 rounded-lg p-6 lg:p-8 text-center">
-              <h2 className="text-2xl font-semibold mb-3">
-                Ready to Transform Your Kitchen?
-              </h2>
-              <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+            <div className="mt-12 rounded-2xl p-8 lg:p-10 text-center bg-[#77c117]/8 border border-[#77c117]/20">
+              <div className="inline-flex items-center gap-2 bg-[#77c117]/15 text-[#77c117] text-xs font-semibold px-3 py-1.5 rounded-full mb-4">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#77c117]" />
+                Free Consultation Available
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-3">Ready to Transform Your Kitchen?</h2>
+              <p className="text-gray-500 mb-8 max-w-2xl mx-auto text-[15px] leading-relaxed">
                 Let our experienced designers help you create the kitchen of your dreams.
-                Schedule a free consultation and bring your vision to life.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button asChild size="lg">
-                  <Link href="/book-appointment">
-                    Book Free Consultation
-                  </Link>
+                <Button asChild size="lg" className="bg-[#77c117] hover:bg-[#6aad14] text-white font-semibold px-8 rounded-full shadow-md shadow-[#77c117]/30">
+                  <Link href="/book-appointment">Book Free Consultation</Link>
                 </Button>
-                <Button asChild variant="outline" size="lg">
+                <Button asChild variant="outline" size="lg" className="border-[#77c117] text-[#77c117] hover:bg-[#77c117]/5 font-semibold px-8 rounded-full">
                   <Link href="tel:+1234567890" className="flex items-center gap-2">
                     <Phone className="h-4 w-4" />
                     Call Us Now
@@ -106,114 +175,44 @@ export default function KitchenPageCom({ products }: { products: any[] }) {
               </div>
             </div>
 
-            {/* Info Section */}
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center p-6 border rounded-lg">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
+            {/* Info Cards */}
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-5">
+              {[
+                { icon: <Shield className="w-6 h-6 text-[#77c117]" />, title: "Lifetime Warranty", desc: "Premium quality with comprehensive coverage" },
+                { icon: <Paintbrush className="w-6 h-6 text-[#77c117]" />, title: "Bespoke Designs", desc: "Tailored furniture to match your space" },
+                { icon: <CreditCard className="w-6 h-6 text-[#77c117]" />, title: "Flexible Payment", desc: "0% APR finance options available" },
+              ].map((card) => (
+                <div key={card.title} className="text-center p-6 border border-gray-100 rounded-xl hover:border-[#77c117]/30 hover:shadow-sm transition-all duration-200 bg-white">
+                  <div className="w-12 h-12 bg-[#77c117]/10 rounded-full flex items-center justify-center mx-auto mb-4">{card.icon}</div>
+                  <h3 className="font-semibold text-gray-900 mb-2">{card.title}</h3>
+                  <p className="text-sm text-gray-500">{card.desc}</p>
                 </div>
-                <h3 className="font-semibold mb-2">Lifetime Warranty</h3>
-                <p className="text-sm text-muted-foreground">
-                  Premium quality with comprehensive coverage
-                </p>
-              </div>
-
-              <div className="text-center p-6 border rounded-lg">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                  </svg>
-                </div>
-                <h3 className="font-semibold mb-2">Bespoke Designs</h3>
-                <p className="text-sm text-muted-foreground">
-                  Tailored furniture to match your space
-                </p>
-              </div>
-
-              <div className="text-center p-6 border rounded-lg">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <h3 className="font-semibold mb-2">Flexible Payment</h3>
-                <p className="text-sm text-muted-foreground">
-                  0% APR finance options available
-                </p>
-              </div>
+              ))}
             </div>
 
-            {/* Features Section */}
-            <div className="mt-12 border rounded-lg p-6 lg:p-8">
-              <h2 className="text-xl font-semibold mb-6 text-center">
-                Why Choose Our Kitchen Furniture?
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0">
-                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                      <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
+            {/* Features */}
+            <div className="mt-10 border border-gray-100 rounded-xl p-6 lg:p-8 bg-gray-50/50">
+              <h2 className="text-xl font-bold text-gray-900 mb-2 text-center">Why Choose Our Kitchen Furniture?</h2>
+              <p className="text-center text-sm text-gray-500 mb-8">Crafted with care, built to last</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {[
+                  { title: "Custom Storage Solutions", desc: "Maximize your space with cabinetry, drawers, and shelving designed for your needs" },
+                  { title: "Premium Materials", desc: "Hand-selected woods and finishes that stand the test of time" },
+                  { title: "Professional Installation", desc: "Expert fitting service included with every purchase" },
+                  { title: "Design Flexibility", desc: "Choose from hundreds of colours, styles, and configurations" },
+                ].map((feature) => (
+                  <div key={feature.title} className="flex gap-4 p-4 bg-white rounded-lg border border-gray-100 hover:border-[#77c117]/20 transition-colors">
+                    <div className="flex-shrink-0 mt-0.5">
+                      <div className="w-8 h-8 bg-[#77c117]/10 rounded-lg flex items-center justify-center">
+                        <CheckCircle2 className="w-4 h-4 text-[#77c117]" />
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-1 text-[14px]">{feature.title}</h3>
+                      <p className="text-sm text-gray-500 leading-relaxed">{feature.desc}</p>
                     </div>
                   </div>
-                  <div>
-                    <h3 className="font-medium mb-1">Custom Storage Solutions</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Maximize your space with cabinetry, drawers, and shelving designed for your needs
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0">
-                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                      <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="font-medium mb-1">Premium Materials</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Hand-selected woods and finishes that stand the test of time
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0">
-                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                      <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="font-medium mb-1">Professional Installation</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Expert fitting service included with every purchase
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0">
-                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                      <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="font-medium mb-1">Design Flexibility</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Choose from hundreds of colours, styles, and configurations
-                    </p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </main>
@@ -228,10 +227,10 @@ function ProductGridSkeleton() {
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {[...Array(9)].map((_, i) => (
         <div key={i} className="space-y-4">
-          <div className="aspect-[4/3] bg-muted animate-pulse rounded-lg" />
+          <div className="aspect-[4/3] bg-gray-100 animate-pulse rounded-xl" />
           <div className="space-y-2">
-            <div className="h-4 bg-muted animate-pulse rounded w-3/4" />
-            <div className="h-3 bg-muted animate-pulse rounded w-1/2" />
+            <div className="h-4 bg-gray-100 animate-pulse rounded w-3/4" />
+            <div className="h-3 bg-gray-100 animate-pulse rounded w-1/2" />
           </div>
         </div>
       ))}

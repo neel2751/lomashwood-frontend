@@ -19,7 +19,6 @@ export function DesktopNav({ className }: DesktopNavProps) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navRef = useRef<HTMLElement>(null);
 
-  // Close menu on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (navRef.current && !navRef.current.contains(e.target as Node)) {
@@ -30,7 +29,6 @@ export function DesktopNav({ className }: DesktopNavProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Close menu on route change
   useEffect(() => {
     setActiveMenu(null);
   }, [pathname]);
@@ -65,11 +63,11 @@ export function DesktopNav({ className }: DesktopNavProps) {
             onMouseLeave={handleMouseLeave}
           >
             {isMegaMenu ? (
-              // Clickable trigger for mega menu items
               <button
                 onClick={() => handleClick(menuType as "kitchen" | "bedroom")}
                 className={cn(
-                  "relative flex items-center gap-1 text-[14px] font-medium transition-colors duration-200 py-8 bg-transparent border-none cursor-pointer",
+                  // ✅ Changed from 16px → 14.5px (industry standard 14px–15px)
+                  "relative flex items-center gap-1 text-[14.5px] font-medium transition-colors duration-200 py-8 bg-transparent border-none cursor-pointer",
                   isActive || activeMenu === menuType
                     ? "text-lomash-primary"
                     : "text-lomash-dark hover:text-lomash-primary",
@@ -90,7 +88,8 @@ export function DesktopNav({ className }: DesktopNavProps) {
               <Link
                 href={link.href}
                 className={cn(
-                  "relative flex items-center gap-1 text-[14px] font-medium transition-colors duration-200 py-8",
+                  // ✅ Changed from 16px → 14.5px (industry standard 14px–15px)
+                  "relative flex items-center gap-1 text-[14.5px] font-medium transition-colors duration-200 py-8",
                   isActive
                     ? "text-lomash-primary"
                     : "text-lomash-dark hover:text-lomash-primary",

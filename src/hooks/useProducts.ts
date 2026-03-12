@@ -1,6 +1,5 @@
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
-
-import { QUERY_KEYS } from "@/lib/react-query";
+import { QUERY_KEYS } from "@/config/api";
 import { productService } from "@/services/productService";
 import type { ProductFilters } from "@/types";
 
@@ -26,10 +25,7 @@ export function useInfiniteProducts(params?: {
   return useInfiniteQuery({
     queryKey: QUERY_KEYS.products.list(params),
     queryFn: ({ pageParam = 1 }) =>
-      productService.getProducts({
-        ...params,
-        page: pageParam,
-      }),
+      productService.getProducts({ ...params, page: pageParam }),
     getNextPageParam: (lastPage) => {
       const { page, hasMore } = lastPage.pagination;
       return hasMore ? page + 1 : undefined;
@@ -45,7 +41,7 @@ export function useKitchens(params?: {
   sort?: string;
 }) {
   return useQuery({
-    queryKey: QUERY_KEYS.products.kitchen(params),
+    queryKey: [...QUERY_KEYS.products.all, "kitchen", params],
     queryFn: () => productService.getKitchens(params),
   });
 }
@@ -56,12 +52,9 @@ export function useInfiniteKitchens(params?: {
   sort?: string;
 }) {
   return useInfiniteQuery({
-    queryKey: QUERY_KEYS.products.kitchen(params),
+    queryKey: [...QUERY_KEYS.products.all, "kitchen", params],
     queryFn: ({ pageParam = 1 }) =>
-      productService.getKitchens({
-        ...params,
-        page: pageParam,
-      }),
+      productService.getKitchens({ ...params, page: pageParam }),
     getNextPageParam: (lastPage) => {
       const { page, hasMore } = lastPage.pagination;
       return hasMore ? page + 1 : undefined;
@@ -77,7 +70,7 @@ export function useBedrooms(params?: {
   sort?: string;
 }) {
   return useQuery({
-    queryKey: QUERY_KEYS.products.bedroom(params),
+    queryKey: [...QUERY_KEYS.products.all, "bedroom", params],
     queryFn: () => productService.getBedrooms(params),
   });
 }
@@ -88,12 +81,9 @@ export function useInfiniteBedrooms(params?: {
   sort?: string;
 }) {
   return useInfiniteQuery({
-    queryKey: QUERY_KEYS.products.bedroom(params),
+    queryKey: [...QUERY_KEYS.products.all, "bedroom", params],
     queryFn: ({ pageParam = 1 }) =>
-      productService.getBedrooms({
-        ...params,
-        page: pageParam,
-      }),
+      productService.getBedrooms({ ...params, page: pageParam }),
     getNextPageParam: (lastPage) => {
       const { page, hasMore } = lastPage.pagination;
       return hasMore ? page + 1 : undefined;
@@ -112,7 +102,7 @@ export function useProduct(id: string) {
 
 export function useFeaturedProducts(category?: "kitchen" | "bedroom") {
   return useQuery({
-    queryKey: [...QUERY_KEYS.products.all, "featured", category],
+    queryKey: QUERY_KEYS.products.featured,
     queryFn: () => productService.getFeaturedProducts(category),
   });
 }
@@ -126,7 +116,7 @@ export function usePopularProducts(category?: "kitchen" | "bedroom") {
 
 export function useSearchProducts(query: string, category?: "kitchen" | "bedroom") {
   return useQuery({
-    queryKey: [...QUERY_KEYS.products.all, "search", query, category],
+    queryKey: QUERY_KEYS.products.search(query),
     queryFn: () => productService.searchProducts(query, category),
     enabled: query.length > 2,
   });
@@ -134,7 +124,7 @@ export function useSearchProducts(query: string, category?: "kitchen" | "bedroom
 
 export function useRelatedProducts(productId: string, limit?: number) {
   return useQuery({
-    queryKey: [...QUERY_KEYS.products.all, "related", productId, limit],
+    queryKey: QUERY_KEYS.products.related(productId),
     queryFn: () => productService.getRelatedProducts(productId, limit),
     enabled: !!productId,
   });
@@ -142,7 +132,7 @@ export function useRelatedProducts(productId: string, limit?: number) {
 
 export function useProductsByColour(colourId: string, category?: "kitchen" | "bedroom") {
   return useQuery({
-    queryKey: [...QUERY_KEYS.products.all, "colour", colourId, category],
+    queryKey: QUERY_KEYS.products.colours,
     queryFn: () => productService.getProductsByColour(colourId, category),
     enabled: !!colourId,
   });
@@ -166,8 +156,48 @@ export function useProductsByStyle(style: string, category?: "kitchen" | "bedroo
 
 export function useProductsByFinish(finish: string, category?: "kitchen" | "bedroom") {
   return useQuery({
-    queryKey: [...QUERY_KEYS.products.all, "finish", finish, category],
+    queryKey: QUERY_KEYS.products.finish,
     queryFn: () => productService.getProductsByFinish(finish, category),
     enabled: !!finish,
+  });
+}
+
+// ✅ NEW — GET /api/v1/products/categories
+export function useProductCategories() {
+  return useQuery({
+    queryKey: QUERY_KEYS.products.categories,
+    queryFn: () => productService.getCategories(),
+  });
+}
+
+// ✅ NEW — GET /api/v1/products/colours
+export function useProductColours() {
+  return useQuery({
+    queryKey: QUERY_KEYS.products.colours,
+    queryFn: () => productService.getColours(),
+  });
+}
+
+// ✅ NEW — GET /api/v1/products/sizes
+export function useProductSizes() {
+  return useQuery({
+    queryKey: QUERY_KEYS.products.sizes,
+    queryFn: () => productService.getSizes(),
+  });
+}
+
+// ✅ NEW — GET /api/v1/products/finish
+export function useProductFinish() {
+  return useQuery({
+    queryKey: QUERY_KEYS.products.finish,
+    queryFn: () => productService.getFinish(),
+  });
+}
+
+// ✅ NEW — GET /api/v1/products/packages
+export function useProductPackages() {
+  return useQuery({
+    queryKey: QUERY_KEYS.products.packages,
+    queryFn: () => productService.getPackages(),
   });
 }
