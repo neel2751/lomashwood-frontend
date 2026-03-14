@@ -15,7 +15,6 @@ interface OfferCardProps {
 }
 
 export function OfferCard({ sale, className }: OfferCardProps) {
-  // Calculate days remaining if validUntil exists
   const daysRemaining = sale.validUntil
     ? Math.ceil(
         (new Date(sale.validUntil).getTime() - new Date().getTime()) /
@@ -26,7 +25,7 @@ export function OfferCard({ sale, className }: OfferCardProps) {
   return (
     <div
       className={cn(
-        "group relative bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300",
+        "group relative bg-white rounded-lg overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer",
         className
       )}
     >
@@ -40,9 +39,12 @@ export function OfferCard({ sale, className }: OfferCardProps) {
           sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
 
+        {/* Gradient Overlay - Media Wall Style */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+
         {/* Discount Badge */}
         {sale.discount && (
-          <div className="absolute top-4 right-4">
+          <div className="absolute top-4 right-4 group-hover:scale-110 transition-transform duration-300">
             <Badge
               variant="destructive"
               className="text-lg px-4 py-2 shadow-lg"
@@ -55,7 +57,7 @@ export function OfferCard({ sale, className }: OfferCardProps) {
 
         {/* Featured Badge */}
         {sale.featured && (
-          <div className="absolute top-4 left-4">
+          <div className="absolute top-4 left-4 group-hover:translate-y-1 transition-transform duration-300">
             <Badge variant="accent" className="shadow-md">
               Featured
             </Badge>
@@ -64,8 +66,8 @@ export function OfferCard({ sale, className }: OfferCardProps) {
 
         {/* Time Remaining */}
         {daysRemaining !== null && daysRemaining > 0 && (
-          <div className="absolute bottom-4 left-4 bg-black/70 backdrop-blur-sm text-white px-3 py-2 rounded-lg flex items-center space-x-2">
-            <Clock className="h-4 w-4" />
+          <div className="absolute bottom-4 left-4 bg-black/70 backdrop-blur-sm text-white px-3 py-2 rounded-lg flex items-center space-x-2 group-hover:bg-black/90 transition-colors duration-300">
+            <Clock className="h-4 w-4 group-hover:animate-pulse" />
             <span className="text-sm font-medium">
               {daysRemaining} {daysRemaining === 1 ? "day" : "days"} left
             </span>
@@ -74,29 +76,33 @@ export function OfferCard({ sale, className }: OfferCardProps) {
       </div>
 
       {/* Content */}
-      <div className="p-6">
+      <div className="p-6 bg-white group-hover:bg-gray-50 transition-colors">
         {/* Categories */}
-        <div className="flex items-center space-x-2 mb-3">
+        <div className="flex items-center space-x-2 mb-3 group-hover:translate-x-1 transition-transform duration-300">
           {sale.categories.map((category) => (
-            <Badge key={category} variant="secondary" className="text-xs">
+            <Badge 
+              key={category} 
+              variant="secondary" 
+              className="text-xs group-hover:bg-primary/10 transition-colors duration-300"
+            >
               {category.charAt(0).toUpperCase() + category.slice(1)}
             </Badge>
           ))}
         </div>
 
         {/* Title */}
-        <h3 className="text-xl font-bold text-lomash-dark mb-2 line-clamp-2 group-hover:text-lomash-primary transition-colors">
+        <h3 className="text-xl font-bold text-lomash-dark mb-2 line-clamp-2 group-hover:text-lomash-primary transition-colors duration-200">
           {sale.title}
         </h3>
 
         {/* Description */}
-        <p className="text-sm text-lomash-gray-600 mb-4 line-clamp-3">
+        <p className="text-sm text-lomash-gray-600 mb-4 line-clamp-3 group-hover:text-lomash-gray-700 transition-colors duration-200">
           {sale.description}
         </p>
 
         {/* CTA Button */}
         <Link href={`/sale#${sale.id}`}>
-          <Button className="w-full group/btn">
+          <Button className="w-full group/btn transition-all duration-300 hover:shadow-lg">
             View Offer Details
             <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
           </Button>

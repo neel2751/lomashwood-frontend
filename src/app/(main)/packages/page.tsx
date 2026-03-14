@@ -1,6 +1,5 @@
 "use client";
 
-import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { SlidersHorizontal, ArrowRight, Check, X } from "lucide-react";
@@ -91,7 +90,6 @@ const allPackages = [
   },
 ];
 
-// ── Filter state shape ────────────────────────────────────────────────────────
 interface ActiveFilters {
   category: string[];
   style: string[];
@@ -121,11 +119,7 @@ export default function PackagesPage() {
       return { ...prev, [group]: updated };
     });
   };
-
-  // ── Clear all filters ───────────────────────────────────────────────────────
   const clearFilters = () => setActiveFilters(emptyFilters);
-
-  // ── Check if any filter is active ──────────────────────────────────────────
   const hasActiveFilters = Object.values(activeFilters).some((arr) => arr.length > 0);
 
   // ── Count total active selections ──────────────────────────────────────────

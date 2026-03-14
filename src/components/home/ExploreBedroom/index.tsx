@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AnimatedSection, AnimatedContent, fadeUp } from "@/components/ui/animated-section";
 import { useFeaturedProducts } from "@/hooks/useProducts";
 
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
@@ -132,74 +133,75 @@ export function ExploreBedroom() {
   const productData = products && products.length > 0 ? products : productDemoData;
 
   return (
-    <section className="section-padding bg-lomash-gray-50
+    <AnimatedSection>
+      <section className="section-padding bg-lomash-gray-50
      px-6 sm:px-10 lg:px-18
     pt-12 md:pt-16 lg:pt-20
     pb-16 md:pb-20 lg:pb-24
     ">
-      <div className="container-custom">
-        {/* Section Header */}
-        <div className="flex items-center justify-between mb-8 md:mb-12">
-          <div>
-            <h2 className="heading-2 text-lomash-dark mb-2">
-              Explore Bedroom
-            </h2>
-            <p className="text-lg text-lomash-gray-600">
-              All bedrooms come from the backend
-            </p>
-          </div>
-          <Link href="/bedroom" className="hidden md:block">
-            <Button variant="outline" size="lg" className="group">
-              View All Bedrooms
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Button>
-          </Link>
-        </div>
+        <div className="container-custom">
+          {/* Section Header */}
+          <AnimatedSection className="flex items-center justify-between mb-8 md:mb-12">
+            <div>
+              <AnimatedContent variants={fadeUp} custom={0}>
+                <h2 className="heading-2 text-lomash-dark mb-2">
+                  Explore Bedroom
+                </h2>
+              </AnimatedContent>
+              <AnimatedContent variants={fadeUp} custom={1}>
+                <p className="text-lg text-lomash-gray-600">
+                  All bedrooms come from backend
+                </p>
+              </AnimatedContent>
+            </div>
+            <AnimatedContent variants={fadeUp} custom={2}>
+              <Link href="/bedroom" className="hidden md:block">
+                <Button variant="outline" size="lg" className="group">
+                  View All Bedrooms
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
+            </AnimatedContent>
+          </AnimatedSection>
 
-        {/* Bedroom Grid */}
-        {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="space-y-4">
-                <Skeleton className="h-64 w-full rounded-lg" />
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-4 w-1/2" />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <Carousel
-          opts={{
-            align: "start",
-            slidesToScroll: 1
-          }}
-          className="w-full"
-          >
-            <CarouselContent>
-              {Array.isArray(productData) && productData.slice(0, 8).map((product, index) => (
-                <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/4 pb-2">
-                  <CategoryCard product={product} />
-                </CarouselItem>
+          {/* Bedroom Grid */}
+          {isLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="space-y-4">
+                  <Skeleton className="h-64 w-full rounded-lg" />
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                </div>
               ))}
-            </CarouselContent>
-            <CarouselPrevious className="hidden sm:flex" />
-            <CarouselNext className="hidden sm:flex" />
-          </Carousel>
-          // <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          //   {Array.isArray(productDemoData) && productDemoData.slice(0, 8).map((product) => (
-          //     <CategoryCard key={product.id} product={product} />
-          //   ))}
-          // </div>
-        )}
+            </div>
+          ) : (
+            <Carousel
+              opts={{
+                slidesToScroll: 1
+              }}
+              className="w-full"
+            >
+              <CarouselContent>
+                {Array.isArray(productData) && productData.slice(0, 8).map((product, index) => (
+                  <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/4 pb-2">
+                    <CategoryCard product={product} />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="hidden sm:flex" />
+              <CarouselNext className="hidden sm:flex" />
+            </Carousel>
+          )}
 
-        {/* Empty State */}
-        {!isLoading && (!products || products.length === 0) && (
-          <div className="text-center py-12">
-            <p className="text-lg text-lomash-gray-600">
-              No bedroom products available at the moment.
-            </p>
-          </div>
-        )}
+          {/* Empty State */}
+          {!isLoading && (!products || products.length === 0) && (
+            <div className="text-center py-12">
+              <p className="text-lg text-lomash-gray-600">
+                No bedroom products available at the moment.
+              </p>
+            </div>
+          )}
 
         {/* Mobile View All Button */}
         {!isLoading && products && products.length > 0 && (
@@ -214,5 +216,6 @@ export function ExploreBedroom() {
         )}
       </div>
     </section>
+    </AnimatedSection>
   );
 }

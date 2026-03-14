@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AnimatedSection, AnimatedContent, fadeUp } from "@/components/ui/animated-section";
 import { useFeaturedProducts } from "@/hooks/useProducts";
 
 import { CategoryCard } from "./CategoryCard";
@@ -133,30 +134,36 @@ export function ExploreKitchen() {
     const productData = products && products.length > 0 ? products : productDemoData;
 
   return (
-    <section className="section-padding bg-white 
+    <AnimatedSection>
+      <section className="section-padding bg-white 
    px-6 sm:px-10 lg:px-18
     pt-12 md:pt-16 lg:pt-20
     pb-16 md:pb-20 lg:pb-24
     ">
-      <div className="container-custom">
-        {/* Section Header */}
-        <div className="flex items-center justify-between mb-8 md:mb-12">
-          <div>
-            <h2 className="heading-2 text-lomash-dark mb-2">
-              Explore Kitchen
-            </h2>
-            <p className="text-lg text-lomash-gray-600">
-              All kitchens come from the backend
-            </p>
-          </div>
-          <Link href="/kitchen" className="hidden md:block">
-            <Button variant="outline" size="lg" className="group">
-              View All Kitchens
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Button>
-          </Link>
-        </div>
-
+        <div className="container-custom">
+          {/* Section Header */}
+          <AnimatedSection className="flex items-center justify-between mb-8 md:mb-12">
+            <div>
+              <AnimatedContent variants={fadeUp} custom={0}>
+                <h2 className="heading-2 text-lomash-dark mb-2">
+                  Explore Kitchen
+                </h2>
+              </AnimatedContent>
+              <AnimatedContent variants={fadeUp} custom={1}>
+                <p className="text-lg text-lomash-gray-600">
+                  All kitchens come from backend
+                </p>
+              </AnimatedContent>
+            </div>
+            <AnimatedContent variants={fadeUp} custom={2}>
+              <Link href="/kitchen" className="hidden md:block">
+                <Button variant="outline" size="lg" className="group">
+                  View All Kitchens
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
+            </AnimatedContent>
+          </AnimatedSection>
 
         {/* Kitchen Grid */}
         {isLoading ? (
@@ -219,5 +226,6 @@ export function ExploreKitchen() {
         )}
       </div>
     </section>
+    </AnimatedSection>
   );
 }

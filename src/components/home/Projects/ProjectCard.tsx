@@ -18,7 +18,7 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
     <Link href={`/projects/${project.id}`} className="group block">
       <div
         className={cn(
-          "overflow-hidden rounded-xl bg-white shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100",
+          "overflow-hidden rounded-xl bg-white border border-gray-100 group hover:shadow-xl transition-all duration-300 cursor-pointer",
           className
         )}
       >
@@ -28,9 +28,12 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
             src={project.image || "/images/placeholder.jpg"}
             alt={project.title}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-110"
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
+
+          {/* Gradient Overlay - Media Wall Style */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
           {/* Category Badge */}
           <div className="absolute top-3 left-3">
@@ -44,7 +47,7 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
         </div>
 
         {/* Content */}
-        <div className="p-5">
+        <div className="p-5 bg-white group-hover:bg-gray-50 transition-colors">
           {/* Title */}
           <h3 className="text-base font-bold text-lomash-dark mb-2 line-clamp-1 group-hover:text-lomash-primary transition-colors duration-200">
             {project.title}
@@ -52,13 +55,13 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
 
           {/* Description */}
           {project.description && (
-            <p className="text-sm text-lomash-gray-500 mb-3 line-clamp-2">
+            <p className="text-sm text-lomash-gray-500 mb-3 line-clamp-2 group-hover:text-lomash-gray-600 transition-colors">
               {project.description}
             </p>
           )}
 
           {/* Meta Info */}
-          <div className="flex items-center gap-4 text-xs text-lomash-gray-400 mb-4">
+          <div className="flex items-center gap-4 text-xs text-lomash-gray-400 mb-4 group-hover:text-lomash-gray-500 transition-colors">
             {project.location && (
               <div className="flex items-center gap-1">
                 <MapPin className="h-3 w-3 flex-shrink-0" />
@@ -79,9 +82,9 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
           </div>
 
           {/* View Project Link */}
-          <div className="flex items-center gap-1 text-sm font-semibold text-lomash-primary group-hover:gap-2 transition-all duration-200">
+          <div className="flex items-center gap-1 text-sm font-semibold text-lomash-primary group-hover:gap-2 group-hover:text-lomash-dark transition-all duration-200">
             <span>View Project</span>
-            <ArrowRight className="h-4 w-4" />
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </div>
         </div>
       </div>
