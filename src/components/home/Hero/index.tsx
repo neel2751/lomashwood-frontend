@@ -2,9 +2,11 @@
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { apiClient } from '@/lib/api';
 
 import CTAButton from './CTAButton';
 import HeroSlide from './HeroSlide';
@@ -24,7 +26,7 @@ interface Slide {
   overlayOpacity?: number;
 }
 
-const slides: Slide[] = [
+const fallbackSlides: Slide[] = [
   {
     id: '1',
     type: 'image',
@@ -68,22 +70,29 @@ const slides: Slide[] = [
 
 export function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  // const [isPaused, setIsPaused] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  // Fetch slides from API
+  const { data: heroData } = useQuery({
+    queryKey: ['hero-slides'],
+    queryFn: () => apiClient.heroSlider.getAll(),
+  });
+
+  const slides: Slide[] = (heroData?.data as unknown as Slide[]) ?? fallbackSlides;
 
   const nextSlide = useCallback(() => {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setCurrentSlide((prev) => (prev + 1) % slides.length);
     setTimeout(() => setIsTransitioning(false), 500);
-  }, [isTransitioning]);
+  }, [isTransitioning, slides.length]);
 
   const prevSlide = useCallback(() => {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
     setTimeout(() => setIsTransitioning(false), 500);
-  }, [isTransitioning]);
+  }, [isTransitioning, slides.length]);
 
   const goToSlide = useCallback(
     (index: number) => {
@@ -96,8 +105,6 @@ export function Hero() {
   );
 
   useEffect(() => {
-    // if (isPaused) return;
-
     const interval = setInterval(() => {
       nextSlide();
     }, 8000);
@@ -118,8 +125,6 @@ export function Hero() {
   return (
     <section
       className="relative h-screen w-full overflow-hidden bg-gray-900"
-      // onMouseEnter={() => setIsPaused(true)}
-      // onMouseLeave={() => setIsPaused(false)}
       aria-label="Hero Slider"
     >
       {/* Slides */}

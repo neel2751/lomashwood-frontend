@@ -1,14 +1,9 @@
 'use client';
-import { CreditCard, FileText, CheckCircle2, BadgePercent, Clock, ShieldCheck, HelpCircle } from 'lucide-react';
-import Link from 'next/link';
+import { FileText, BadgePercent, Clock, CreditCard, ShieldCheck, HelpCircle } from 'lucide-react';
 
 import ApplyForm from '@/components/finance/ApplyForm';
-import FinanceComparison from '@/components/finance/FinanceComparison';
-import FinanceOptions from '@/components/finance/FinanceOptions';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
 
 const features = [
   {
@@ -91,190 +86,15 @@ const faqs = [
   },
 ];
 
-const financeOptionsData = [
-  {
-    id: '1',
-    name: '0% APR Finance',
-    provider: 'Lomash Finance',
-    logo: undefined,
-    description: 'Interest-free credit for 12 months on purchases over £1,00,000. No hidden charges, flexible payment options.',
-    interestRate: 0,
-    processingFee: 0,
-    minAmount: 100000,
-    maxAmount: 5000000,
-    minTenure: 6,
-    maxTenure: 12,
-    features: [
-      'Zero interest for 12 months',
-      'No hidden charges or processing fees',
-      'Quick online application process',
-      'Instant approval decision',
-      'Flexible payment options',
-      'No prepayment penalties',
-    ],
-    eligibility: [
-      'Age between 21-65 years',
-      'Minimum monthly income £25,000',
-      'Good credit score (700+)',
-      'No recent bankruptcies or defaults',
-      'Stable employment or business',
-    ],
-    documents: [
-      'Last 3 months salary slips',
-      'Last 6 months bank statements',
-      'Address proof',
-    ],
-    processingTime: 'Instant to 24 hours',
-    earlyPayment: true,
-    partPayment: true,
-    preApproved: false,
-    rating: 4.5,
-    featured: true,
-    popular: false,
-  },
-  {
-    id: '2',
-    name: 'Low-Rate Finance',
-    provider: 'Clearpay Finance',
-    logo: undefined,
-    description: 'Competitive interest rates starting from 9.99% p.a. with flexible tenure options up to 5 years.',
-    interestRate: 9.99,
-    processingFee: 2,
-    minAmount: 50000,
-    maxAmount: 10000000,
-    minTenure: 6,
-    maxTenure: 60,
-    features: [
-      'Competitive interest rates from 9.99%',
-      'Tenure up to 5 years',
-      'No prepayment charges',
-      'Minimal documentation required',
-      'Quick disbursal process',
-      'Pre-approved offers available',
-    ],
-    eligibility: [
-      'Age between 23-60 years',
-      'Minimum monthly income £3,000',
-      'Credit score above 650',
-      'Stable employment history',
-      'No history of loan defaults',
-    ],
-    documents: [
-      'Identity proof',
-      'Address proof',
-      'Income proof (salary slips)',
-      'Bank statements (6 months)',
-    ],
-    processingTime: '24-48 hours',
-    earlyPayment: true,
-    partPayment: true,
-    preApproved: true,
-    rating: 4.3,
-    featured: false,
-    popular: true,
-  },
-  {
-    id: '3',
-    name: 'Buy Now Pay Later',
-    provider: 'Klarna',
-    logo: undefined,
-    description: 'Defer your payment by 3-6 months with zero interest. Perfect for immediate needs with delayed payment.',
-    interestRate: 0,
-    processingFee: 1,
-    minAmount: 25000,
-    maxAmount: 2000000,
-    minTenure: 3,
-    maxTenure: 6,
-    features: [
-      'No payment for first 3-6 months',
-      'Zero interest if paid in full',
-      'Simple application process',
-      'Instant approval for existing customers',
-      'Digital process - no paperwork',
-    ],
-    eligibility: [
-      'Age 21+ years',
-      'Minimum monthly income £2,000',
-      'Good credit history',
-      'Regular income source',
-    ],
-    documents: [
-      'Identity proof',
-      'Address proof',
-      'Bank statements (3 months)',
-      'Proof of income (salary slips)',
-    ],
-    processingTime: '2-4 hours',
-    earlyPayment: true,
-    partPayment: false,
-    preApproved: true,
-    rating: 4.2,
-    featured: false,
-    popular: true,
-  },
-  {
-    id: '4',
-    name: 'EMI on Credit Card',
-    provider: 'Multiple Banks',
-    logo: undefined,
-    description: 'Convert your purchase into easy EMIs using your existing credit card. Available across all major banks.',
-    interestRate: 12.5,
-    processingFee: 0,
-    minAmount: 10000,
-    maxAmount: 3000000,
-    minTenure: 3,
-    maxTenure: 24,
-    features: [
-      'Use existing credit card',
-      'No additional documentation',
-      'Tenure from 3 to 24 months',
-      'Instant conversion',
-      'Available on most credit cards',
-    ],
-    eligibility: [
-      'Valid credit card holder',
-      'Sufficient credit limit',
-      'Good payment history',
-      'Age 21-60 years',
-    ],
-    documents: [
-      'Credit card details',
-      'Identity proof',
-      'No additional documents required',
-    ],
-    processingTime: 'Instant',
-    earlyPayment: true,
-    partPayment: true,
-    preApproved: true,
-    rating: 4.0,
-    featured: false,
-    popular: false,
-  },
-];
-
 export default function FinancePage() {
-  const handleApply = async (optionId: string) => {
-    console.log('Applying for finance option:', optionId);
-    const formSection = document.getElementById('application-form');
-    if (formSection) {
-      formSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleCalculate = (_optionId: string) => {
-    const optionsTab = document.querySelector('[value="options"]');
-    if (optionsTab) {
-      (optionsTab as HTMLElement).click();
-    }
-  };
-
   const handleFormSubmit = async (data: any) => {
     console.log('Form submitted with data:', data);
   };
 
   return (
     <div className="min-h-screen bg-neutral-50">
-      {/* Hero Section */}
+
+      {/* ── Hero Section ── */}
       <section className="bg-gradient-to-br from-primary-600 to-primary-800 py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
@@ -299,26 +119,12 @@ export default function FinancePage() {
                 <FileText className="mr-2 h-5 w-5" />
                 Apply Now
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="text-lg bg-white text-primary-600 hover:bg-lomash-primary hover:text-white shadow-md hover:shadow-lg"
-                onClick={() => {
-                  const tabsSection = document.getElementById('finance-tabs');
-                  if (tabsSection) {
-                    tabsSection.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}
-              >
-                <CreditCard className="mr-2 h-5 w-5" />
-                View Finance Plans
-              </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* ── Features Section ── */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-18">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -335,47 +141,7 @@ export default function FinancePage() {
         </div>
       </section>
 
-      {/* Finance Plans Tabs — EMI Calculator tab removed */}
-      <section id="finance-tabs" className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
-              Choose Your Finance Plan
-            </h2>
-            <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
-              Select the finance option that best suits your budget and requirements
-            </p>
-          </div>
-
-          {/* ✅ defaultValue changed to "options", EMI Calculator tab removed */}
-          <Tabs defaultValue="options" className="max-w-6xl mx-auto">
-            <TabsList className="flex justify-center gap-2 bg-lomash-light backdrop-blur-md py-7 px-1 max-w-max mx-auto rounded-2xl border border-lomash-dark/20 mb-10">
-              <TabsTrigger className="flex items-center gap-2 rounded-xl px-4 py-3 text-base font-semibold text-muted-foreground data-[state=active]:bg-lomash-primary data-[state=active]:text-white" value="options">Finance Options</TabsTrigger>
-              <TabsTrigger className="flex items-center gap-2 rounded-xl px-4 py-3 text-base font-semibold text-muted-foreground data-[state=active]:bg-lomash-primary data-[state=active]:text-white" value="compare">Compare Plans</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="options">
-              <FinanceOptions
-                options={financeOptionsData}
-                onApply={handleApply}
-                onCalculate={handleCalculate}
-                showComparison={true}
-              />
-            </TabsContent>
-
-            <TabsContent value="compare">
-              <FinanceComparison
-                options={financeOptionsData}
-                maxCompare={4}
-                defaultSelected={['1', '2']}
-                onApply={handleApply}
-              />
-            </TabsContent>
-          </Tabs>
-        </div>
-      </section>
-
-      {/* Application Process */}
+      {/* ── Application Process ── */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -411,7 +177,7 @@ export default function FinancePage() {
         </div>
       </section>
 
-      {/* Apply Form */}
+      {/* ── Apply Form ── */}
       <section id="application-form" className="py-16 bg-neutral-100">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
@@ -426,51 +192,18 @@ export default function FinancePage() {
         </div>
       </section>
 
-      {/* Representative Example */}
-      <section className="py-12 bg-lomash-light">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <h3 className="text-xl font-semibold mb-4">Representative Example</h3>
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <p className="text-sm text-neutral-600 mb-4">
-                If you borrow £4,50,000 over 36 months at a representative APR of 9.9%, you would make 36 monthly payments of £14,420. The total amount payable would be £5,69,120.
-              </p>
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <li className="flex items-start">
-                  <CheckCircle2 className="h-5 w-5 text-lomash-primary mr-2 flex-shrink-0 mt-0.5" />
-                  <span>Amount of credit: £4,50,000</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="h-5 w-5 text-lomash-primary mr-2 flex-shrink-0 mt-0.5" />
-                  <span>Representative APR: 9.9%</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="h-5 w-5 text-lomash-primary mr-2 flex-shrink-0 mt-0.5" />
-                  <span>36 monthly payments of £14,420</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="h-5 w-5 text-lomash-primary mr-2 flex-shrink-0 mt-0.5" />
-                  <span>Total amount payable: £5,69,120</span>
-                </li>
-              </ul>
-              <p className="text-xs text-neutral-500 mt-4">
-                This is a representative example. The rate you are offered will depend on your individual circumstances.
-                Finance is subject to status and available to UK residents aged 18 or over. Minimum income requirements apply.
-                <Link href="/finance/terms" className="text-lomash-primary hover:underline"> Read more</Link>.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQs */}
+      {/* ── FAQs ── */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-12">
               <HelpCircle className="h-12 w-12 text-lomash-primary mx-auto mb-4" />
-              <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">Frequently Asked Questions</h2>
-              <p className="text-lg text-neutral-600">Find answers to common questions about our finance options</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
+                Frequently Asked Questions
+              </h2>
+              <p className="text-lg text-neutral-600">
+                Find answers to common questions about our finance options
+              </p>
             </div>
             <Accordion type="single" collapsible className="w-full">
               {faqs.map((faq, index) => (
@@ -488,7 +221,7 @@ export default function FinancePage() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* ── CTA Section ── */}
       <section className="py-16 bg-gradient-to-br from-lomash-primary to-lomash-secondary text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Get Started?</h2>
@@ -518,6 +251,7 @@ export default function FinancePage() {
           </div>
         </div>
       </section>
+
     </div>
   );
 }

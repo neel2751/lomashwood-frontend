@@ -7,7 +7,6 @@
   import { Hero } from "@/components/home/Hero";
   import { MainCTA } from "@/components/home/MainCTA";
   import { MediaWall } from "@/components/home/MediaWall";
-  import { OfferSection } from "@/components/home/OfferSection";
   import { OurProcess } from "@/components/home/OurProcess";
   import { PackageSection } from "@/components/home/PackageSection";
   import { Projects } from "@/components/home/Projects";
@@ -38,10 +37,7 @@
         <ExploreBedroom />
 
         {/* Color Options - Color picker section */}
-        <ColorOptions />
-
-        {/* Offer Section - Special offers slider */}
-        <OfferSection />
+        <ColorOptions />  
 
         {/* Package Section - Kitchen & Bedroom packages */}
         <PackageSection />

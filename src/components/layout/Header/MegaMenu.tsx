@@ -121,12 +121,10 @@ export function MegaMenu({
       <div className="container mx-auto px-8 lg:px-18 py-8">
         <div className="flex gap-8">
 
-          {/* Categories */}
           <div className="flex flex-1 gap-12">
             {categories.map((category) => (
               <div key={category.title} className="min-w-0">
-                {/* Category Title */}
-                <h3 className="font-bold text-[11px] uppercase tracking-widest text-[#77c117] mb-4 pb-2 border-b border-gray-100">
+                <h3 className="font-bold text-[13px] uppercase tracking-widest text-[#77c117] mb-4 pb-2 border-b border-gray-100">
                   {category.title}
                 </h3>
 
@@ -135,9 +133,9 @@ export function MegaMenu({
                     <li key={item.label}>
                       <Link
                         href={item.href}
-                        className="group flex items-center gap-2.5 text-[13.5px] text-gray-600 hover:text-[#77c117] transition-colors duration-150"
+                        style={{ fontSize: "15px" }}
+                        className="group flex items-center gap-2.5 text-gray-600 hover:text-[#77c117] transition-colors duration-150"
                       >
-                        {/* Color swatch if available */}
                         {"swatch" in item && item.swatch ? (
                           <span
                             className="h-[14px] w-[14px] rounded-full flex-shrink-0 border border-gray-300 shadow-sm"
@@ -165,10 +163,8 @@ export function MegaMenu({
             ))}
           </div>
 
-          {/* Divider */}
           <div className="w-px bg-gray-100 flex-shrink-0" />
 
-          {/* Featured Card */}
           <div className="w-52 flex-shrink-0">
             <Link href={featured.href} className="group block">
               <div className="relative w-full h-40 rounded-xl overflow-hidden bg-gray-100 mb-3 shadow-md">
@@ -185,11 +181,11 @@ export function MegaMenu({
                   </Badge>
                 </div>
               </div>
-              <h4 className="font-semibold text-[13px] text-gray-900 group-hover:text-[#77c117] transition-colors mb-1">
+              <h4 className="font-semibold text-[15px] text-gray-900 group-hover:text-[#77c117] transition-colors mb-1">
                 {featured.title}
               </h4>
-              <p className="text-[12px] text-gray-500 mb-2 leading-relaxed">{featured.description}</p>
-              <span className="inline-flex items-center gap-1 text-[12px] font-semibold text-[#77c117] group-hover:underline">
+              <p className="text-[13px] text-gray-500 mb-2 leading-relaxed">{featured.description}</p>
+              <span className="inline-flex items-center gap-1 text-[13px] font-semibold text-[#77c117] group-hover:underline">
                 Explore Collection
                 <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
               </span>
@@ -197,12 +193,10 @@ export function MegaMenu({
           </div>
         </div>
 
-        {/* Bottom Links */}
         <div className="mt-6 pt-4 border-t border-gray-100 flex items-center gap-6">
-          {/* View All - highlighted prominently */}
           <Link
             href={viewAllHref}
-            className="inline-flex items-center gap-2 text-[13px] font-bold text-white bg-[#77c117] hover:bg-[#6aad14] px-4 py-2 rounded-full transition-colors duration-200"
+            className="inline-flex items-center gap-2 text-[15px] font-bold text-white bg-[#77c117] hover:bg-[#6aad14] px-4 py-2 rounded-full transition-colors duration-200"
           >
             {viewAllLabel}
             <ArrowRight className="h-3.5 w-3.5" />
@@ -210,7 +204,7 @@ export function MegaMenu({
 
           <Link
             href={`/${type}/inspiration`}
-            className="text-[13px] text-gray-500 hover:text-[#77c117] transition-colors inline-flex items-center gap-1.5 font-medium"
+            className="text-[15px] text-gray-500 hover:text-[#77c117] transition-colors inline-flex items-center gap-1.5 font-medium"
           >
             <Sparkles className="h-3.5 w-3.5" />
             Get Inspired
@@ -218,7 +212,7 @@ export function MegaMenu({
 
           <Link
             href="/book-appointment"
-            className="text-[13px] text-gray-500 hover:text-[#77c117] transition-colors font-medium"
+            className="text-[15px] text-gray-500 hover:text-[#77c117] transition-colors font-medium"
           >
             Book Free Consultation
           </Link>

@@ -2,7 +2,6 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    // Replaced deprecated 'domains' with 'remotePatterns'
     remotePatterns: [
       {
         protocol: 'https',
@@ -27,7 +26,6 @@ const nextConfig = {
     scrollRestoration: true,
   },
   turbopack: {
-    // Fixes the multiple lockfiles workspace root warning
     root: __dirname,
   },
   typescript: {
@@ -37,6 +35,14 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === 'production',
   },
   staticPageGenerationTimeout: 120,
+  async rewrites() {
+    return [
+      {
+        source: '/api/v1/:path*',
+        destination: '/api/:path*',
+      },
+    ];
+  },
   async headers() {
     return [
       {

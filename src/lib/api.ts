@@ -21,7 +21,7 @@ import type {
 } from "@/types";
 
 const api: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api/v1",
   timeout: 30000,
   headers: {
     "Content-Type": "application/json",
@@ -75,11 +75,23 @@ export const apiClient = {
       api
         .get("/products", { params: { ...params, category: "bedroom" } })
         .then((res) => res.data),
+
+    getCategories: (): Promise<ApiResponse<any>> =>
+      api.get("/products/categories").then((res) => res.data),
+
+    getColours: (): Promise<ApiResponse<Colour[]>> =>
+      api.get("/products/colours").then((res) => res.data),
+
+    getSizes: (): Promise<ApiResponse<any>> =>
+      api.get("/products/sizes").then((res) => res.data),
+
+    getFinish: (): Promise<ApiResponse<any>> =>
+      api.get("/products/finish").then((res) => res.data),
   },
 
   colours: {
     getAll: (): Promise<ApiResponse<Colour[]>> =>
-      api.get("/colours").then((res) => res.data),
+      api.get("/products/colours").then((res) => res.data),
   },
 
   showrooms: {
@@ -117,7 +129,7 @@ export const apiClient = {
 
   heroSlider: {
     getAll: (): Promise<ApiResponse<HeroSlide[]>> =>
-      api.get("/hero-slider").then((res) => res.data),
+      api.get("/hero").then((res) => res.data),
   },
 
   finance: {
@@ -144,11 +156,27 @@ export const apiClient = {
     create: (data: Appointment): Promise<ApiResponse<Appointment>> =>
       api.post("/appointments", data).then((res) => res.data),
 
-    getAvailability: (params: {
+    getSlots: (params: {
       date: string;
-      type: string;
-    }): Promise<ApiResponse<string[]>> =>
-      api.get("/appointments/availability", { params }).then((res) => res.data),
+      appointmentType: string;
+      showroomId?: string;
+    }): Promise<ApiResponse<any>> =>
+      api.get("/appointments/slots", { params }).then((res) => res.data),
+
+    getSlotsCount: (params: {
+      date: string;
+      appointmentType: string;
+    }): Promise<ApiResponse<any>> =>
+      api.get("/appointments/slots/count", { params }).then((res) => res.data),
+
+    getById: (id: string): Promise<ApiResponse<Appointment>> =>
+      api.get(`/appointments/${id}`).then((res) => res.data),
+
+    update: (id: string, data: Partial<Appointment>): Promise<ApiResponse<Appointment>> =>
+      api.put(`/appointments/${id}`, data).then((res) => res.data),
+
+    delete: (id: string): Promise<ApiResponse<any>> =>
+      api.delete(`/appointments/${id}`).then((res) => res.data),
   },
 
   brochure: {

@@ -65,9 +65,10 @@ export function DesktopNav({ className }: DesktopNavProps) {
             {isMegaMenu ? (
               <button
                 onClick={() => handleClick(menuType as "kitchen" | "bedroom")}
+                style={{ fontSize: "19px" }}
                 className={cn(
-                  // ✅ Changed from 16px → 14.5px (industry standard 14px–15px)
-                  "relative flex items-center gap-1 text-[14.5px] font-medium transition-colors duration-200 py-8 bg-transparent border-none cursor-pointer",
+
+                  "relative flex items-center gap-1 font-medium transition-colors duration-200 py-8 bg-transparent border-none cursor-pointer",
                   isActive || activeMenu === menuType
                     ? "text-lomash-primary"
                     : "text-lomash-dark hover:text-lomash-primary",
@@ -87,9 +88,9 @@ export function DesktopNav({ className }: DesktopNavProps) {
             ) : (
               <Link
                 href={link.href}
+                style={{ fontSize: "19px" }}
                 className={cn(
-                  // ✅ Changed from 16px → 14.5px (industry standard 14px–15px)
-                  "relative flex items-center gap-1 text-[14.5px] font-medium transition-colors duration-200 py-8",
+                  "relative flex items-center gap-1 font-medium transition-colors duration-200 py-8",
                   isActive
                     ? "text-lomash-primary"
                     : "text-lomash-dark hover:text-lomash-primary",

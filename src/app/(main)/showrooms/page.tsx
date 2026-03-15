@@ -1,15 +1,13 @@
 import { Search, Monitor, Store } from 'lucide-react';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
+import Link from 'next/link';
 
 import { PageLoader } from '@/components/shared/PageLoader';
 import ShowroomList from '@/components/showroom/ShowroomList';
 import ShowroomMap from '@/components/showroom/ShowroomMap';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
-import { showrooms } from '@/types/showrooms.types';
-import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Kitchen Showrooms Near Me | Lomash Wood',
@@ -24,8 +22,23 @@ export const metadata: Metadata = {
   },
 };
 
+async function getShowrooms() {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/v1/showrooms`,
+      { next: { revalidate: 3600 } }
+    );
+    const data = await res.json();
+    return data?.data ?? [];
+  } catch (error) {
+    console.error('Failed to fetch showrooms:', error);
+    return [];
+  }
+}
 
-export default function ShowroomsPage() {
+export default async function ShowroomsPage() {
+  const showrooms = await getShowrooms();
+
   return (
     <main className="min-h-screen">
 
@@ -43,15 +56,15 @@ export default function ShowroomsPage() {
             <p className="text-base md:text-lg text-slate-600 mb-8 font-medium">
               Dreaming of a{' '}
               <strong className="font-semibold text-slate-900">
-              <Link href="/kitchen" className="underline hover:text-lomash-primary transition-colors">
-                Traditional Kitchen
-              </Link>
+                <Link href="/kitchen" className="underline hover:text-lomash-primary transition-colors">
+                  Traditional Kitchen
+                </Link>
               </strong>
-              ? Or have you been longing for a bedroom refresh with our{' '} 
+              ? Or have you been longing for a bedroom refresh with our{' '}
               <strong className="font-semibold text-slate-900">
-              <Link href="/bedroom" className="underline hover:text-lomash-primary transition-colors">
-                Bespoke Bedroom Designs
-              </Link>
+                <Link href="/bedroom" className="underline hover:text-lomash-primary transition-colors">
+                  Bespoke Bedroom Designs
+                </Link>
               </strong>
               ? Whatever your kitchen or bedroom dream, find your nearest Lomash Wood showroom and let our
               expert designers help bring it to life.
@@ -62,7 +75,7 @@ export default function ShowroomsPage() {
               <Input
                 type="text"
                 placeholder="Search by postcode, town or city"
-                className="pl-5 pr-14 py-6 text-base  rounded-none focus:ring-0 focus:border-lomash-primary w-full"
+                className="pl-5 pr-14 py-6 text-base rounded-none focus:ring-0 focus:border-lomash-primary w-full"
               />
               <button
                 className="absolute right-0 top-0 h-full px-5 bg-white border border-l-0 border-slate-300 hover:bg-lomash-primary hover:text-white transition-colors group"
@@ -78,40 +91,44 @@ export default function ShowroomsPage() {
       {/* ── Showrooms List / Map (tabs) ── */}
       <section className="py-8 md:py-12 px-4 md:px-18 bg-slate-50">
         <div className="container mx-auto px-4">
-          <Tabs defaultValue="list" className="w-full">
-            <div className="flex justify-center mb-8">
-              <TabsList className="grid w-full max-w-xs grid-cols-2 rounded-full border border-slate-300 bg-white p-0 h-auto">
-                <TabsTrigger
-                  value="list"
-                  className="rounded-none py-3 text-sm font-medium data-[state=active]:bg-lomash-primary data-[state=active]:text-white
-                  rounded-l-full data-[state=active]:rounded-l-full data-[state=active]:rounded-r-full
-                  "
-                >
-                  List View
-                </TabsTrigger>
-                <TabsTrigger
-                  value="map"
-                  className="rounded-none py-3 text-sm font-medium data-[state=active]:bg-lomash-primary data-[state=active]:text-white
-                  rounded-r-full data-[state=active]:rounded-r-full data-[state=active]:rounded-l-full
-                  "
-                >
-                  Map View
-                </TabsTrigger>
-              </TabsList>
+          {showrooms.length === 0 ? (
+            <div className="text-center py-16 text-slate-500">
+              No showrooms found. Please check back later.
             </div>
+          ) : (
+            <Tabs defaultValue="list" className="w-full">
+              <div className="flex justify-center mb-8">
+                <TabsList className="grid w-full max-w-xs grid-cols-2 rounded-full border border-slate-300 bg-white p-0 h-auto">
+                  <TabsTrigger
+                    value="list"
+                    className="rounded-none py-3 text-sm font-medium data-[state=active]:bg-lomash-primary data-[state=active]:text-white
+                    rounded-l-full data-[state=active]:rounded-l-full data-[state=active]:rounded-r-full"
+                  >
+                    List View
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="map"
+                    className="rounded-none py-3 text-sm font-medium data-[state=active]:bg-lomash-primary data-[state=active]:text-white
+                    rounded-r-full data-[state=active]:rounded-r-full data-[state=active]:rounded-l-full"
+                  >
+                    Map View
+                  </TabsTrigger>
+                </TabsList>
+              </div>
 
-            <TabsContent value="list" className="mt-0">
-              <Suspense fallback={<PageLoader />}>
-                <ShowroomList showrooms={showrooms} />
-              </Suspense>
-            </TabsContent>
+              <TabsContent value="list" className="mt-0">
+                <Suspense fallback={<PageLoader />}>
+                  <ShowroomList showrooms={showrooms} />
+                </Suspense>
+              </TabsContent>
 
-            <TabsContent value="map" className="mt-0">
-              <Suspense fallback={<PageLoader />}>
-                <ShowroomMap showrooms={showrooms} />
-              </Suspense>
-            </TabsContent>
-          </Tabs>
+              <TabsContent value="map" className="mt-0">
+                <Suspense fallback={<PageLoader />}>
+                  <ShowroomMap showrooms={showrooms} />
+                </Suspense>
+              </TabsContent>
+            </Tabs>
+          )}
         </div>
       </section>
 
@@ -181,20 +198,17 @@ export default function ShowroomsPage() {
 
             {/* CTA button */}
             <div className="flex justify-center">
-              <a
+              
                 href="/book-appointment"
                 className="inline-flex items-center text-base font-semibold rounded-full justify-center px-10 py-4 bg-lomash-primary text-white hover:bg-lomash-secondary transition-colors"
-              >
                 Book a free appointment
-              </a>
+
             </div>
           </div>
         </div>
       </section>
 
-     
-
-      {/* ── Why Visit (kept for SEO / extra value) ── */}
+      {/* ── Why Visit ── */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
@@ -249,8 +263,9 @@ export default function ShowroomsPage() {
             </div>
           </div>
         </div>
-         {/* ── Trade Banner ── */}
       </section>
+
+      {/* ── Trade Banner ── */}
       <section className="bg-lomash-secondary py-8">
         <div className="container mx-auto px-4">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6 max-w-5xl mx-auto">
@@ -260,12 +275,12 @@ export default function ShowroomsPage() {
                 Sign up for a Lomash Wood Trade account and get exclusive benefits &amp; discounts
               </p>
             </div>
-            <a
+            
               href="/business"
               className="flex-shrink-0 inline-flex rounded-full items-center justify-center px-7 py-3 bg-transparent text-white font-semibold text-base border border-white hover:bg-white hover:text-slate-900 transition-colors whitespace-nowrap"
-            >
+            
               Apply on Lomash Trade
-            </a>
+
           </div>
         </div>
       </section>

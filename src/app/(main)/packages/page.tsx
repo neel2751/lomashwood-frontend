@@ -4,18 +4,38 @@ import Link from "next/link";
 import Image from "next/image";
 import { SlidersHorizontal, ArrowRight, Check, X } from "lucide-react";
 import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { apiClient } from "@/lib/api";
 
 const filterOptions = {
   category: ["Kitchen", "Bedroom"],
-  style: ["Modern", "Traditional", "Contemporary", "Shaker", "Handleless", "Minimalist"],
-  material: ["Solid Wood", "MDF", "Plywood", "Laminate", "Acrylic"],
-  finish: ["Gloss", "Matt", "Wood Grain", "Painted", "Mirror"],
-  layout: ["L-Shape", "U-Shape", "Galley", "Island", "Single Wall", "Open Plan"],
 };
 
-const allPackages = [
+interface LocalPackage {
+  id: string;
+  title: string;
+  category: string;
+  style: string;
+  material: string;
+  finish: string;
+  layout: string;
+  image: string;
+  features: string[];
+  badge: string | null;
+}
+
+interface ActiveFilters {
+  category: string[];
+}
+
+const emptyFilters: ActiveFilters = {
+  category: [],
+};
+
+const fallbackPackages: LocalPackage[] = [
   {
     id: "1",
     title: "Complete Kitchen Package",
@@ -90,26 +110,16 @@ const allPackages = [
   },
 ];
 
-interface ActiveFilters {
-  category: string[];
-  style: string[];
-  material: string[];
-  finish: string[];
-  layout: string[];
-}
-
-const emptyFilters: ActiveFilters = {
-  category: [],
-  style: [],
-  material: [],
-  finish: [],
-  layout: [],
-};
-
 export default function PackagesPage() {
   const [activeFilters, setActiveFilters] = useState<ActiveFilters>(emptyFilters);
 
-  // ── Toggle a single checkbox value ─────────────────────────────────────────
+  const { data: packagesData, isLoading, error } = useQuery({
+    queryKey: ["packages"],
+    queryFn: () => apiClient.packages.getAll(),
+  });
+
+  const allPackages: LocalPackage[] = (packagesData?.data as unknown as LocalPackage[]) ?? fallbackPackages;
+
   const toggleFilter = (group: keyof ActiveFilters, value: string) => {
     setActiveFilters((prev) => {
       const current = prev[group];
@@ -119,31 +129,21 @@ export default function PackagesPage() {
       return { ...prev, [group]: updated };
     });
   };
+
   const clearFilters = () => setActiveFilters(emptyFilters);
   const hasActiveFilters = Object.values(activeFilters).some((arr) => arr.length > 0);
-
-  // ── Count total active selections ──────────────────────────────────────────
   const activeCount = Object.values(activeFilters).reduce(
     (sum, arr) => sum + arr.length,
     0
   );
 
-  // ── Filter packages based on activeFilters ──────────────────────────────────
   const filteredPackages = useMemo(() => {
-    return allPackages.filter((pkg) => {
+    return allPackages.filter((pkg: LocalPackage) => {
       if (activeFilters.category.length > 0 && !activeFilters.category.includes(pkg.category))
-        return false;
-      if (activeFilters.style.length > 0 && !activeFilters.style.includes(pkg.style))
-        return false;
-      if (activeFilters.material.length > 0 && !activeFilters.material.includes(pkg.material))
-        return false;
-      if (activeFilters.finish.length > 0 && !activeFilters.finish.includes(pkg.finish))
-        return false;
-      if (activeFilters.layout.length > 0 && !activeFilters.layout.includes(pkg.layout))
         return false;
       return true;
     });
-  }, [activeFilters]);
+  }, [activeFilters, allPackages]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -170,7 +170,6 @@ export default function PackagesPage() {
                   <SlidersHorizontal className="h-5 w-5 text-lomash-primary" />
                   <h2 className="font-bold text-lg text-lomash-dark">Filters</h2>
                 </div>
-                {/* Active filter count badge */}
                 {activeCount > 0 && (
                   <span className="text-xs font-semibold bg-lomash-primary text-white px-2 py-0.5 rounded-full">
                     {activeCount}
@@ -178,7 +177,6 @@ export default function PackagesPage() {
                 )}
               </div>
 
-              {/* Render each filter group */}
               {(Object.keys(filterOptions) as Array<keyof typeof filterOptions>).map(
                 (group, idx, arr) => (
                   <div key={group}>
@@ -237,7 +235,6 @@ export default function PackagesPage() {
                 packages
               </p>
 
-              {/* Active filter chips */}
               {hasActiveFilters && (
                 <div className="flex flex-wrap gap-2">
                   {(Object.keys(activeFilters) as Array<keyof ActiveFilters>).map((group) =>
@@ -258,8 +255,35 @@ export default function PackagesPage() {
               )}
             </div>
 
+            {/* Loading state */}
+            {isLoading && (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="bg-white rounded-xl overflow-hidden border border-gray-100">
+                    <Skeleton className="aspect-[4/3] w-full" />
+                    <div className="p-5 space-y-3">
+                      <Skeleton className="h-4 w-3/4" />
+                      <Skeleton className="h-3 w-1/2" />
+                      <Skeleton className="h-3 w-full" />
+                      <Skeleton className="h-3 w-full" />
+                      <Skeleton className="h-8 w-full mt-2" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Error state */}
+            {error && !isLoading && (
+              <div className="flex flex-col items-center justify-center py-24 text-center">
+                <p className="text-sm text-red-500 mb-4">
+                  Failed to load packages. Showing demo data.
+                </p>
+              </div>
+            )}
+
             {/* No results */}
-            {filteredPackages.length === 0 ? (
+            {!isLoading && filteredPackages.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-24 text-center">
                 <SlidersHorizontal className="h-12 w-12 text-gray-300 mb-4" />
                 <h3 className="text-lg font-semibold text-gray-700 mb-2">
@@ -272,14 +296,13 @@ export default function PackagesPage() {
                   Clear All Filters
                 </Button>
               </div>
-            ) : (
+            ) : !isLoading && (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {filteredPackages.map((pkg) => (
+                {filteredPackages.map((pkg: LocalPackage) => (
                   <div
                     key={pkg.id}
                     className="group bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300"
                   >
-                    {/* Image */}
                     <div className="relative aspect-[4/3] overflow-hidden">
                       <Image
                         src={pkg.image}
@@ -299,14 +322,10 @@ export default function PackagesPage() {
                       </div>
                     </div>
 
-                    {/* Content */}
                     <div className="p-5">
                       <h3 className="font-bold text-lomash-dark text-base mb-1 group-hover:text-lomash-primary transition-colors">
                         {pkg.title}
                       </h3>
-                      <p className="text-xs text-gray-400 mb-3">
-                        {pkg.style} · {pkg.finish}
-                      </p>
 
                       <div className="space-y-1.5 mb-4">
                         {pkg.features.map((f) => (
