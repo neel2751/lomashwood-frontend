@@ -40,6 +40,9 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const productIdentifier = product.slug || product.id;
+  const styleLabel = typeof product.style === 'string' ? product.style.trim() : '';
+  const finishLabel = typeof product.finish === 'string' ? product.finish.trim() : '';
 
   // const formatPrice = (price: number) => {
   //   return new Intl.NumberFormat('en-IN', {
@@ -54,7 +57,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <Card className="group h-full overflow-hidden border-2 hover:border-primary/50 transition-all duration-300 hover:shadow-xl">
         {/* Image Container */}
         <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
-          <Link href={`/product/${product.slug}`}>
+          <Link href={`/product/${productIdentifier}`}>
             <Image
               src={imageError ? '/images/placeholder-product.jpg' : product.image}
               alt={product.name}
@@ -129,23 +132,27 @@ export function ProductCard({ product }: ProductCardProps) {
             <Badge variant="secondary" className="text-xs capitalize">
               {product.category}
             </Badge>
-            <span className="text-xs text-gray-500">{product.style}</span>
+            {styleLabel && styleLabel !== '0' && (
+              <span className="text-xs text-gray-500">{styleLabel}</span>
+            )}
           </div>
 
           {/* Product Name */}
-          <Link href={`/product/${product.slug}?category=${product.category}`} className="block">
+          <Link href={`/product/${productIdentifier}?category=${product.category}`} className="block">
             <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary transition-colors">
               {product.name}
             </h3>
           </Link>
 
           {/* Finish */}
-          <p className="text-sm text-gray-600 mb-3">
-            Finish: <span className="font-medium">{product.finish}</span>
-          </p>
+          {finishLabel && finishLabel !== '0' && (
+            <p className="text-sm text-gray-600 mb-3">
+              Finish: <span className="font-medium">{finishLabel}</span>
+            </p>
+          )}
 
           {/* Rating */}
-          {product.rating && product.reviewCount && (
+          {/* {product.rating && product.reviewCount && (
             <div className="flex items-center gap-2 mb-3">
               <div className="flex items-center">
                 {Array.from({ length: 5 }).map((_, i) => (
@@ -167,7 +174,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 ({product.reviewCount})
               </span>
             </div>
-          )}
+          )} */}
 
           {/* Price */}
           {/* <div className="flex items-center justify-between mb-4">
@@ -204,7 +211,7 @@ export function ProductCard({ product }: ProductCardProps) {
               className="flex-1"
               // disabled={!product.inStock}
             >
-              <Link href={`/product/${product.slug}?category=${product.category}`}>
+              <Link href={`/product/${productIdentifier}?category=${product.category}`}>
                 View Details
               </Link>
             </Button>
@@ -213,7 +220,7 @@ export function ProductCard({ product }: ProductCardProps) {
               variant="outline"
               size="icon"
             >
-              <Link href={`/book-appointment?product=${product.slug}&category=${product.category}`}>
+              <Link href={`/book-appointment?product=${productIdentifier}&category=${product.category}`}>
                 <svg
                   className="w-5 h-5"
                   fill="none"

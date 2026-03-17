@@ -8,6 +8,15 @@ import type {
 } from "@/types/showroom.types";
 import type { ApiResponse, PaginatedResponse } from "@/types/api.types";
 
+type ApiEnvelope<T> = T | { data: T };
+
+const extractData = <T>(payload: ApiEnvelope<T>): T => {
+  if (payload && typeof payload === "object" && "data" in payload) {
+    return payload.data as T;
+  }
+  return payload as T;
+};
+
 export interface ShowroomDetail extends Showroom {
   description: string;
   long_description?: string;
@@ -102,16 +111,42 @@ export const showroomService = {
   getShowrooms: async (
     params?: ShowroomSearchParams
   ): Promise<ApiResponse<PaginatedResponse<Showroom>>> => {
-    const response = await api.get<PaginatedResponse<Showroom>>(
+    const response = await api.get<any>(
       API_ENDPOINTS.showrooms.base,
       { params }
     );
-    return { data: response.data, message: "Showrooms fetched successfully", success: true };
+    const payload = response.data;
+    const list = extractData<Showroom[]>(payload);
+    const total = payload?.total ?? list.length;
+    const page = params?.page ?? 1;
+    const limit = params?.limit ?? (list.length || 1);
+    const totalPages = Math.max(1, Math.ceil(total / limit));
+
+    return {
+      data: {
+        success: true,
+        data: list,
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages,
+          hasNext: page < totalPages,
+          hasPrev: page > 1,
+        },
+      },
+      message: "Showrooms fetched successfully",
+      success: true,
+    };
   },
 
   getShowroomById: async (id: string): Promise<ApiResponse<ShowroomDetail>> => {
-    const response = await api.get<ShowroomDetail>(API_ENDPOINTS.showrooms.byId(id));
-    return { data: response.data, message: "Showroom detail fetched successfully", success: true };
+    const response = await api.get<any>(API_ENDPOINTS.showrooms.byId(id));
+    return {
+      data: extractData<ShowroomDetail>(response.data),
+      message: "Showroom detail fetched successfully",
+      success: true,
+    };
   },
 
   searchShowrooms: async (query: string): Promise<ApiResponse<Showroom[]>> => {

@@ -1,41 +1,41 @@
 "use client";
 
-import { X, ChevronDown, Plus, ArrowRight } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-
-import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { X, ChevronDown, Plus } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { parseAsString, useQueryStates } from 'nuqs';
 import { API_ENDPOINTS } from '@/config/api';
+import { api } from '@/lib/axios';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
-interface FilterOption {
+
+// Support all filter types and dynamic fields
+type FilterOption = {
   id: string;
   label: string;
-}
+  value: string;
+  // For colour
+  hex?: string;
+  // For size, finish, package
+  description?: string;
+  // For finish
+  image?: string;
+  // For package
+  category?: string;
+};
 
-interface FilterGroup {
+type FilterGroup = {
   id: string;
   label: string;
-  type: "colour" | "style" | "collection";
+  type: string;
   options: FilterOption[];
-}
+};
 
 export interface ActiveFilter {
   filterId: string;
   optionId: string;
 }
 
-const COLOR_MAP: Record<string, string> = {
-  black: "#1a1a1a",
-  white: "#f5f5f5",
-  blue: "#3b82f6",
-  green: "#22c55e",
-  red: "#ef4444",
-  grey: "#9ca3af",
-  wood: "#a0522d",
-  oak: "#c8a96e",
-  beige: "#e8d5b7",
-  charcoal: "#4b5563",
-};
+
 
 interface FiltersProps {
   resultCount?: number;
@@ -43,8 +43,51 @@ interface FiltersProps {
 }
 
 export default function Filters({ resultCount = 0, onFiltersChange }: FiltersProps) {
-  const [sortBy, setSortBy] = useState("popular");
-  const [activeFilters, setActiveFilters] = useState<ActiveFilter[]>([]);
+  const normalizeFilterValue = (input: string) =>
+    input
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '');
+
+  const [queryState, setQueryState] = useQueryStates(
+    {
+      sort: parseAsString.withDefault('popular'),
+      colour: parseAsString,
+      style: parseAsString,
+      size: parseAsString,
+      finish: parseAsString,
+      package: parseAsString,
+    },
+    {
+      history: 'replace',
+      shallow: false,
+      clearOnDefault: true,
+    }
+  );
+
+  const sortBy = queryState.sort;
+  const activeFilters: ActiveFilter[] = useMemo(() => {
+    const next: ActiveFilter[] = [];
+
+    const pushGroup = (filterId: 'colour' | 'style' | 'size' | 'finish' | 'package', rawValue?: string | null) => {
+      if (!rawValue) return;
+      rawValue
+        .split(',')
+        .map((part) => part.trim())
+        .filter(Boolean)
+        .forEach((value) => next.push({ filterId, optionId: value }));
+    };
+
+    pushGroup('colour', queryState.colour);
+    pushGroup('style', queryState.style);
+    pushGroup('size', queryState.size);
+    pushGroup('finish', queryState.finish);
+    pushGroup('package', queryState.package);
+
+    return next;
+  }, [queryState.colour, queryState.style, queryState.size, queryState.finish, queryState.package]);
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   const [filters, setFilters] = useState<FilterGroup[]>([]);
@@ -57,43 +100,117 @@ export default function Filters({ resultCount = 0, onFiltersChange }: FiltersPro
         setIsLoading(true);
         setError(null);
 
-        const [categoriesRes, coloursRes] = await Promise.all([
-          fetch(`/api/v1${API_ENDPOINTS.products.categories}`),
-          fetch(`/api/v1${API_ENDPOINTS.products.colours}`),
+        // Fetch all filter data from API
+        const [coloursRes, stylesRes, sizesRes, finishRes, packagesRes] = await Promise.allSettled([
+          api.get(API_ENDPOINTS.products.colours),
+          api.get(API_ENDPOINTS.products.style),
+          api.get(API_ENDPOINTS.products.sizes),
+          api.get(API_ENDPOINTS.products.finish),
+          api.get(API_ENDPOINTS.products.packages),
         ]);
 
-        const [categoriesData, coloursData] = await Promise.all([
-          categoriesRes.json(),
-          coloursRes.json(),
-        ]);
+        const coloursData = coloursRes.status === 'fulfilled' ? coloursRes.value.data : null;
+        const stylesData = stylesRes.status === 'fulfilled' ? stylesRes.value.data : null;
+        const sizesData = sizesRes.status === 'fulfilled' ? sizesRes.value.data : null;
+        const finishData = finishRes.status === 'fulfilled' ? finishRes.value.data : null;
+        const packagesData = packagesRes.status === 'fulfilled' ? packagesRes.value.data : null;
+
+        let styleOptions = (stylesData?.data || []).map((s: any) => {
+          const rawLabel = s?.name || s?.title || s?.style || s?.label || '';
+          const label = String(rawLabel).trim();
+          return {
+            id: s?.id || label,
+            label,
+            value: normalizeFilterValue(label || s?.id || 'unknown-style'),
+            description: s?.description,
+          };
+        }).filter((s: any) => s.label);
+
+        // Fallback when /products/style is unavailable: derive unique styles from product data
+        if (styleOptions.length === 0) {
+          const [kitchenRes, bedroomRes] = await Promise.allSettled([
+            api.get(API_ENDPOINTS.products.base, { params: { category: 'kitchen' } }),
+            api.get(API_ENDPOINTS.products.base, { params: { category: 'bedroom' } }),
+          ]);
+
+          const extractRows = (response: PromiseSettledResult<any>) => {
+            if (response.status !== 'fulfilled') return [] as any[];
+            const payload = response.value?.data;
+            if (Array.isArray(payload?.data?.products)) return payload.data.products;
+            if (Array.isArray(payload?.data)) return payload.data;
+            if (Array.isArray(payload)) return payload;
+            return [] as any[];
+          };
+
+          const mergedRows = [...extractRows(kitchenRes), ...extractRows(bedroomRes)];
+          const uniqueStyles = Array.from(
+            new Set(
+              mergedRows
+                .map((row: any) => String(row?.style || '').trim())
+                .filter(Boolean)
+            )
+          );
+
+          styleOptions = uniqueStyles.map((styleName) => ({
+            id: styleName,
+            label: styleName,
+            value: normalizeFilterValue(styleName),
+          }));
+        }
 
         const builtFilters: FilterGroup[] = [
           {
-            id: "collection",
-            label: "Collection",
-            type: "collection",
-            options: categoriesData?.data?.collections?.map((c: { id: string; name: string }) => ({
+            id: 'colour',
+            label: 'Colour',
+            type: 'colour',
+            options: (coloursData?.data || []).map((c: any) => ({
               id: c.id,
-              label: c.name,
-            })) ?? [],
+              label: c.name || 'Unknown Colour',
+              value: normalizeFilterValue(c.name || c.id || 'unknown-colour'),
+              hex: c.hexCode,
+            })),
           },
           {
-            id: "style",
-            label: "Kitchen style",
-            type: "style",
-            options: categoriesData?.data?.styles?.map((s: { id: string; name: string }) => ({
+            id: 'style',
+            label: 'Style',
+            type: 'style',
+            options: styleOptions,
+          },
+          {
+            id: 'size',
+            label: 'Size',
+            type: 'size',
+            options: (sizesData?.data || []).map((s: any) => ({
               id: s.id,
-              label: s.name,
-            })) ?? [],
+              label: s.title || 'Unknown Size',
+              value: normalizeFilterValue(s.title || s.id || 'unknown-size'),
+              description: s.description,
+            })),
           },
           {
-            id: "colour",
-            label: "Kitchen colour",
-            type: "colour",
-            options: coloursData?.data?.colours?.map((c: { id: string; name: string }) => ({
-              id: c.id,
-              label: c.name,
-            })) ?? [],
+            id: 'finish',
+            label: 'Finish',
+            type: 'finish',
+            options: (finishData?.data || []).map((f: any) => ({
+              id: f.id,
+              label: f.name || 'Unknown Finish',
+              value: normalizeFilterValue(f.name || f.id || 'unknown-finish'),
+              description: f.description,
+              image: f.image,
+            })),
+          },
+          {
+            id: 'package',
+            label: 'Packages',
+            type: 'package',
+            options: (packagesData?.data || []).map((p: any) => ({
+              id: p.id,
+              label: p.title || 'Unknown Package',
+              value: normalizeFilterValue(p.title || p.id || 'unknown-package'),
+              description: p.description,
+              image: p.image,
+              category: p.category,
+            })),
           },
         ];
 
@@ -109,38 +226,64 @@ export default function Filters({ resultCount = 0, onFiltersChange }: FiltersPro
     fetchFilters();
   }, []);
 
-  const notify = (filters: ActiveFilter[], sort: string) => {
-    onFiltersChange?.(filters, sort);
-  };
-
   const toggleFilter = (filterId: string, optionId: string) => {
-    setActiveFilters((prev) => {
-      const exists = prev.some((f) => f.filterId === filterId && f.optionId === optionId);
-      const next = exists
-        ? prev.filter((f) => !(f.filterId === filterId && f.optionId === optionId))
-        : [...prev, { filterId, optionId }];
-      notify(next, sortBy);
-      return next;
+    const queryKey = filterId as 'colour' | 'style' | 'size' | 'finish' | 'package';
+    const currentValues = (queryState[queryKey] ?? '')
+      .split(',')
+      .map((part) => part.trim())
+      .filter(Boolean);
+
+    const valueSet = new Set(currentValues);
+    if (valueSet.has(optionId)) {
+      valueSet.delete(optionId);
+    } else {
+      valueSet.add(optionId);
+    }
+
+    const nextValue = Array.from(valueSet).join(',');
+    void setQueryState({
+      [queryKey]: nextValue || null,
     });
   };
 
   const removeFilter = (filterId: string, optionId: string) => {
-    setActiveFilters((prev) => {
-      const next = prev.filter((f) => !(f.filterId === filterId && f.optionId === optionId));
-      notify(next, sortBy);
-      return next;
-    });
+    const queryKey = filterId as 'colour' | 'style' | 'size' | 'finish' | 'package';
+    const currentValues = (queryState[queryKey] ?? '')
+      .split(',')
+      .map((p) => p.trim())
+      .filter(Boolean);
+    const nextValues = currentValues.filter((v) => v !== optionId);
+    void setQueryState({ [queryKey]: nextValues.join(',') || null });
   };
 
   const clearAllFilters = () => {
-    setActiveFilters([]);
-    notify([], sortBy);
+    void setQueryState({
+      colour: null,
+      style: null,
+      size: null,
+      finish: null,
+      package: null,
+    });
   };
 
   const handleSortChange = (newSort: string) => {
-    setSortBy(newSort);
-    notify(activeFilters, newSort);
+    void setQueryState({ sort: newSort });
   };
+
+  const onFiltersChangeRef = useRef(onFiltersChange);
+
+  useEffect(() => {
+    onFiltersChangeRef.current = onFiltersChange;
+  }, [onFiltersChange]);
+
+  const filtersKey = useMemo(
+    () => activeFilters.map((f) => `${f.filterId}::${f.optionId}`).join('|'),
+    [activeFilters]
+  );
+
+  useEffect(() => {
+    onFiltersChangeRef.current?.(activeFilters, sortBy);
+  }, [filtersKey, sortBy]);
 
   const toggleGroup = (groupId: string) => {
     setExpandedGroups((prev) => {
@@ -152,7 +295,7 @@ export default function Filters({ resultCount = 0, onFiltersChange }: FiltersPro
 
   const getFilterLabel = (filterId: string, optionId: string) => {
     const filter = filters.find((f) => f.id === filterId);
-    return filter?.options.find((o) => o.id === optionId)?.label || "";
+    return filter?.options.find((o) => o.value === optionId)?.label || "";
   };
 
   const totalSelected = activeFilters.length;
@@ -206,13 +349,6 @@ export default function Filters({ resultCount = 0, onFiltersChange }: FiltersPro
             );
           })}
 
-          {/* Packages Link */}
-          <Link href="/packages">
-            <button className="flex items-center gap-1.5 px-4 py-2 rounded-full border border-gray-300 bg-white text-gray-700 hover:border-gray-400 text-sm font-medium transition-all">
-              Packages
-              <ArrowRight size={14} className="text-gray-500" />
-            </button>
-          </Link>
 
           <div className="ml-auto flex items-center gap-3">
             <span className="text-sm text-gray-500 shrink-0">{resultCount} kitchens</span>
@@ -270,6 +406,9 @@ export default function Filters({ resultCount = 0, onFiltersChange }: FiltersPro
 
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-5 border-b">
+            <SheetHeader className="sr-only">
+              <SheetTitle>Filter options</SheetTitle>
+            </SheetHeader>
             <h2 className="text-2xl font-semibold tracking-tight text-gray-900">Filter</h2>
             <button
               onClick={() => setIsDrawerOpen(false)}
@@ -311,10 +450,9 @@ export default function Filters({ resultCount = 0, onFiltersChange }: FiltersPro
                     <div className="px-6 pb-4 space-y-1">
                       {filter.options.map((option) => {
                         const isSelected = activeFilters.some(
-                          (f) => f.filterId === filter.id && f.optionId === option.id
+                          (f) => f.filterId === filter.id && f.optionId === option.value
                         );
-                        const colorHex = COLOR_MAP[option.id];
-
+                        // Show color swatch for colour filter using API hex
                         return (
                           <label
                             key={option.id}
@@ -323,13 +461,14 @@ export default function Filters({ resultCount = 0, onFiltersChange }: FiltersPro
                             <input
                               type="checkbox"
                               checked={isSelected}
-                              onChange={() => toggleFilter(filter.id, option.id)}
+                              onChange={() => toggleFilter(filter.id, option.value)}
                               className="w-4 h-4 rounded accent-green-600"
                             />
-                            {colorHex && (
+                            {filter.id === 'colour' && option.hex && (
                               <span
-                                className="w-5 h-5 rounded-full border border-gray-200 shrink-0"
-                                style={{ backgroundColor: colorHex }}
+                                className="w-6 h-6 rounded-full border-2 border-gray-200 shrink-0 shadow"
+                                style={{ backgroundColor: option.hex }}
+                                title={option.label}
                               />
                             )}
                             <span className="text-sm text-gray-700">{option.label}</span>

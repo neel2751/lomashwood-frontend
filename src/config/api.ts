@@ -1,5 +1,5 @@
 export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+  process.env.NEXT_PUBLIC_API_URL || "https://lomashwood-backend.vercel.app/api/v1";
 
 export const API_VERSION = "v1";
 
@@ -67,6 +67,7 @@ export const API_ENDPOINTS = {
     addReview: (id: string) => `/products/${id}/reviews`,
     categories: "/products/categories",
     colours: "/products/colours",
+    style: "/products/style",
     sizes: "/products/sizes",
     finish: "/products/finish",
     packages: "/products/packages",

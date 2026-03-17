@@ -41,8 +41,8 @@ const SummaryItem = ({ icon, label, value, badge }: SummaryItemProps) => (
     <div className="p-2 bg-white rounded-lg shadow-sm shrink-0">{icon}</div>
     <div className="flex-1 min-w-0">
       <p className="text-sm font-medium text-gray-600 mb-1">{label}</p>
-      <div className="flex items-center gap-2 flex-wrap">
-        <p className="text-base font-semibold text-gray-900 break-words">{value}</p>
+      <div className="flex items-start gap-2 flex-wrap w-full">
+        <div className="text-base font-semibold text-gray-900 break-words flex-1">{value}</div>
         {badge && (
           <Badge variant="secondary" className="shrink-0">
             {badge}
@@ -84,6 +84,7 @@ export default function Confirmation({ onEdit }: ConfirmationProps) {
     switch (appointmentType) {
       case 'showroom': return 'Showroom Visit';
       case 'home': return 'Home Visit';
+      case 'online': return 'Online Consultation';
       case 'virtual': return 'Virtual Consultation';
       default: return appointmentType;
     }
@@ -112,6 +113,7 @@ export default function Confirmation({ onEdit }: ConfirmationProps) {
     switch (appointmentType) {
       case 'showroom': return <Store className="h-5 w-5 text-primary" />;
       case 'home': return <Home className="h-5 w-5 text-primary" />;
+      case 'online': return <Video className="h-5 w-5 text-primary" />;
       case 'virtual': return <Video className="h-5 w-5 text-primary" />;
       default: return <Calendar className="h-5 w-5 text-primary" />;
     }
@@ -213,10 +215,15 @@ export default function Confirmation({ onEdit }: ConfirmationProps) {
             icon={<Phone className="h-5 w-5 text-primary" />}
             label="Phone"
             value={
-              <div className="space-y-1">
-                <div>{phone}</div>
-                {alternatePhone && <div className="text-sm text-gray-600">Alt: {alternatePhone}</div>}
-              </div>
+              <span className="block">
+                {phone}
+                {alternatePhone && (
+                  <>
+                    <br />
+                    <span className="text-sm text-gray-600">Alt: {alternatePhone}</span>
+                  </>
+                )}
+              </span>
             }
           />
         </CardContent>

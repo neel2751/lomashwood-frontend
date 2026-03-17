@@ -57,14 +57,26 @@ axiosInstance.interceptors.response.use(
   (error: AxiosError) => {
     if (error.response) {
       const status = error.response.status;
-      const message = (error.response.data as { message?: string })?.message || error.message;
+      const errorData = error.response.data as Record<string, any> | string;
+      let message = error.message;
+      
+      if (typeof errorData === 'object' && errorData !== null) {
+        message = errorData.message || errorData.msg || JSON.stringify(errorData) || error.message;
+      } else if (typeof errorData === 'string') {
+        message = errorData;
+      }
 
       console.error("❌ API Error:", {
         status,
         message,
+        data: errorData,
         url: error.config?.url,
       });
 
+      // Create a custom error that preserves the message
+      const customError = new Error(message);
+      customError.name = `APIError_${status}`;
+      
       switch (status) {
         case 401:
           if (typeof window !== "undefined") {
@@ -78,10 +90,9 @@ axiosInstance.interceptors.response.use(
           console.error("Resource not found");
           break;
         case 422:
-          console.error("Validation error:", error.response.data);
-          break;
-        case 429:
-          console.error("Rate limit exceeded");
+          const validationData = error.response.data as Record<string, any> | null;
+          const validationErrors = validationData?.errors || validationData?.message || "Validation failed";
+          console.error("Validation error:", validationErrors);
           break;
         case 500:
         case 502:
@@ -92,16 +103,20 @@ axiosInstance.interceptors.response.use(
         default:
           console.error("Unexpected error");
       }
+
+      return Promise.reject(customError);
     } else if (error.request) {
       console.error("❌ Network Error:", {
         message: "No response received from server",
         url: error.config?.url,
       });
+      const networkError = new Error("No response received from server. Please check your connection.");
+      return Promise.reject(networkError);
     } else {
       console.error("❌ Request Setup Error:", error.message);
+      const setupError = new Error(error.message || "Request setup failed");
+      return Promise.reject(setupError);
     }
-
-    return Promise.reject(error);
   }
 );
 

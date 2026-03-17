@@ -5,6 +5,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 import { ProductCard } from "@/components/products/ProductCard";
+import { productService } from "@/services/productService";
+import type { Product as ApiProduct } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -31,6 +33,25 @@ interface Product {
   isFeatured?: boolean;
 }
 
+const mapApiProductToCard = (product: ApiProduct): Product => ({
+  id: product.id,
+  name: product.title,
+  slug: product.slug,
+  image: product.images?.[0] || "/images/placeholder-product.jpg",
+  images: product.images || [],
+  category: product.category,
+  style: product.style || product.rangeName || "",
+  finish: product.finish || "",
+  priceRange: {
+    min: product.price || 0,
+    max: product.price || 0,
+  },
+  rating: 0,
+  reviewCount: 0,
+  inStock: true,
+  isFeatured: product.featured,
+});
+
 interface RelatedProductsProps {
   productId: string;
   category?: string;
@@ -55,18 +76,27 @@ export default function RelatedProducts({
   const { data: products, isLoading } = useQuery<Product[]>({
     queryKey: ["relatedProducts", productId, category, style],
     queryFn: async () => {
-      const params = new URLSearchParams({
-        productId,
-        limit: maxItems.toString(),
-        ...(category && { category }),
-        ...(style && { style }),
+      const response = await productService.getProducts({
+        page: 1,
+        limit: maxItems + 8,
+        sort: "newest",
+        ...(category ? { category: category as "kitchen" | "bedroom" } : {}),
       });
 
-      const response = await fetch(`/api/products/related?${params}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch related products");
-      }
-      return response.json();
+      const rows = response.data || [];
+      const filteredRows = rows.filter((product) => {
+        if (product.id === productId) {
+          return false;
+        }
+
+        if (style) {
+          return (product.style || "").toLowerCase() === style.toLowerCase();
+        }
+
+        return true;
+      });
+
+      return filteredRows.slice(0, maxItems).map(mapApiProductToCard);
     },
     staleTime: 5 * 60 * 1000,
   });

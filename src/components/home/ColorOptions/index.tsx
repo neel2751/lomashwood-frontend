@@ -5,31 +5,34 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { apiClient } from "@/lib/api";
-import { QUERY_KEYS } from "@/lib/react-query";
 
 import { ColorPicker } from "./ColorPicker";
 
-const coloursDemoData = [
-  { id: "green", name: "Green", hexCode: "#6B7F6B" },      
-  { id: "blue", name: "Blue", hexCode: "#3D4F5C" },        
-  { id: "neutral", name: "Neutral", hexCode: "#D4C4B0" }, 
-  { id: "white", name: "White", hexCode: "#FFFFFF" },      
-  { id: "wood", name: "Wood", hexCode: "#9B8B7B" },       
-  { id: "grey", name: "Grey", hexCode: "#D0D0D0" },       
-  { id: "cream", name: "Cream", hexCode: "#EBE3D5" },     
-  { id: "black", name: "Black", hexCode: "#1A1A1A" },      
-  { id: "cashmere", name: "Cashmere", hexCode: "#F5E6DC" },
-  { id: "pink", name: "Pink", hexCode: "#D4A5A5" },                
-];
+interface FeaturedColour {
+  id: string;
+  name: string;
+  hexCode: string;
+}
 
 export function ColorOptions() {
-  const { data: coloursData, isLoading } = useQuery({
-    queryKey: QUERY_KEYS.colours.all,
-    queryFn: () => apiClient.colours.getAll(),
+  const { data: coloursData, isLoading } = useQuery<FeaturedColour[]>({
+    queryKey: ["featured-colours"],
+    queryFn: async () => {
+      const response = await fetch('/api/featured-colours', {
+        method: 'GET',
+        headers: { Accept: 'application/json' },
+      });
+
+      if (!response.ok) {
+        return [];
+      }
+
+      const payload = await response.json();
+      return Array.isArray(payload?.data) ? payload.data : [];
+    },
   });
 
-  const colours = coloursData?.data || coloursDemoData;
+  const colours = Array.isArray(coloursData) ? coloursData : [];
 
   return (
     <section className="w-full bg-gradient-to-br from-[#E8F3F5] via-[#F1F9FB] to-[#E8F3F5] py-16 md:py-24 lg:py-32">
@@ -80,6 +83,12 @@ export function ColorOptions() {
             </Button>
           </Link>
         </div>
+
+        {!isLoading && colours.length === 0 && (
+          <div className="text-center py-8">
+            <p className="text-base text-slate-600">No featured colours available right now.</p>
+          </div>
+        )}
       </div>
     </section>
   );

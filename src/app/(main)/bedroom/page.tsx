@@ -1,69 +1,149 @@
+import type { Metadata } from 'next';
 
-  import type { Metadata } from 'next';
+import BedroomPageCom from './bedroomPage';
 
-  import BedroomPageCom from './bedroomPage';
-
-
-  export const metadata: Metadata = {
+export const metadata: Metadata = {
+  title: 'Bedroom Design & Consultation | Lomash Wood',
+  description: 'Discover our elegant bedroom designs with bespoke furniture and custom storage solutions. Book your free consultation today.',
+  openGraph: {
     title: 'Bedroom Design & Consultation | Lomash Wood',
-    description: 'Discover our elegant bedroom designs with bespoke furniture and custom storage solutions. Book your free consultation today.',
-    openGraph: {
-      title: 'Bedroom Design & Consultation | Lomash Wood',
-      description: 'Discover our elegant bedroom designs with bespoke furniture and custom storage solutions.',
-      type: 'website',
-    },
-  };
+    description: 'Discover our elegant bedroom designs with bespoke furniture and custom storage solutions.',
+    type: 'website',
+  },
+};
 
-  const products = [
-    {
-      id: '1',
-      slug: 'modern-white-bedroom',
-      name: 'Modern White Bedroom',
-      category: 'bedroom',
-      style: 'modern',
-      finish: 'gloss',
-      image: 'https://plus.unsplash.com/premium_photo-1683120852623-143817d6400b?q=80&w=3276&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      price: { from: 50000 },
-      colors: ['white', 'gray'],
-      inStock: true,
-      isNew: true,
-      rating: 4.5,
-      reviewCount: 20,
-    },
-    {
-      id: '2',
-      name: 'Classic Oak Bedroom',
-      slug: 'classic-oak-bedroom',
-      category: 'bedroom',
-      style: 'traditional',
-      finish: 'wood-grain',
-      image: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      price: { from: 75000 },
-      colors: ['oak', 'beige'],
-      inStock: true,
-      isSale: true,
-      discount: 10,
-      rating: 4.0,
-      reviewCount: 15,
-    },
-    {
-      id: '3',
-      name: 'Sleek Black Bedroom',
-      slug: 'sleek-black-bedroom',
-      category: 'bedroom',
-      style: 'industrial',
-      finish: 'matt',
-      image: 'https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      price: { from: 60000 },
-      colors: ['black', 'charcoal'],
-      inStock: false,
-      rating: 4.2,
-      reviewCount: 10,
-    },
-  ];
+interface BackendProduct {
+  id: string;
+  slug: string;
+  title: string;
+  category: 'kitchen' | 'bedroom';
+  style?: string;
+  finish?: string;
+  price?: number;
+  images?: string[];
+  colours?: Array<{ name: string }>;
+  isPublished?: boolean;
+  isFeatured?: boolean;
+}
 
-  export default function BedroomPage() {
-    return (
-      <BedroomPageCom products={products} />
-    );
+type BedroomSearchParams = Record<string, string | string[] | undefined>;
+
+const pickSingle = (value?: string | string[]) => {
+  if (Array.isArray(value)) return value[0] ?? undefined;
+  return value;
+};
+
+const normalizeParam = (value?: string) => {
+  if (!value) return undefined;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : undefined;
+};
+
+async function getBedroomProducts(searchParams?: BedroomSearchParams) {
+  try {
+    const configuredBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '');
+    const urlsToTry: string[] = [];
+
+    const colour = normalizeParam(pickSingle(searchParams?.colour));
+    const style = normalizeParam(pickSingle(searchParams?.style));
+    const size = normalizeParam(pickSingle(searchParams?.size));
+    const finish = normalizeParam(pickSingle(searchParams?.finish));
+    const packageFilter = normalizeParam(pickSingle(searchParams?.package));
+    const sort = normalizeParam(pickSingle(searchParams?.sort));
+
+    const params = new URLSearchParams({ category: 'bedroom' });
+    if (colour) params.set('colour', colour);
+    if (style) params.set('style', style);
+    if (size) params.set('size', size);
+    if (packageFilter) params.set('package', packageFilter);
+    if (sort && sort !== 'popular') params.set('sort', sort);
+
+    if (finish) {
+      const finishValues = finish.split(',').map((v) => v.trim()).filter(Boolean);
+      if (finishValues.length === 1) {
+        params.set('finish', finishValues[0]);
+      }
+    }
+
+    const query = params.toString();
+
+    if (configuredBase) {
+      if (configuredBase.endsWith('/api/v1')) {
+        urlsToTry.push(`${configuredBase}/products?${query}`);
+      } else if (configuredBase.endsWith('/api')) {
+        urlsToTry.push(`${configuredBase}/v1/products?${query}`);
+      } else {
+        urlsToTry.push(`${configuredBase}/api/v1/products?${query}`);
+        urlsToTry.push(`${configuredBase}/products?${query}`);
+      }
+    }
+
+    urlsToTry.push(`https://lomashwood-backend.vercel.app/api/v1/products?${query}`);
+
+    let rows: BackendProduct[] = [];
+
+    for (const url of urlsToTry) {
+      try {
+        const response = await fetch(url, { next: { revalidate: 300 } });
+        if (!response.ok) {
+          continue;
+        }
+
+        const payload = await response.json();
+        const candidateRows: BackendProduct[] = Array.isArray(payload?.data?.products)
+          ? payload.data.products
+          : Array.isArray(payload?.data)
+            ? payload.data
+            : Array.isArray(payload)
+              ? payload
+              : [];
+
+        if (candidateRows.length > 0) {
+          rows = candidateRows;
+          break;
+        }
+      } catch {
+        continue;
+      }
+    }
+
+    if (rows.length === 0) {
+      return [];
+    }
+
+    return rows.map((product) => ({
+      id: product.id,
+      slug: product.slug,
+      name: product.title,
+      category: product.category,
+      style: product.style || 'modern',
+      finish: product.finish || 'matt',
+      image: product.images?.[0] || '/images/placeholder-product.jpg',
+      images: product.images || [],
+      price: { from: product.price || 0 },
+      colors: product.colours?.map((colour) => colour.name.toLowerCase()) || [],
+      inStock: product.isPublished ?? true,
+      isNew: false,
+      rating: 0,
+      reviewCount: 0,
+    }));
+  } catch (error) {
+    console.error('Bedroom products fetch failed:', error);
+    return [];
   }
+}
+
+export default async function BedroomPage({
+  searchParams,
+}: {
+  searchParams?: BedroomSearchParams | Promise<BedroomSearchParams>;
+}) {
+  const resolvedSearchParams = searchParams ? await Promise.resolve(searchParams) : undefined;
+  const products = await getBedroomProducts(resolvedSearchParams);
+
+  return (
+    <div className="w-full min-h-screen bg-white">
+      <BedroomPageCom products={products} />
+    </div>
+  );
+}

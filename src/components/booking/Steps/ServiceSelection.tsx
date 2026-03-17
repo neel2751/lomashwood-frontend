@@ -12,6 +12,7 @@ import {
   MapPin
 } from 'lucide-react';
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useFormContext } from 'react-hook-form';
 
 import { Badge } from '@/components/ui/badge';
@@ -21,6 +22,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
+import { showroomService } from '@/services/showroomService';
 
 interface ServiceOption {
   id: string;
@@ -88,33 +90,6 @@ const additionalServices: AdditionalService[] = [
   },
 ];
 
-const showrooms: Showroom[] = [
-  {
-    id: 'showroom-1',
-    name: 'Downtown Showroom',
-    city: 'Jaipur',
-    address: '123 Main Street, Jaipur',
-  },
-  {
-    id: 'showroom-2',
-    name: 'City Center Showroom',
-    city: 'Jaipur',
-    address: '456 Market Road, Jaipur',
-  },
-  {
-    id: 'showroom-3',
-    name: 'Mall Showroom',
-    city: 'Delhi',
-    address: '789 Shopping Mall, Delhi',
-  },
-  {
-    id: 'showroom-4',
-    name: 'Rajasthan Showroom',
-    city: 'Udaipur',
-    address: '321 Lake View, Udaipur',
-  },
-];
-
 export default function ServiceSelection({ category }: { category?: string }) {
   const { setValue, watch } = useFormContext();
 
@@ -125,6 +100,19 @@ export default function ServiceSelection({ category }: { category?: string }) {
   
   const [showAdditional, setShowAdditional] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
+
+  const { data: showroomResponse, isLoading: isShowroomsLoading } = useQuery({
+    queryKey: ['booking-showrooms'],
+    queryFn: () => showroomService.getShowrooms({ limit: 100 }),
+  });
+
+  const showrooms: Showroom[] =
+    showroomResponse?.data?.data?.map((showroom: any) => ({
+      id: showroom.id,
+      name: showroom.name,
+      city: showroom.city,
+      address: showroom.address,
+    })) || [];
 
   const handleServiceChange = (value: string) => {
     setValue('serviceType', [value], { shouldValidate: true });
@@ -248,6 +236,9 @@ export default function ServiceSelection({ category }: { category?: string }) {
             </h4>
             <RadioGroup value={selectedShowroom} onValueChange={handleShowroomSelect}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {isShowroomsLoading && (
+                  <p className="text-sm text-gray-600">Loading showrooms...</p>
+                )}
                 {showrooms.map((showroom) => (
                   <Card
                     key={showroom.id}

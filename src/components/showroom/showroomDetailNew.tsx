@@ -21,7 +21,6 @@ import {
 import { Button } from "@/components/ui/button"
 // import { ShowroomCard } from "@/components/showroom-card"
 import type { Showroom } from "@/types/showrooms.types"
-import { getNearbyStores } from "@/types/showrooms.types"
 import ShowroomCard from "./ShowroomCard"
 
 const facilityIconMap: Record<string, React.ElementType> = {
@@ -37,10 +36,11 @@ const facilityIconMap: Record<string, React.ElementType> = {
 
 interface ShowroomDetailProps {
   showroom: Showroom
+  nearbyStores?: Showroom[]
 }
 
-export function ShowroomDetail({ showroom }: ShowroomDetailProps) {
-  const nearbyStores = getNearbyStores(showroom.nearbyStores)
+export function ShowroomDetail({ showroom, nearbyStores = [] }: ShowroomDetailProps) {
+  const currentDayName = new Intl.DateTimeFormat("en-GB", { weekday: "long" }).format(new Date())
 
   return (
     <div>
@@ -55,7 +55,7 @@ export function ShowroomDetail({ showroom }: ShowroomDetailProps) {
             priority
           />
         </div>
-        <div className="relative mx-auto max-w-7xl px-4 py-12 lg:px-8 lg:py-20">
+        <div className="relative mx-auto max-w-7xl px-4 py-12 lg:px-8 lg:py-20 animate-in fade-in slide-in-from-bottom-3 duration-700">
           <nav className="mb-6 flex items-center gap-2 text-xs text-primary-foreground/60" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-primary-foreground">
               Home
@@ -82,11 +82,11 @@ export function ShowroomDetail({ showroom }: ShowroomDetailProps) {
       </section>
 
       {/* Contact + Opening Hours row */}
-      <section className="mx-auto max-w-7xl px-4 py-10 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 py-10 lg:px-8 animate-in fade-in slide-in-from-bottom-3 duration-700">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Contact info */}
           <div className="lg:col-span-1">
-            <div className="rounded-lg border border-border bg-card p-6">
+            <div className="rounded-lg border border-border bg-card p-6 shadow-sm transition-all duration-300 hover:shadow-md">
               <h2 className="mb-5 text-lg font-semibold text-foreground">
                 Contact Details
               </h2>
@@ -150,7 +150,7 @@ export function ShowroomDetail({ showroom }: ShowroomDetailProps) {
 
           {/* Opening Hours */}
           <div className="lg:col-span-2">
-            <div className="rounded-lg border border-border bg-card p-6">
+            <div className="rounded-lg border border-border bg-card p-6 shadow-sm transition-all duration-300 hover:shadow-md">
               <h2 className="mb-5 text-lg font-semibold text-foreground">
                 Opening Hours
               </h2>
@@ -158,10 +158,14 @@ export function ShowroomDetail({ showroom }: ShowroomDetailProps) {
                 {showroom.openingHours.map((oh) => (
                   <div
                     key={oh.day}
-                    className="flex items-center justify-between py-3 text-sm"
+                    className={`flex items-center justify-between rounded-md px-2 py-3 text-sm transition-colors ${
+                      oh.day === currentDayName ? "bg-muted/70" : "hover:bg-muted/40"
+                    }`}
                   >
                     <div>
-                      <span className="font-medium text-foreground">{oh.day}</span>
+                      <span className={`font-medium ${oh.day === currentDayName ? "text-primary" : "text-foreground"}`}>
+                        {oh.day}
+                      </span>
                       <span className="ml-2 text-muted-foreground">{oh.date}</span>
                     </div>
                     <span
@@ -185,7 +189,7 @@ export function ShowroomDetail({ showroom }: ShowroomDetailProps) {
       </section>
 
       {/* Store Facilities */}
-      <section className="border-y border-border bg-lomash-secondary/30">
+      <section className="border-y border-border bg-lomash-secondary/30 animate-in fade-in slide-in-from-bottom-3 duration-700">
         <div className="mx-auto max-w-7xl px-4 py-10 lg:px-8">
           <h2 className="mb-2 text-sm font-semibold uppercase tracking-wider text-lomash-secondary">
             Welcome to us
@@ -200,7 +204,7 @@ export function ShowroomDetail({ showroom }: ShowroomDetailProps) {
               return (
                 <div
                   key={facility}
-                  className="flex items-center gap-3 rounded-lg border border-border bg-card p-4"
+                  className="flex items-center gap-3 rounded-lg border border-border bg-card p-4 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
                 >
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-lomash-secondary">
                     <Icon className="h-5 w-5 text-white" />
@@ -213,31 +217,8 @@ export function ShowroomDetail({ showroom }: ShowroomDetailProps) {
         </div>
       </section>
 
-      {/* Our Team */}
-      <section className="mx-auto max-w-7xl px-4 py-12 lg:px-8">
-        <h2 className="mb-8 text-3xl font-bold text-foreground">Our Team</h2>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-          {showroom.team.map((member) => (
-            <div
-              key={member.name}
-              className="flex flex-col items-center rounded-lg border border-border bg-card p-6 text-center"
-            >
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-lomash-secondary">
-                <span className="text-xl font-bold text-white">
-                  {member.name.charAt(0)}
-                </span>
-              </div>
-              <h4 className="mt-3 text-xl font-semibold text-foreground">
-                {member.name}
-              </h4>
-              <p className="mt-1 text-base tracking-tight text-muted-foreground">{member.role}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* Kitchens on Display */}
-      <section className="border-t border-border bg-lomash-secondary/30">
+      <section className="border-t border-border bg-lomash-secondary/30 animate-in fade-in slide-in-from-bottom-3 duration-700">
         <div className="mx-auto max-w-7xl px-4 py-12 lg:px-8">
           <h2 className="mb-2 text-3xl font-bold text-lomash-secondary">
             Kitchens on Display in {showroom.city}
@@ -251,7 +232,7 @@ export function ShowroomDetail({ showroom }: ShowroomDetailProps) {
             {showroom.kitchensOnDisplay.map((kitchen) => (
               <div
                 key={kitchen.name}
-                className="group overflow-hidden rounded-lg border border-border bg-card"
+                className="group overflow-hidden rounded-lg border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <Image
@@ -278,13 +259,13 @@ export function ShowroomDetail({ showroom }: ShowroomDetailProps) {
       </section>
 
       {/* Design Services */}
-      <section className="mx-auto max-w-7xl px-4 py-12 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 py-12 lg:px-8 animate-in fade-in slide-in-from-bottom-3 duration-700">
         <h2 className="mb-8 text-3xl font-bold text-foreground">
           Our Bespoke Design Service
         </h2>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {/* In-store */}
-          <div className="rounded-lg border border-border bg-card p-6">
+          <div className="rounded-lg border border-border bg-card p-6 shadow-sm transition-all duration-300 hover:shadow-md">
             <h3 className="mb-4 text-lg font-semibold text-foreground">
               In-Store Design Appointment
             </h3>
@@ -305,7 +286,7 @@ export function ShowroomDetail({ showroom }: ShowroomDetailProps) {
           </div>
 
           {/* Virtual */}
-          <div className="rounded-lg border border-border bg-card p-6">
+          <div className="rounded-lg border border-border bg-card p-6 shadow-sm transition-all duration-300 hover:shadow-md">
             <h3 className="mb-4 text-lg font-semibold text-foreground">
               Virtual Design Appointment
             </h3>
@@ -333,7 +314,7 @@ export function ShowroomDetail({ showroom }: ShowroomDetailProps) {
       </section>
 
       {/* Consultation CTA with image */}
-      <section className="border-y border-border bg-foreground">
+      <section className="border-y border-border bg-foreground animate-in fade-in slide-in-from-bottom-3 duration-700">
         <div className="mx-auto grid max-w-7xl grid-cols-1 lg:grid-cols-2">
           <div className="relative hidden lg:block">
             <Image
@@ -369,7 +350,7 @@ export function ShowroomDetail({ showroom }: ShowroomDetailProps) {
 
       {/* Nearby Stores */}
       {nearbyStores.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 py-12 lg:px-8">
+        <section className="mx-auto max-w-7xl px-4 py-12 lg:px-8 animate-in fade-in slide-in-from-bottom-3 duration-700">
           <h2 className="mb-6 text-3xl font-bold text-foreground">
             Other Stores Nearby
           </h2>

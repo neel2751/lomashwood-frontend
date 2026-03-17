@@ -1,7 +1,7 @@
 import { Search, Monitor, Store } from 'lucide-react';
 import type { Metadata } from 'next';
-import { Suspense } from 'react';
 import Link from 'next/link';
+import { Suspense } from 'react';
 
 import { PageLoader } from '@/components/shared/PageLoader';
 import ShowroomList from '@/components/showroom/ShowroomList';
@@ -24,12 +24,60 @@ export const metadata: Metadata = {
 
 async function getShowrooms() {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/v1/showrooms`,
-      { next: { revalidate: 3600 } }
-    );
-    const data = await res.json();
-    return data?.data ?? [];
+    const configuredBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '');
+    const urlsToTry: string[] = [];
+
+    if (configuredBase) {
+      if (configuredBase.endsWith('/api/v1')) {
+        urlsToTry.push(`${configuredBase}/showrooms`);
+      } else if (configuredBase.endsWith('/api')) {
+        urlsToTry.push(`${configuredBase}/v1/showrooms`);
+      } else {
+        urlsToTry.push(`${configuredBase}/api/v1/showrooms`);
+        urlsToTry.push(`${configuredBase}/showrooms`);
+      }
+    }
+
+    urlsToTry.push('https://lomashwood-backend.vercel.app/api/v1/showrooms');
+
+    const mapShowroom = (row: any) => ({
+      ...row,
+      coordinates:
+        typeof row?.latitude === 'number' && typeof row?.longitude === 'number'
+          ? { lat: row.latitude, lng: row.longitude }
+          : row?.coordinates,
+      openingHours: Array.isArray(row?.openingHours)
+        ? row.openingHours.map((item: any) => ({
+            day: item?.day || '',
+            date: item?.date || '',
+            hours: item?.hours || '',
+          }))
+        : [],
+    });
+
+    for (const url of urlsToTry) {
+      try {
+        const res = await fetch(url, { next: { revalidate: 3600 } });
+        if (!res.ok) {
+          continue;
+        }
+
+        const payload = await res.json();
+        const rows = Array.isArray(payload?.data)
+          ? payload.data
+          : Array.isArray(payload)
+            ? payload
+            : [];
+
+        if (rows.length > 0) {
+          return rows.map(mapShowroom);
+        }
+      } catch {
+        continue;
+      }
+    }
+
+    return [];
   } catch (error) {
     console.error('Failed to fetch showrooms:', error);
     return [];
@@ -275,16 +323,14 @@ export default async function ShowroomsPage() {
                 Sign up for a Lomash Wood Trade account and get exclusive benefits &amp; discounts
               </p>
             </div>
-            
-              href="/business"
-              className="flex-shrink-0 inline-flex rounded-full items-center justify-center px-7 py-3 bg-transparent text-white font-semibold text-base border border-white hover:bg-white hover:text-slate-900 transition-colors whitespace-nowrap"
-            
-              Apply on Lomash Trade
-
+            <Link              href="/trade"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-lomash-secondary font-medium rounded-full hover:bg-gray-100 transition-colors"
+            >
+              Join the Trade
+            </Link>
           </div>
         </div>
       </section>
-
     </main>
   );
 }

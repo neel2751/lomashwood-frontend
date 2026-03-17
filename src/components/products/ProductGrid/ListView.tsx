@@ -52,7 +52,7 @@ export function ListView({ products }: ListViewProps) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
               {/* Image Section */}
               <div className="relative aspect-[4/3] md:aspect-auto md:h-full bg-gray-100">
-                <Link href={`/product/${product.slug}`}>
+                <Link href={`/product/${product.slug || product.id}`}>
                   <Image
                     src={product.image}
                     alt={product.name}
@@ -93,20 +93,24 @@ export function ListView({ products }: ListViewProps) {
                         <Badge variant="secondary" className="text-xs capitalize">
                           {product.category}
                         </Badge>
-                        <span className="text-sm text-gray-500">{product.style}</span>
+                        {product.style && product.style !== '0' && (
+                          <span className="text-sm text-gray-500">{product.style}</span>
+                        )}
                       </div>
 
                       {/* Product Name */}
-                      <Link href={`/product/${product.slug}`}>
+                      <Link href={`/product/${product.slug || product.id}`}>
                         <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 hover:text-primary transition-colors">
                           {product.name}
                         </h3>
                       </Link>
 
                       {/* Finish */}
-                      <p className="text-sm text-gray-600 mb-3">
-                        Finish: <span className="font-medium">{product.finish}</span>
-                      </p>
+                      {product.finish && product.finish !== '0' && (
+                        <p className="text-sm text-gray-600 mb-3">
+                          Finish: <span className="font-medium">{product.finish}</span>
+                        </p>
+                      )}
                     </div>
 
                     {/* Wishlist */}
@@ -199,21 +203,21 @@ export function ListView({ products }: ListViewProps) {
                     {/* Action Buttons */}
                     <div className="flex gap-2 w-full sm:w-auto">
                       <Button
-              asChild
-              className="flex-1"
-              // disabled={!product.inStock}
-            >
-              <Link href={`/product/${product.slug}?category=${product.category}`}>
-                View Details
-              </Link>
-            </Button>
+                        asChild
+                        className="flex-1"
+                        // disabled={!product.inStock}
+                      >
+                        <Link href={`/product/${product.slug || product.id}?category=${product.category}`}>
+                          View Details
+                        </Link>
+                      </Button>
                       <Button
               asChild
               variant="outline"
               size="icon"
               className='sm:hidden'
             >
-              <Link href={`/book-appointment?product=${product.slug}&category=${product.category}`}>
+              <Link href={`/book-appointment?product=${product.slug || product.id}&category=${product.category}`}>
                 <svg
                   className="w-5 h-5"
                   fill="none"
@@ -236,7 +240,7 @@ export function ListView({ products }: ListViewProps) {
                         disabled={!product.inStock}
                         className="flex-1 sm:flex-none hidden sm:inline-flex"
                       >
-                        <Link href={`/book-appointment?product=${product.slug}&category=${product.category}`}>
+                        <Link href={`/book-appointment?product=${product.slug || product.id}&category=${product.category}`}>
                           Book Consultation
                         </Link>
                       </Button>

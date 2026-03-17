@@ -47,6 +47,8 @@ export function QuickView({ product, isOpen, onClose }: QuickViewProps) {
   const [selectedColor, setSelectedColor] = useState<string | null>(
     product.colors?.[0] || null
   );
+  const styleLabel = typeof product.style === 'string' ? product.style.trim() : '';
+  const finishLabel = typeof product.finish === 'string' ? product.finish.trim() : '';
 
   const images = product.images || [product.image];
 
@@ -159,7 +161,9 @@ export function QuickView({ product, isOpen, onClose }: QuickViewProps) {
               <Badge variant="secondary" className="capitalize">
                 {product.category}
               </Badge>
-              <span className="text-sm text-gray-500">{product.style}</span>
+              {styleLabel && styleLabel !== '0' && (
+                <span className="text-sm text-gray-500">{styleLabel}</span>
+              )}
             </div>
 
             {/* Product Name */}
@@ -218,10 +222,12 @@ export function QuickView({ product, isOpen, onClose }: QuickViewProps) {
             </div>
 
             {/* Finish */}
-            <div className="mb-6 pb-6 border-b">
-              <p className="text-sm text-gray-600 mb-2">Finish</p>
-              <p className="font-medium text-gray-900">{product.finish}</p>
-            </div>
+            {finishLabel && finishLabel !== '0' && (
+              <div className="mb-6 pb-6 border-b">
+                <p className="text-sm text-gray-600 mb-2">Finish</p>
+                <p className="font-medium text-gray-900">{finishLabel}</p>
+              </div>
+            )}
 
             {/* Colors */}
             {product.colors && product.colors.length > 0 && (

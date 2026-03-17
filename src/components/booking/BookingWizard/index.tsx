@@ -10,6 +10,7 @@ import { z } from "zod";
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { appointmentService } from "@/services/appointmentService";
 
 import AppointmentType from "../Steps/AppointmentType";
 import Confirmation from "../Steps/Confirmation";
@@ -88,7 +89,7 @@ interface BookingWizardProps {
   category?: string;
 }
 
-export default function BookingWizard({ className, product, category }: BookingWizardProps) {
+export default function BookingWizard({ className, product: _product, category: _category }: BookingWizardProps) {
   const router = useRouter();
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(1);
@@ -101,30 +102,108 @@ export default function BookingWizard({ className, product, category }: BookingW
 
   const { mutate: submitBooking, isPending } = useMutation({
     mutationFn: async (data: BookingFormData) => {
-      const response = await fetch("/api/appointments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, product, category }),
-      });
-      if (!response.ok) throw new Error("Failed to submit booking");
-      return response.json();
+      const rawData = data as BookingFormData & {
+        selectedShowroom?: string;
+        fullAddress?: string;
+        notes?: string;
+        termsAccepted?: boolean;
+      };
+
+      const serviceType = data.serviceType?.[0] || "kitchen";
+      const appointmentType =
+        data.appointmentType === "showroom-visit"
+          ? "showroom"
+          : data.appointmentType === "home-visit"
+            ? "home"
+            : data.appointmentType === "video-call"
+              ? "online"
+              : data.appointmentType;
+      const appointmentDate = data.appointmentDate
+        ? new Date(data.appointmentDate).toISOString().split("T")[0]
+        : "";
+
+      const slotDateTime = (() => {
+        if (!appointmentDate || !data.appointmentTime) return "";
+        const [hourText, minuteText = "0"] = data.appointmentTime.split(":");
+        const hour = Number(hourText);
+        const minute = Number(minuteText);
+        if (Number.isNaN(hour) || Number.isNaN(minute)) return "";
+
+        const dateObj = new Date(`${appointmentDate}T00:00:00`);
+        dateObj.setHours(hour, minute, 0, 0);
+        return dateObj.toISOString();
+      })();
+
+      const customerName = `${data.firstName || ""} ${data.lastName || ""}`.trim();
+      const address = rawData.fullAddress || data.address || "";
+      const notes = rawData.notes || data.message || "";
+      const forKitchen = serviceType === "kitchen" || serviceType === "both";
+      const forBedroom = serviceType === "bedroom" || serviceType === "both";
+
+      const payload = {
+        // Backend Prisma model fields
+        type: appointmentType,
+        forKitchen,
+        forBedroom,
+        customerName,
+        customerEmail: data.email,
+        customerPhone: data.phone,
+        postcode: data.postcode,
+        address,
+        slot: slotDateTime,
+        showroomId: rawData.selectedShowroom || undefined,
+        notes,
+
+        // Keep existing contract fields for compatibility
+        appointmentType,
+        serviceType,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phone: data.phone,
+        addressLegacy: data.address || "",
+        zipCode: data.postcode || "",
+        preferredDate: appointmentDate,
+        timeSlot: data.appointmentTime,
+        message: data.message || "",
+        marketingConsent: data.marketingConsent,
+        source: "website",
+        agreeToTerms: rawData.termsAccepted,
+      };
+
+      console.log("[Booking] Submitting appointment:", payload);
+
+      return appointmentService.createAppointment(payload as any);
     },
+
     onSuccess: (data) => {
       toast({
         title: "Booking Confirmed!",
         description: "We've sent a confirmation email to your inbox.",
       });
-      router.push(`/book-appointment/success?ref=${data.id}`);
+      router.push(`/book-appointment/success?ref=${data.appointment?.id || data.confirmationNumber}`);
     },
     onError: (error: Error) => {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      console.error("[Booking] Error:", errorMsg);
+      
+      // Try to extract validation errors from the error message
+      const hasValidationError = /Required|String must contain|Invalid input|Validation/i.test(errorMsg);
+      
+      let displayMsg = errorMsg || "Please try again or contact us for assistance.";
+      
+      if (hasValidationError) {
+        displayMsg = `Validation Error: ${errorMsg.substring(0, 150)}`;
+        if (displayMsg.length > 150) displayMsg += "...";
+      }
+      
       toast({
         title: "Booking Failed",
-        description: error.message || "Please try again or contact us for assistance.",
+        description: displayMsg,
         variant: "error",
       });
     },
   });
-
   const handleNext = async () => {
     const fieldsToValidate = getFieldsForStep(currentStep);
     const isValid = await methods.trigger(fieldsToValidate);
@@ -179,7 +258,7 @@ export default function BookingWizard({ className, product, category }: BookingW
 
         <Card>
           <CardContent className="pt-6">
-            <CurrentStepComponent category={category} />
+            <CurrentStepComponent category={_category} />
           </CardContent>
         </Card>
 

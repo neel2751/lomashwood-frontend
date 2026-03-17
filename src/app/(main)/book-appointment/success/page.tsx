@@ -14,12 +14,12 @@ import {
 } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Suspense } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { API_BASE_URL } from '@/config/api';
 
 
 export const metadata: Metadata = {
@@ -32,11 +32,119 @@ export const metadata: Metadata = {
 };
 
 interface SuccessPageProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default function BookingSuccessPage({ searchParams }: SuccessPageProps) {
-  const bookingId = searchParams.id as string || 'APT-2024-001';
+interface BackendAppointment {
+  id: string;
+  type?: 'home' | 'online' | 'showroom' | string;
+  forKitchen?: boolean;
+  forBedroom?: boolean;
+  customerName?: string;
+  customerEmail?: string;
+  customerPhone?: string;
+  postcode?: string;
+  address?: string;
+  slot?: string;
+  status?: string;
+  consultantName?: string | null;
+  showroomName?: string | null;
+  notes?: string | null;
+}
+
+function extractAppointment(payload: unknown): BackendAppointment | null {
+  const source = payload as
+    | { data?: unknown; appointment?: unknown }
+    | undefined;
+
+  const candidate =
+    (source?.data as { appointment?: unknown } | undefined)?.appointment ||
+    source?.appointment ||
+    source?.data ||
+    payload;
+
+  if (!candidate || typeof candidate !== 'object') {
+    return null;
+  }
+
+  return candidate as BackendAppointment;
+}
+
+async function fetchAppointmentById(id: string): Promise<BackendAppointment | null> {
+  if (!id || id === 'Confirmation pending') {
+    return null;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/appointments/${id}`, {
+      cache: 'no-store',
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const payload = await response.json();
+    return extractAppointment(payload);
+  } catch (error) {
+    console.error('[Booking Success] Failed to fetch appointment details', error);
+    return null;
+  }
+}
+
+function formatAppointmentType(type?: string) {
+  if (type === 'home') return 'Home Visit';
+  if (type === 'online') return 'Online Consultation';
+  if (type === 'showroom') return 'Showroom Visit';
+  return 'Consultation';
+}
+
+function formatService(appointment: BackendAppointment | null) {
+  if (!appointment) return 'As selected during booking';
+  if (appointment.forKitchen && appointment.forBedroom) return 'Kitchen & Bedroom';
+  if (appointment.forKitchen) return 'Kitchen';
+  if (appointment.forBedroom) return 'Bedroom';
+  return 'As selected during booking';
+}
+
+function formatSlotDate(slot?: string) {
+  if (!slot) return 'Included in your confirmation email';
+  const date = new Date(slot);
+  if (Number.isNaN(date.getTime())) return 'Included in your confirmation email';
+  return date.toLocaleDateString('en-GB', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+}
+
+function formatSlotTime(slot?: string) {
+  if (!slot) return 'Included in your confirmation email';
+  const date = new Date(slot);
+  if (Number.isNaN(date.getTime())) return 'Included in your confirmation email';
+  return date.toLocaleTimeString('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+function getQueryValue(value: string | string[] | undefined): string | undefined {
+  if (Array.isArray(value)) return value[0];
+  if (typeof value === 'string' && value.trim()) return value;
+  return undefined;
+}
+
+export default async function BookingSuccessPage({ searchParams }: SuccessPageProps) {
+  const resolvedSearchParams = await searchParams;
+  const bookingId =
+    getQueryValue(resolvedSearchParams.ref) ||
+    getQueryValue(resolvedSearchParams.id) ||
+    'Confirmation pending';
+  const appointment = await fetchAppointmentById(bookingId);
 
   return (
     <div className="min-h-screen bg-background">
@@ -73,9 +181,7 @@ export default function BookingSuccessPage({ searchParams }: SuccessPageProps) {
       <div className="container mx-auto px-4 py-8 lg:py-12">
         <div className="max-w-4xl mx-auto">
           {/* Appointment Details Card */}
-          <Suspense fallback={<AppointmentDetailsSkeleton />}>
-            <AppointmentDetails bookingId={bookingId} />
-          </Suspense>
+          <AppointmentDetails bookingId={bookingId} appointment={appointment} />
 
           {/* Action Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
@@ -320,25 +426,29 @@ export default function BookingSuccessPage({ searchParams }: SuccessPageProps) {
   );
 }
 
-function AppointmentDetails({  }: { bookingId: string }) {
-
-  const appointment = {
-    type: 'Home Visit',
-    service: 'Kitchen & Bedroom',
-    date: 'Monday, January 27, 2026',
-    time: '2:00 PM - 3:30 PM',
-    address: '123 Main Street, Ahmedabad, Gujarat',
-    customerName: 'John Doe',
-    email: 'john.doe@example.com',
-    phone: '+91 98765 43210',
-    designer: 'Sarah Johnson',
-  };
+function AppointmentDetails({
+  bookingId,
+  appointment,
+}: {
+  bookingId: string;
+  appointment: BackendAppointment | null;
+}) {
 
   return (
     <Card className="p-6 lg:p-8">
       <h2 className="text-2xl font-semibold mb-6">Your Appointment Details</h2>
       
       <div className="space-y-6">
+        <div className="rounded-lg border bg-muted/40 p-4">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <div>
+              <p className="text-sm text-muted-foreground">Confirmation Reference</p>
+              <p className="font-semibold break-all">{bookingId}</p>
+            </div>
+            <Badge variant="secondary">{appointment?.status || 'Booked'}</Badge>
+          </div>
+        </div>
+
         {/* Appointment Type & Service */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
@@ -346,14 +456,14 @@ function AppointmentDetails({  }: { bookingId: string }) {
               <User className="h-4 w-4" />
               <span>Appointment Type</span>
             </div>
-            <p className="font-semibold">{appointment.type}</p>
+            <p className="font-semibold">{formatAppointmentType(appointment?.type)}</p>
           </div>
           <div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
               <Home className="h-4 w-4" />
               <span>Service</span>
             </div>
-            <p className="font-semibold">{appointment.service}</p>
+            <p className="font-semibold">{formatService(appointment)}</p>
           </div>
         </div>
 
@@ -366,14 +476,14 @@ function AppointmentDetails({  }: { bookingId: string }) {
               <Calendar className="h-4 w-4" />
               <span>Date</span>
             </div>
-            <p className="font-semibold">{appointment.date}</p>
+            <p className="font-semibold">{formatSlotDate(appointment?.slot)}</p>
           </div>
           <div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
               <Clock className="h-4 w-4" />
               <span>Time</span>
             </div>
-            <p className="font-semibold">{appointment.time}</p>
+            <p className="font-semibold">{formatSlotTime(appointment?.slot)}</p>
           </div>
         </div>
 
@@ -385,10 +495,13 @@ function AppointmentDetails({  }: { bookingId: string }) {
             <MapPin className="h-4 w-4" />
             <span>Location</span>
           </div>
-          <p className="font-semibold">{appointment.address}</p>
-          <Button variant="link" size="sm" className="px-0 mt-2">
-            View on Map →
-          </Button>
+          <p className="font-semibold">
+            {appointment?.showroomName
+              ? `${appointment.showroomName}${appointment.address ? `, ${appointment.address}` : ''}`
+              : appointment?.address
+                ? `${appointment.address}${appointment.postcode ? `, ${appointment.postcode}` : ''}`
+                : 'Based on your booking selection (home, online, or showroom)'}
+          </p>
         </div>
 
         <Separator />
@@ -400,14 +513,14 @@ function AppointmentDetails({  }: { bookingId: string }) {
               <Mail className="h-4 w-4" />
               <span>Email</span>
             </div>
-            <p className="font-semibold">{appointment.email}</p>
+            <p className="font-semibold">{appointment?.customerEmail || 'Sent to your submitted email address'}</p>
           </div>
           <div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
               <Phone className="h-4 w-4" />
               <span>Phone</span>
             </div>
-            <p className="font-semibold">{appointment.phone}</p>
+            <p className="font-semibold">{appointment?.customerPhone || 'We may call for confirmation if needed'}</p>
           </div>
         </div>
 
@@ -417,26 +530,22 @@ function AppointmentDetails({  }: { bookingId: string }) {
         <div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
             <User className="h-4 w-4" />
-            <span>Your Designer</span>
+            <span>Assigned Consultant</span>
           </div>
-          <p className="font-semibold">{appointment.designer}</p>
+          <p className="font-semibold">
+            {appointment?.consultantName || 'A team member will be assigned before your appointment'}
+          </p>
         </div>
-      </div>
-    </Card>
-  );
-}
 
-function AppointmentDetailsSkeleton() {
-  return (
-    <Card className="p-6 lg:p-8">
-      <div className="space-y-6">
-        <div className="h-8 bg-muted animate-pulse rounded w-48" />
-        {[...Array(5)].map((_, i) => (
-          <div key={i} className="space-y-2">
-            <div className="h-4 bg-muted animate-pulse rounded w-24" />
-            <div className="h-6 bg-muted animate-pulse rounded w-full" />
-          </div>
-        ))}
+        {appointment?.notes ? (
+          <>
+            <Separator />
+            <div>
+              <p className="text-sm text-muted-foreground mb-2">Notes</p>
+              <p className="font-semibold">{appointment.notes}</p>
+            </div>
+          </>
+        ) : null}
       </div>
     </Card>
   );

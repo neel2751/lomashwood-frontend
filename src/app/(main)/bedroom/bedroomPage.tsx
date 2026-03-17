@@ -1,11 +1,11 @@
 "use client";
 import { Phone, Shield, Paintbrush, CreditCard, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
-import { Suspense, useState, useMemo } from 'react';
+import { parseAsString, useQueryStates } from 'nuqs';
+import { Suspense, useMemo, useState } from 'react';
 
 import CategoryHero from '@/components/category/CategoryHero';
-import HelpSidebar from '@/components/category/HelpSidebar';
-import Filters, { ActiveFilter } from '@/components/products/Filters';
+import Filters from '@/components/products/Filters';
 import ProductGrid from '@/components/products/ProductGrid';
 import ProductSort from '@/components/products/ProductSort';
 import ViewToggle from '@/components/products/ViewToggle';
@@ -33,63 +33,34 @@ interface Product {
 
 export default function BedroomPageCom({ products }: { products: Product[] }) {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [activeFilters, setActiveFilters] = useState<ActiveFilter[]>([]);
-  const [sortBy, setSortBy] = useState("popular");
 
-  // ── Filter + Sort logic ────────────────────────────────────────────────────
+  const [queryState] = useQueryStates({
+    sort: parseAsString.withDefault('popular'),
+    finish: parseAsString,
+  });
+
+  // Server page provides API-filtered products; client applies finish-multi fallback + sort
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
-    if (activeFilters.length > 0) {
-      const filtersByGroup: Record<string, string[]> = {};
-      activeFilters.forEach(({ filterId, optionId }) => {
-        if (!filtersByGroup[filterId]) filtersByGroup[filterId] = [];
-        filtersByGroup[filterId].push(optionId);
-      });
+    const finishValues = (queryState.finish ?? '')
+      .split(',')
+      .map((value) => value.trim())
+      .filter(Boolean);
 
-      result = result.filter((product) =>
-        Object.entries(filtersByGroup).every(([filterId, optionIds]) => {
-          if (filterId === "colour") {
-            return optionIds.some((id) =>
-              product.colors?.some((c) =>
-                c.toLowerCase().includes(id.toLowerCase())
-              )
-            );
-          }
-          if (filterId === "style") {
-            return optionIds.some((id) =>
-              product.style?.toLowerCase().includes(id.toLowerCase())
-            );
-          }
-          if (filterId === "finish") {
-            // ── Normalise finish before comparing ──────────────────────
-            const productFinish = product.finish?.toLowerCase().replace(/\s+/g, "-") ?? "";
-            return optionIds.some((id) => {
-              if (id === "matte")      return productFinish === "matt"  || productFinish === "matte";
-              if (id === "glossy")     return productFinish === "gloss" || productFinish === "glossy";
-              if (id === "wood-grain") return productFinish === "wood-grain";
-              if (id === "textured")   return productFinish === "textured";
-              if (id === "lacquer")    return productFinish === "lacquer";
-              return productFinish.includes(id);
-            });
-          }
-          if (filterId === "range") {
-            return optionIds.some((id) => {
-              const price = product.price?.from ?? 0;
-              if (id === "budget")    return price < 50000;
-              if (id === "mid-range") return price >= 50000 && price < 75000;
-              if (id === "premium")   return price >= 75000 && price < 150000;
-              if (id === "luxury")    return price >= 150000;
-              return true;
-            });
-          }
-          return true;
-        })
-      );
+    if (finishValues.length > 1) {
+      result = result.filter((product) => {
+        const productFinish = product.finish?.toLowerCase().replace(/\s+/g, '-') ?? '';
+        return finishValues.some((value) => {
+          if (value === 'matte') return productFinish === 'matt' || productFinish === 'matte';
+          if (value === 'glossy') return productFinish === 'gloss' || productFinish === 'glossy';
+          return productFinish.includes(value.toLowerCase());
+        });
+      });
     }
 
     // ── Sort ───────────────────────────────────────────────────────────────
-    switch (sortBy) {
+    switch (queryState.sort) {
       case "price-low":
         result.sort((a, b) => (a.price?.from ?? 0) - (b.price?.from ?? 0));
         break;
@@ -105,12 +76,7 @@ export default function BedroomPageCom({ products }: { products: Product[] }) {
     }
 
     return result;
-  }, [products, activeFilters, sortBy]);
-
-  const handleFiltersChange = (filters: ActiveFilter[], sort: string) => {
-    setActiveFilters(filters);
-    setSortBy(sort);
-  };
+  }, [products, queryState.finish, queryState.sort]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -123,14 +89,14 @@ export default function BedroomPageCom({ products }: { products: Product[] }) {
       />
 
       <div className="container mx-auto px-8 lg:px-18 py-8 lg:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
 
           {/* Sidebar */}
-          <aside className="hidden lg:block lg:col-span-1">
+          {/* <aside className="hidden lg:block lg:col-span-1">
             <div className="sticky top-24 space-y-6">
               <HelpSidebar />
             </div>
-          </aside>
+          </aside> */}
 
           {/* Main Content */}
           <main className="lg:col-span-3">
@@ -139,7 +105,6 @@ export default function BedroomPageCom({ products }: { products: Product[] }) {
             <div className="w-full pt-10 pb-6 border-b border-gray-200 mb-6">
               <Filters
                 resultCount={filteredProducts.length}
-                onFiltersChange={handleFiltersChange}
               />
             </div>
 
@@ -156,10 +121,10 @@ export default function BedroomPageCom({ products }: { products: Product[] }) {
                     Showing {filteredProducts.length} of {products.length} results
                   </span>
                 </div>
-                <div className="flex items-center gap-4">
+                {/* <div className="flex items-center gap-4">
                   <ProductSort />
                   <ViewToggle view={viewMode} onChange={setViewMode} />
-                </div>
+                </div> */}
               </div>
             </div>
 

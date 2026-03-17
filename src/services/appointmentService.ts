@@ -8,6 +8,33 @@ import type {
   AppointmentStats,
 } from "@/types/booking.types";
 
+type ApiEnvelope<T> = T | { data: T };
+
+const extractData = <T>(payload: ApiEnvelope<T>): T => {
+  if (payload && typeof payload === "object" && "data" in payload) {
+    return payload.data as T;
+  }
+  return payload as T;
+};
+
+const mapAppointmentType = (value?: string) => {
+  if (value === "showroom-visit" || value === "showroom") return "showroom";
+  if (value === "home-visit" || value === "home") return "home";
+  if (value === "video-call" || value === "virtual" || value === "online") return "online";
+  return value;
+};
+
+const buildSlotsParams = (params: {
+  date: string;
+  serviceType?: "kitchen" | "bedroom" | "both";
+  showroomId?: string;
+}) => ({
+  date: params.date,
+  serviceType: params.serviceType,
+  appointmentType: mapAppointmentType(params.serviceType),
+  showroomId: params.showroomId,
+});
+
 export const appointmentService = {
 
   async getAvailability(params: {
@@ -15,8 +42,24 @@ export const appointmentService = {
     serviceType?: "kitchen" | "bedroom" | "both";
     showroomId?: string;
   }): Promise<AvailabilityResponse> {
-    const { data } = await api.get(API_ENDPOINTS.appointments.slots, { params });
-    return data;
+    const { data } = await api.get(API_ENDPOINTS.appointments.slots, {
+      params: buildSlotsParams(params),
+    });
+    const slots = extractData<any[]>(data);
+
+    return {
+      date: params.date,
+      availableSlots: slots.map((slot) => ({
+        id: slot.id,
+        time: slot.time,
+        startTime: slot.time,
+        endTime: slot.time,
+        available: !!slot.available,
+      })),
+      totalSlots: slots.length,
+      availableCount: slots.filter((slot) => slot.available).length,
+      showroomId: params.showroomId,
+    };
   },
 
   async getAvailableDates(params: {
@@ -25,8 +68,16 @@ export const appointmentService = {
     serviceType?: "kitchen" | "bedroom" | "both";
     showroomId?: string;
   }): Promise<string[]> {
-    const { data } = await api.get(API_ENDPOINTS.appointments.slots, { params });
-    return data;
+    const { data } = await api.get(API_ENDPOINTS.appointments.slots, {
+      params: {
+        year: params.year,
+        month: params.month,
+        serviceType: params.serviceType,
+        appointmentType: mapAppointmentType(params.serviceType),
+        showroomId: params.showroomId,
+      },
+    });
+    return extractData<string[]>(data);
   },
 
   async getTimeSlots(params: {
@@ -34,8 +85,18 @@ export const appointmentService = {
     serviceType?: "kitchen" | "bedroom" | "both";
     showroomId?: string;
   }): Promise<TimeSlot[]> {
-    const { data } = await api.get(API_ENDPOINTS.appointments.slots, { params });
-    return data;
+    const { data } = await api.get(API_ENDPOINTS.appointments.slots, {
+      params: buildSlotsParams(params),
+    });
+    const slots = extractData<any[]>(data);
+
+    return slots.map((slot) => ({
+      id: slot.id,
+      time: slot.time,
+      startTime: slot.time,
+      endTime: slot.time,
+      available: !!slot.available,
+    }));
   },
 
   async getSlotsCount(params: {
@@ -43,8 +104,16 @@ export const appointmentService = {
     serviceType?: "kitchen" | "bedroom" | "both";
     showroomId?: string;
   }): Promise<{ count: number }> {
-    const { data } = await api.get(API_ENDPOINTS.appointments.slotsCount, { params });
-    return data;
+    const { data } = await api.get(API_ENDPOINTS.appointments.slotsCount, {
+      params: buildSlotsParams(params),
+    });
+    const countData = extractData<any>(data);
+    return {
+      count:
+        countData?.count ??
+        countData?.availableSlots ??
+        0,
+    };
   },
 
   async createAppointment(formData: AppointmentFormData): Promise<{
@@ -52,7 +121,15 @@ export const appointmentService = {
     confirmationNumber: string;
   }> {
     const { data } = await api.post(API_ENDPOINTS.appointments.create, formData);
-    return data;
+    const payload = extractData<any>(data);
+    return {
+      appointment: payload?.appointment ?? payload,
+      confirmationNumber:
+        payload?.confirmationNumber ??
+        payload?.appointment?.confirmationNumber ??
+        payload?.id ??
+        "",
+    };
   },
 
   async getAppointmentById(id: string): Promise<Appointment> {

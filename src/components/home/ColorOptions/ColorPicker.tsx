@@ -11,9 +11,15 @@ interface ColorPickerProps {
 }
 
 export function ColorPicker({ colour, className }: ColorPickerProps) {
+  const colourQueryValue = colour.name
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '');
+
   return (
     <Link
-      href={`/kitchen?colour=${colour.id}`}
+      href={`/kitchen?colour=${encodeURIComponent(colourQueryValue)}`}
       className={cn("group flex flex-col items-center", className)}
     >
       {/* Color Circle */}

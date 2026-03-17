@@ -21,7 +21,7 @@ import type {
 } from "@/types";
 
 const api: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api/v1",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "https://lomashwood-backend.vercel.app/api/v1",
   timeout: 30000,
   headers: {
     "Content-Type": "application/json",

@@ -142,7 +142,60 @@ export interface UseProductDetailReturn {
   effectivePrice: number;
 }
 
-const DEFAULT_API_ENDPOINT = '/api/products';
+const DEFAULT_API_ENDPOINT =
+  `${process.env.NEXT_PUBLIC_API_URL || 'https://lomashwood-backend.vercel.app/api/v1'}/products`;
+
+const mapApiProductToDetail = (rawProduct: any): ProductDetail => ({
+  id: rawProduct.id,
+  name: rawProduct.title || rawProduct.name || '',
+  slug: rawProduct.slug || rawProduct.id,
+  description: rawProduct.description || '',
+  shortDescription: rawProduct.shortDescription,
+  price: rawProduct.price || 0,
+  originalPrice: rawProduct.originalPrice,
+  discount: rawProduct.discount,
+  image: rawProduct.images?.[0] || rawProduct.image || '/images/placeholder-product.jpg',
+  images: rawProduct.images || (rawProduct.image ? [rawProduct.image] : []),
+  category: rawProduct.category || '',
+  categorySlug: rawProduct.categorySlug,
+  subCategory: rawProduct.subCategory,
+  woodType: rawProduct.woodType,
+  stock: typeof rawProduct.stock === 'number' ? rawProduct.stock : 1,
+  inStock: rawProduct.inStock ?? true,
+  lowStockThreshold: rawProduct.lowStockThreshold,
+  restockDate: rawProduct.restockDate,
+  rating: rawProduct.rating ?? 0,
+  reviewCount: rawProduct.reviewCount ?? 0,
+  reviews: rawProduct.reviews,
+  dimensions: rawProduct.dimensions,
+  weight: rawProduct.weight,
+  weightUnit: rawProduct.weightUnit,
+  specifications: rawProduct.specifications,
+  sku: rawProduct.sku || rawProduct.id,
+  brand: rawProduct.brand,
+  manufacturer: rawProduct.manufacturer,
+  countryOfOrigin: rawProduct.countryOfOrigin,
+  material: rawProduct.material,
+  finish: rawProduct.finish,
+  grade: rawProduct.grade,
+  tags: rawProduct.tags,
+  features: rawProduct.features,
+  warranty: rawProduct.warranty,
+  careInstructions: rawProduct.careInstructions,
+  featured: rawProduct.featured,
+  isNew: rawProduct.isNew,
+  isBestseller: rawProduct.isBestseller,
+  isOnSale: rawProduct.isOnSale,
+  variants: rawProduct.variants,
+  hasVariants: rawProduct.hasVariants,
+  relatedProducts: rawProduct.relatedProducts,
+  similarProducts: rawProduct.similarProducts,
+  metaTitle: rawProduct.metaTitle,
+  metaDescription: rawProduct.metaDescription,
+  metaKeywords: rawProduct.metaKeywords,
+  createdAt: rawProduct.createdAt || new Date().toISOString(),
+  updatedAt: rawProduct.updatedAt || rawProduct.createdAt || new Date().toISOString(),
+});
 
 export const useProductDetail = (
   options: UseProductDetailOptions
@@ -207,15 +260,17 @@ export const useProductDetail = (
           throw new Error('Failed to fetch product details');
         }
 
-        const data = await response.json();
-        setProduct(data.product);
+        const payload = await response.json();
+        const rawProduct = payload?.data?.product ?? payload?.data ?? payload?.product ?? payload;
+        const mappedProduct = mapApiProductToDetail(rawProduct);
+        setProduct(mappedProduct);
 
-        if (data.product.variants && data.product.variants.length > 0) {
-          setSelectedVariant(data.product.variants[0]);
+        if (mappedProduct.variants && mappedProduct.variants.length > 0) {
+          setSelectedVariant(mappedProduct.variants[0]);
         }
 
-        if (data.product.reviews) {
-          setHasMoreReviews(data.hasMoreReviews || false);
+        if (mappedProduct.reviews) {
+          setHasMoreReviews(payload?.hasMoreReviews || false);
         }
       } catch (err) {
         const errorMessage =

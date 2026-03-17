@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Sparkles } from "lucide-react";
 
 import { ProductCard } from "@/components/products/ProductCard";
+import { productService } from "@/services/productService";
+import type { Product as ApiProduct } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -29,6 +31,25 @@ interface Product {
   isFeatured?: boolean;
 }
 
+const mapApiProductToCard = (product: ApiProduct): Product => ({
+  id: product.id,
+  name: product.title,
+  slug: product.slug,
+  image: product.images?.[0] || "/images/placeholder-product.jpg",
+  images: product.images || [],
+  category: product.category,
+  style: product.style || product.rangeName || "",
+  finish: product.finish || "",
+  priceRange: {
+    min: product.price || 0,
+    max: product.price || 0,
+  },
+  rating: 0,
+  reviewCount: 0,
+  inStock: true,
+  isFeatured: product.featured,
+});
+
 interface FeaturedProductsProps {
   category: "kitchen" | "bedroom" | "all";
   limit?: number;
@@ -47,17 +68,19 @@ export default function FeaturedProducts({
   const { data: products, isLoading } = useQuery<Product[]>({
     queryKey: ["featuredProducts", category, limit],
     queryFn: async () => {
-      const params = new URLSearchParams({
-        featured: "true",
-        limit: limit.toString(),
-        ...(category !== "all" && { category }),
-      });
+      const response = await productService.getProducts({
+        page: 1,
+        limit,
+        sort: "newest",
+        ...(category !== "all" ? { category } : {}),
+        featured: true,
+      } as any);
 
-      const response = await fetch(`/api/products?${params}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch featured products");
-      }
-      return response.json();
+      const rows = response.data || [];
+      const featuredRows = rows.filter((product) => product.featured);
+      return (featuredRows.length > 0 ? featuredRows : rows)
+        .slice(0, limit)
+        .map(mapApiProductToCard);
     },
     staleTime: 5 * 60 * 1000,
   });

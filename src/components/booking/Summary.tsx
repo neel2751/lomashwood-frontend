@@ -86,6 +86,8 @@ export default function Summary({
         return 'Showroom Visit';
       case 'home':
         return 'Home Visit';
+      case 'online':
+        return 'Online Consultation';
       case 'virtual':
         return 'Virtual Consultation';
       default:
@@ -99,6 +101,8 @@ export default function Summary({
         return <Store className="h-4 w-4" />;
       case 'home':
         return <Home className="h-4 w-4" />;
+      case 'online':
+        return <Video className="h-4 w-4" />;
       case 'virtual':
         return <Video className="h-4 w-4" />;
       default:

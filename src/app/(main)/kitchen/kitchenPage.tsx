@@ -1,11 +1,11 @@
 "use client";
 import { Phone, Shield, Paintbrush, CreditCard, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
-import { Suspense, useState, useMemo } from 'react';
+import { parseAsString, useQueryStates } from 'nuqs';
+import { Suspense, useMemo, useState } from 'react';
 
 import CategoryHero from '@/components/category/CategoryHero';
-import HelpSidebar from '@/components/category/HelpSidebar';
-import Filters, { ActiveFilter } from '@/components/products/Filters';
+import Filters from '@/components/products/Filters';
 import ProductGrid from '@/components/products/ProductGrid';
 import ProductSort from '@/components/products/ProductSort';
 import ViewToggle from '@/components/products/ViewToggle';
@@ -23,78 +23,48 @@ export default function KitchenPageCom({
   productsSpacing = "pb-16"
 }: KitchenPageComProps) {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [activeFilters, setActiveFilters] = useState<ActiveFilter[]>([]);
-  const [sortBy, setSortBy] = useState("popular");
 
-  // ── Filter + Sort logic ────────────────────────────────────────────────────
+  // Read filter/sort state from URL
+  const [filterParams] = useQueryStates({
+    sort: parseAsString.withDefault('popular'),
+    finish: parseAsString,
+  });
+
+  // Server page provides API-filtered products; client applies finish-multi fallback + sort
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
-    if (activeFilters.length > 0) {
-      // Group filters by category (OR within category, AND across categories)
-      const filtersByGroup: Record<string, string[]> = {};
-      activeFilters.forEach(({ filterId, optionId }) => {
-        if (!filtersByGroup[filterId]) filtersByGroup[filterId] = [];
-        filtersByGroup[filterId].push(optionId);
-      });
+    const finishValues = (filterParams.finish ?? '')
+      .split(',')
+      .map((value) => value.trim())
+      .filter(Boolean);
 
+    if (finishValues.length > 1) {
       result = result.filter((product) =>
-        Object.entries(filtersByGroup).every(([filterId, optionIds]) => {
-          if (filterId === "colour") {
-            return optionIds.some((id) =>
-              product.colors?.some((c: string) => c.toLowerCase().includes(id.toLowerCase()))
-            );
-          }
-          if (filterId === "style") {
-            return optionIds.some((id) =>
-              product.style?.toLowerCase().includes(id.toLowerCase())
-            );
-          }
-          if (filterId === "finish") {
-            return optionIds.some((id) =>
-              product.finish?.toLowerCase().replace(" ", "-").includes(id.toLowerCase())
-            );
-          }
-          if (filterId === "range") {
-            return optionIds.some((id) => {
-              const price = product.price?.from ?? 0;
-              if (id === "budget") return price < 50000;
-              if (id === "mid-range") return price >= 50000 && price < 75000;
-              if (id === "premium") return price >= 75000 && price < 150000;
-              if (id === "luxury") return price >= 150000;
-              return true;
-            });
-          }
-          return true;
-        })
+        finishValues.some((value) =>
+          product.finish?.toLowerCase().replace(/\s+/g, '-').includes(value.toLowerCase())
+        )
       );
     }
 
-    // Sort
-    switch (sortBy) {
-      case "price-low":
+    switch (filterParams.sort) {
+      case 'price-low':
         result.sort((a, b) => (a.price?.from ?? 0) - (b.price?.from ?? 0));
         break;
-      case "price-high":
+      case 'price-high':
         result.sort((a, b) => (b.price?.from ?? 0) - (a.price?.from ?? 0));
         break;
-      case "rating":
+      case 'rating':
         result.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
         break;
-      case "newest":
-        result.sort((a) => (a.isNew ? -1 : 1));
+      case 'newest':
+        result.sort(a => (a.isNew ? -1 : 1));
         break;
       default:
         break;
     }
-
     return result;
-  }, [products, activeFilters, sortBy]);
-
-  const handleFiltersChange = (filters: ActiveFilter[], sort: string) => {
-    setActiveFilters(filters);
-    setSortBy(sort);
-  };
+  }, [products, filterParams.finish, filterParams.sort]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -107,23 +77,22 @@ export default function KitchenPageCom({
       />
 
       <div className="container mx-auto px-8 lg:px-18 py-8 lg:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
 
           {/* Sidebar */}
-          <aside className="hidden lg:block lg:col-span-1">
+          {/* <aside className="hidden lg:block lg:col-span-1">
             <div className="sticky top-24 space-y-6">
               <HelpSidebar />
             </div>
-          </aside>
+          </aside> */}
 
           {/* Main Content */}
           <main className="lg:col-span-3">
 
-            {/* Single Filters instance — passes state up via onFiltersChange */}
+            {/* Filters updates URL params; server page fetches products from API using those params */}
             <div className={`w-full ${filterBarSpacing} border-b border-gray-200 mb-6`}>
               <Filters
                 resultCount={filteredProducts.length}
-                onFiltersChange={handleFiltersChange}
               />
             </div>
 
@@ -140,14 +109,14 @@ export default function KitchenPageCom({
                     Showing {filteredProducts.length} of {products.length} results
                   </span>
                 </div>
-                <div className="flex items-center gap-4">
+                {/* <div className="flex items-center gap-4">
                   <ProductSort />
                   <ViewToggle view={viewMode} onChange={setViewMode} />
-                </div>
+                </div> */}
               </div>
             </div>
 
-            {/* Products Grid — receives filtered products */}
+            {/* Products Grid */}
             <Suspense fallback={<ProductGridSkeleton />}>
               <ProductGrid products={filteredProducts} viewMode={viewMode} />
             </Suspense>

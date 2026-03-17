@@ -101,7 +101,34 @@ export interface UseInfiniteProductsReturn {
 }
 
 const DEFAULT_LIMIT = 12;
-const DEFAULT_API_ENDPOINT = '/api/products';
+const DEFAULT_API_ENDPOINT =
+  `${process.env.NEXT_PUBLIC_API_URL || 'https://lomashwood-backend.vercel.app/api/v1'}/products`;
+
+const mapApiProduct = (raw: any): Product => ({
+  id: raw.id,
+  name: raw.title || raw.name || '',
+  slug: raw.slug || raw.id,
+  description: raw.description || '',
+  price: raw.price || 0,
+  originalPrice: raw.originalPrice,
+  discount: raw.discount,
+  image: raw.images?.[0] || raw.image || '/images/placeholder-product.jpg',
+  images: raw.images || (raw.image ? [raw.image] : []),
+  category: raw.category || '',
+  woodType: raw.woodType,
+  stock: typeof raw.stock === 'number' ? raw.stock : 1,
+  inStock: raw.inStock ?? true,
+  rating: raw.rating,
+  reviewCount: raw.reviewCount,
+  dimensions: raw.dimensions,
+  weight: raw.weight,
+  sku: raw.sku,
+  tags: raw.tags,
+  featured: raw.featured,
+  isNew: raw.isNew,
+  isBestseller: raw.isBestseller,
+  createdAt: raw.createdAt,
+});
 
 export const useInfiniteProducts = (
   options: UseInfiniteProductsOptions = {}
@@ -213,26 +240,34 @@ export const useInfiniteProducts = (
           throw new Error('Failed to fetch products');
         }
 
-        const data = await response.json();
+        const payload = await response.json();
+        const productRows = payload?.data?.products ?? payload?.data ?? payload?.products ?? [];
+        const paginationData = payload?.data?.pagination ?? payload?.pagination;
+        const mappedProducts = (productRows as any[]).map(mapApiProduct);
 
         setProducts((prev) => {
           if (append) {
             const existingIds = new Set(prev.map((p) => p.id));
-            const newProducts = data.products.filter(
+            const newProducts = mappedProducts.filter(
               (p: Product) => !existingIds.has(p.id)
             );
             return [...prev, ...newProducts];
           } else {
-            return data.products;
+            return mappedProducts;
           }
         });
 
+        const currentPage = paginationData?.currentPage ?? paginationData?.page ?? page;
+        const totalPages = paginationData?.totalPages ?? 1;
+        const totalItems = paginationData?.totalItems ?? paginationData?.total ?? mappedProducts.length;
+        const itemsPerPage = paginationData?.itemsPerPage ?? paginationData?.limit ?? initialLimit;
+
         setPagination({
-          currentPage: data.pagination.currentPage,
-          totalPages: data.pagination.totalPages,
-          totalItems: data.pagination.totalItems,
-          itemsPerPage: data.pagination.itemsPerPage,
-          hasMore: data.pagination.currentPage < data.pagination.totalPages,
+          currentPage,
+          totalPages,
+          totalItems,
+          itemsPerPage,
+          hasMore: currentPage < totalPages,
         });
       } catch (err) {
         if (err instanceof Error && err.name === 'AbortError') {

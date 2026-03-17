@@ -102,7 +102,7 @@ export function useProduct(id: string) {
 
 export function useFeaturedProducts(category?: "kitchen" | "bedroom") {
   return useQuery({
-    queryKey: QUERY_KEYS.products.featured,
+    queryKey: [...QUERY_KEYS.products.featured, category],
     queryFn: () => productService.getFeaturedProducts(category),
   });
 }

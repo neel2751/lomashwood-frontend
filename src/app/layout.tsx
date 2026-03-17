@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Figtree, Poppins } from "next/font/google";
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
@@ -81,13 +82,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${figtree.className} ${poppins.variable}`}>
       <body className="font-sans antialiased m-0 p-0">
-        <Providers>
-          <div className="flex flex-col min-h-[100dvh] w-full mx-w-full overflow-x-hidden">
-            <Header />
-            <main className="flex-1 w-full">{children}</main>
-            <Footer />
-          </div>
-        </Providers>
+        <NuqsAdapter>
+          <Providers>
+            <div className="flex flex-col min-h-[100dvh] w-full mx-w-full overflow-x-hidden">
+              <Header />
+              <main className="flex-1 w-full">{children}</main>
+              <Footer />
+            </div>
+          </Providers>
+        </NuqsAdapter>
       </body>
     </html>
   );

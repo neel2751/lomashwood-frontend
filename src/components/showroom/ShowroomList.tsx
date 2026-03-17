@@ -134,7 +134,7 @@ export default function ShowroomList({
       {(showSearch || showFilters) && (
         <div className="space-y-4">
           {/* Search Bar */}
-          {showSearch && (
+          {/* {showSearch && (
             <div className="relative">
               <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
@@ -145,7 +145,7 @@ export default function ShowroomList({
                 className="pl-9 pr-4"
               />
             </div>
-          )}
+          )} */}
 
           {/* Filters */}
           {showFilters && (
@@ -191,7 +191,7 @@ export default function ShowroomList({
                   </SelectContent>
                 </Select>
 
-                <Select value={sortBy} onValueChange={setSortBy}>
+                {/* <Select value={sortBy} onValueChange={setSortBy}>
                   <SelectTrigger>
                     <SelectValue placeholder="Sort by" />
                   </SelectTrigger>
@@ -202,7 +202,7 @@ export default function ShowroomList({
                       </SelectItem>
                     ))}
                   </SelectContent>
-                </Select>
+                </Select> */}
 
                 {hasActiveFilters && (
                   <Button
