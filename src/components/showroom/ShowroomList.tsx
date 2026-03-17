@@ -1,12 +1,11 @@
 "use client";
 
-import { MapPin, Phone, Navigation, Search, Filter, X } from "lucide-react";
+import { MapPin, Phone, Navigation, Filter, X } from "lucide-react";
 import { useState, useMemo } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -58,11 +57,11 @@ interface ShowroomListProps {
   className?: string;
 }
 
-const sortOptions = [
-  { value: "name", label: "Name (A-Z)" },
-  { value: "distance", label: "Nearest First" },
-  { value: "city", label: "City (A-Z)" },
-];
+// const sortOptions = [
+//   { value: "name", label: "Name (A-Z)" },
+//   { value: "distance", label: "Nearest First" },
+//   { value: "city", label: "City (A-Z)" },
+// ];
 
 export default function ShowroomList({
   showrooms,
