@@ -4,7 +4,7 @@ import { Check, Star } from "lucide-react";
 import Image from "next/image";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import type { Package } from "@/types";
 
@@ -73,13 +73,19 @@ export function PackageCard({ package: pkg, className }: PackageCardProps) {
           )}
         </div>
 
-        {/* CTA Button */}
-        <Button className="w-full group/btn transition-all duration-300 hover:shadow-lg" size="lg">
-          Learn More
-          <svg className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </Button>
+        {/* CTA Button two buttons kitchen package & bedroom package */}
+ <div className="flex flex-col sm:flex-row items-center justify-center mt-10 gap-4">
+            <Link
+              href="/kitchen?package"
+              className="inline-flex items-center gap-2 px-6 py-2 bg-lomash-primary text-white font-medium rounded-full hover:bg-lomash-primary-dark transition-colors"
+            >Kitchen Packages
+            </Link>
+            <Link
+              href="/bedroom?package"
+              className="inline-flex items-center gap-2 px-6 py-2 bg-lomash-secondary text-white font-medium rounded-full hover:bg-lomash-secondary-dark transition-colors"
+            >Bedroom Packages
+            </Link>
+          </div>
       </div>
     </div>
   );

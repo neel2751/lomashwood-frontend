@@ -112,7 +112,7 @@ export const apiClient = {
 
   packages: {
     getAll: (): Promise<ApiResponse<Package[]>> =>
-      api.get("/packages").then((res) => res.data),
+      api.get("/products/packages").then((res) => res.data),
   },
 
   blog: {

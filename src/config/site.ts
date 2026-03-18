@@ -2,21 +2,21 @@ import type { SEOMetadata } from "@/types";
 
 export const siteConfig = {
   name: "Lomash Wood",
-  title: "Lomash Wood - Premium Kitchen & Bedroom Solutions",
+  title: "Lomash Wood - Kitchen & Bedroom Solutions",
   description:
-    "Lomash Wood compares prices and promotions to ensure you'll always find a beautiful kitchen at our best possible price. Explore our premium kitchen and bedroom collections.",
+    "Lomash Wood offers premium kitchen and bedroom design solutions. Explore our collections, book a free consultation, and transform your home with expert craftsmanship and the best prices guaranteed.",
   url: process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000",
   ogImage: "/images/og-image.jpg",
   links: {
-    facebook: process.env.NEXT_PUBLIC_FACEBOOK_URL || "#",
-    instagram: process.env.NEXT_PUBLIC_INSTAGRAM_URL || "#",
-    twitter: process.env.NEXT_PUBLIC_TWITTER_URL || "#",
-    linkedin: process.env.NEXT_PUBLIC_LINKEDIN_URL || "#",
+    facebook: "https://www.facebook.com/people/Lomash-Wood-Ltd/61557434510488/",
+    instagram: "https://www.instagram.com/lomashwood_uk",
+    tiktok: "https://www.tiktok.com/@lomashwooduk",
+    twitter: "https://twitter.com/lomashwood",
   },
   contact: {
-    email: "info@lomashwood.com",
-    phone: "1234567890",
-    address: "1234 Wood Street, City, State, ZIP",
+    email: "contact@lomashwood.com",
+    phone: "07776 470010",
+    address: "Unit 3B, Tonbridge Works, Tonbridge Rd, Harold Hill\nRomford RM3 8TS",
   },
   socialHandles: {
     twitter: "@lomashwood",

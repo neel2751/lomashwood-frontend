@@ -216,7 +216,7 @@ export const hamburgerMenuLinks: NavLink[] = [
 
 export const footerNavigation = {
   company: [
-    { label: "About Us", href: "/about" },
+    // { label: "About Us", href: "/about" },
     { label: "Our Process", href: "/our-process" },
     { label: "Why Choose Us", href: "/why-choose-us" },
     { label: "Contact Us", href: "/contact" },
@@ -287,10 +287,10 @@ export const quickLinks = {
 };
 
 export const socialLinks = [
-  { name: "Facebook", href: process.env.NEXT_PUBLIC_FACEBOOK_URL || "#", icon: "Facebook" },
-  { name: "Instagram", href: process.env.NEXT_PUBLIC_INSTAGRAM_URL || "#", icon: "Instagram" },
-  { name: "Twitter", href: process.env.NEXT_PUBLIC_TWITTER_URL || "#", icon: "Twitter" },
-  { name: "LinkedIn", href: process.env.NEXT_PUBLIC_LINKEDIN_URL || "#", icon: "Linkedin" },
+  { name: "Facebook", href: "https://www.facebook.com/people/Lomash-Wood-Ltd/61557434510488/", icon: "Facebook" },
+  { name: "Instagram", href: "https://www.instagram.com/lomashwood_uk", icon: "Instagram" },
+  { name: "TikTok", href: "https://www.tiktok.com/@lomashwooduk", icon: "TikTok" },
+  // { name: "LinkedIn", href: "#", icon: "Linkedin" },
 ];
 
 export const helpLinks: NavLink[] = [

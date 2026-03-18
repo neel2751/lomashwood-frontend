@@ -68,14 +68,8 @@ export function CategoryCard({ product, className }: CategoryCardProps) {
               {product.title}
             </h3>
 
-            { <p className="text-sm text-lomash-gray-600 mb-2 line-clamp-2">
-              {product.description}
-            </p> }
 
             <div className="flex items-center justify-between mt-2">
-              { <p className="text-sm font-medium text-lomash-gray-700">
-                {product.rangeName}
-              </p> }
 
               <span className="text-base text-lomash-primary font-semibold group-hover:text-lomash-dark transition-colors">
                 View Details 

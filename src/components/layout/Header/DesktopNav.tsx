@@ -65,7 +65,7 @@ export function DesktopNav({ className }: DesktopNavProps) {
             {isMegaMenu ? (
               <button
                 onClick={() => handleClick(menuType as "kitchen" | "bedroom")}
-                style={{ fontSize: "19px" }}
+                style={{ fontSize: "17px" }}
                 className={cn(
 
                   "relative flex items-center gap-1 font-medium transition-colors duration-200 py-8 bg-transparent border-none cursor-pointer",
@@ -88,7 +88,7 @@ export function DesktopNav({ className }: DesktopNavProps) {
             ) : (
               <Link
                 href={link.href}
-                style={{ fontSize: "19px" }}
+                style={{ fontSize: "17px" }}
                 className={cn(
                   "relative flex items-center gap-1 font-medium transition-colors duration-200 py-8",
                   isActive
