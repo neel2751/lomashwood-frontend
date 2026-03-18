@@ -102,18 +102,18 @@ export default function Filters({ resultCount = 0, onFiltersChange }: FiltersPro
 
         // Fetch all filter data from API
         const [coloursRes, stylesRes, sizesRes, finishRes, packagesRes] = await Promise.allSettled([
-          api.get(API_ENDPOINTS.products.colours),
-          api.get(API_ENDPOINTS.products.style),
-          api.get(API_ENDPOINTS.products.sizes),
-          api.get(API_ENDPOINTS.products.finish),
-          api.get(API_ENDPOINTS.products.packages),
+           fetch('/api/colours').then(r => r.json()),
+           fetch('/api/styles').then(r => r.json()),
+           fetch('/api/sizes').then(r => r.json()),
+           fetch('/api/finishes').then(r => r.json()),
+           fetch('/api/packages').then(r => r.json()),
         ]);
 
-        const coloursData = coloursRes.status === 'fulfilled' ? coloursRes.value.data : null;
-        const stylesData = stylesRes.status === 'fulfilled' ? stylesRes.value.data : null;
-        const sizesData = sizesRes.status === 'fulfilled' ? sizesRes.value.data : null;
-        const finishData = finishRes.status === 'fulfilled' ? finishRes.value.data : null;
-        const packagesData = packagesRes.status === 'fulfilled' ? packagesRes.value.data : null;
+          const coloursData = coloursRes.status === 'fulfilled' ? coloursRes.value : null;
+          const stylesData = stylesRes.status === 'fulfilled' ? stylesRes.value : null;
+          const sizesData = sizesRes.status === 'fulfilled' ? sizesRes.value : null;
+          const finishData = finishRes.status === 'fulfilled' ? finishRes.value : null;
+          const packagesData = packagesRes.status === 'fulfilled' ? packagesRes.value : null;
 
         let styleOptions = (stylesData?.data || []).map((s: any) => {
           const rawLabel = s?.name || s?.title || s?.style || s?.label || '';
