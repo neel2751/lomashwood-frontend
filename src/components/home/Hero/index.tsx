@@ -29,8 +29,8 @@ interface Slide {
 const fallbackSlides: Slide[] = [
   {
     id: '1',
-    type: 'image',
-    src: 'https://plus.unsplash.com/premium_photo-1680382578857-c331ead9ed51?q=80&w=2064&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    type: 'video',
+    src: 'https://lomashwood-prod.s3.eu-west-2.amazonaws.com/public/hero/kitchen.mp4',
     title: 'Transform Your Kitchen',
     subtitle: 'Modern Designs, Timeless Quality',
     description: 'Discover our premium kitchen solutions tailored to your lifestyle',
@@ -43,7 +43,7 @@ const fallbackSlides: Slide[] = [
   {
     id: '2',
     type: 'video',
-    src: 'https://portal.cdcproperty.management/storage/site_settings/68f11d406c6356qQ2x1760632128.mov',
+    src: 'https://lomashwood-prod.s3.eu-west-2.amazonaws.com/public/hero/Bedroom.mp4',
     title: 'Bedroom Sanctuary',
     subtitle: 'Where Comfort Meets Elegance',
     description: 'Create your perfect retreat with our bespoke bedroom designs',

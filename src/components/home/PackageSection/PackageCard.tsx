@@ -14,6 +14,13 @@ interface PackageCardProps {
 }
 
 export function PackageCard({ package: pkg, className }: PackageCardProps) {
+
+  const normalizeFilterValue = (input: string) =>
+    input
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '');
   return (
     <div
       className={cn(
@@ -76,12 +83,12 @@ export function PackageCard({ package: pkg, className }: PackageCardProps) {
         {/* CTA Button two buttons kitchen package & bedroom package */}
  <div className="flex flex-col sm:flex-row items-center justify-center mt-10 gap-4">
             <Link
-              href="/kitchen?package"
+              href={`/kitchen?package=${normalizeFilterValue(pkg.title)}`}
               className="inline-flex items-center gap-2 px-6 py-2 bg-lomash-primary text-white font-medium rounded-full hover:bg-lomash-primary-dark transition-colors"
             >Kitchen Packages
             </Link>
             <Link
-              href="/bedroom?package"
+              href={`/bedroom?package=${normalizeFilterValue(pkg.title)}`}
               className="inline-flex items-center gap-2 px-6 py-2 bg-lomash-secondary text-white font-medium rounded-full hover:bg-lomash-secondary-dark transition-colors"
             >Bedroom Packages
             </Link>

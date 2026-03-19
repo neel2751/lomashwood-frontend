@@ -52,9 +52,8 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand & Newsletter */}
           <div className="lg:col-span-2">
-            <Link href="/" className="inline-block mb-6">
-            <Image src="/logo.jpg" alt="Lomash Wood Logo" width={150} height={120} />
-              <h3 className="text-2xl font-bold text-white">Lomash Wood</h3>
+            <Link href="/" className="inline-block">
+            <Image src="/LomashLogo.png" alt="Lomash Wood Logo" width={200} height={200} />
             </Link>
             <p className="text-lomash-gray-300 mb-6 max-w-sm">
               {siteConfig.description}

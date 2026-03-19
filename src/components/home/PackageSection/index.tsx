@@ -64,7 +64,7 @@
           )}
 
           {/* Mobile we have to show two buttons kitchen pacakge & bedroom package */}
-          <div className="flex flex-col sm:flex-row items-center justify-center mt-10 gap-4">
+          {/* <div className="flex flex-col sm:flex-row items-center justify-center mt-10 gap-4">
             <Link
               href="/kitchen?packages"
               className="inline-flex items-center gap-2 px-6 py-3 bg-lomash-primary text-white font-medium rounded-full hover:bg-lomash-primary-dark transition-colors"
@@ -77,7 +77,7 @@
             >
               View Bedroom Packages
             </Link>
-          </div>
+          </div> */}
         </div>
       </section>
     );
