@@ -40,20 +40,44 @@ async function getShowrooms() {
 
     urlsToTry.push('https://lomashwood-backend.vercel.app/api/v1/showrooms');
 
-    const mapShowroom = (row: any) => ({
-      ...row,
-      coordinates:
-        typeof row?.latitude === 'number' && typeof row?.longitude === 'number'
-          ? { lat: row.latitude, lng: row.longitude }
-          : row?.coordinates,
-      openingHours: Array.isArray(row?.openingHours)
-        ? row.openingHours.map((item: any) => ({
-            day: item?.day || '',
-            date: item?.date || '',
-            hours: item?.hours || '',
-          }))
-        : [],
-    });
+    const mapShowroom = (row: any) => {
+      const addressObject =
+        row?.address && typeof row.address === 'object' && !Array.isArray(row.address)
+          ? row.address
+          : null;
+
+      const city = String(row?.city || addressObject?.city || '').trim();
+      const state = String(row?.state || addressObject?.state || '').trim();
+      const country = String(row?.country || addressObject?.country || '').trim();
+      const postcode = String(
+        row?.postcode || row?.pincode || addressObject?.postcode || addressObject?.pincode || ''
+      ).trim();
+
+      const address =
+        typeof row?.address === 'string'
+          ? row.address.trim()
+          : [addressObject?.street, city, state, country].filter(Boolean).join(', ');
+
+      return {
+        ...row,
+        address,
+        city,
+        state,
+        country,
+        postcode,
+        coordinates:
+          typeof row?.latitude === 'number' && typeof row?.longitude === 'number'
+            ? { lat: row.latitude, lng: row.longitude }
+            : row?.coordinates,
+        openingHours: Array.isArray(row?.openingHours)
+          ? row.openingHours.map((item: any) => ({
+              day: item?.day || '',
+              date: item?.date || '',
+              hours: item?.hours || '',
+            }))
+          : [],
+      };
+    };
 
     for (const url of urlsToTry) {
       try {
@@ -246,11 +270,12 @@ export default async function ShowroomsPage() {
 
             {/* CTA button */}
             <div className="flex justify-center">
-              
+              <Link
                 href="/book-appointment"
                 className="inline-flex items-center text-base font-semibold rounded-full justify-center px-10 py-4 bg-lomash-primary text-white hover:bg-lomash-secondary transition-colors"
+              >
                 Book a free appointment
-
+              </Link>
             </div>
           </div>
         </div>

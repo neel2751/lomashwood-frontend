@@ -1,7 +1,6 @@
   "use client";
 
   import { useQuery } from "@tanstack/react-query";
-  import Link from "next/link";
 
   import { Skeleton } from "@/components/ui/skeleton";
   import { QUERY_KEYS } from "@/lib/react-query";
