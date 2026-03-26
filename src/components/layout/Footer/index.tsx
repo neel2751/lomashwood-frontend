@@ -55,9 +55,9 @@ export function Footer() {
             <Link href="/" className="inline-block">
             <Image src="/LomashLogo.png" alt="Lomash Wood Logo" width={200} height={200} />
             </Link>
-            <p className="text-lomash-gray-300 mb-6 max-w-sm">
+            {/* <p className="text-lomash-gray-300 mb-6 max-w-sm">
               {siteConfig.description}
-            </p>
+            </p> */}
 
             {/* Contact Info */}
             <div className="space-y-3 mb-6">
@@ -65,12 +65,20 @@ export function Footer() {
                 <Phone className="h-5 w-5 text-lomash-accent mt-0.5" />
                 <div>
                   <p className="text-sm text-lomash-gray-300">Call us</p>
+                  <div className="flex flex-col space-y-1">
+                  <a
+                    href={`tel:${siteConfig.contact.officePhone}`}
+                    className="text-white hover:text-lomash-accent transition-colors"
+                  >
+                    {siteConfig.contact.officePhone}
+                  </a>
                   <a
                     href={`tel:${siteConfig.contact.phone}`}
                     className="text-white hover:text-lomash-accent transition-colors"
                   >
                     {siteConfig.contact.phone}
                   </a>
+                  </div>
                 </div>
               </div>
 
@@ -91,7 +99,10 @@ export function Footer() {
                 <MapPin className="h-5 w-5 text-lomash-accent mt-0.5" />
                 <div>
                   <p className="text-sm text-lomash-gray-300">Visit us</p>
-                  <p className="text-white">{siteConfig.contact.address}</p>
+                  <p className="text-white">{siteConfig.contact.officeAddress}</p>
+                  
+                  <p className="text-sm text-lomash-gray-300">Factory</p>
+                  <p className="text-white">{siteConfig.contact.factory}</p>
                 </div>
               </div>
             </div>

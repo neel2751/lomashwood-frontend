@@ -15,8 +15,10 @@ export const siteConfig = {
   },
   contact: {
     email: "contact@lomashwood.com",
-    phone: "07776 470010",
-    address: "Unit 3B, Tonbridge Works, Tonbridge Rd, Harold Hill\nRomford RM3 8TS",
+    phone: "07459 324 138",
+    officePhone: "020 8434 7800",
+    officeAddress: "623 Cranbrook Road, Gants Hill, Ilford IG2 6SU",
+    factory: "Unit 3B, Tonbridge Works, Tonbridge Rd, Harold Hill\nRomford RM3 8TS",
   },
   socialHandles: {
     twitter: "@lomashwood",
