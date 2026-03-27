@@ -11,9 +11,12 @@ import { useFeaturedProducts } from "@/hooks/useProducts";
 
 import { CategoryCard } from "./CategoryCard";
 
+const productDemoData: never[] = [];
+
 export function ExploreKitchen() {
   const { data: products, isLoading } = useFeaturedProducts("kitchen");
-  const productData = Array.isArray(products) ? products : [];
+
+    const productData = products && products.length > 0 ? products : productDemoData;
 
   return (
     <AnimatedSection>

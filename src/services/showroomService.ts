@@ -1,5 +1,4 @@
 import { api } from "@/lib/axios";
-import { API_ENDPOINTS } from "@/config/api";
 import type {
   Showroom,
   ShowroomSearchParams,
@@ -111,7 +110,7 @@ export const showroomService = {
   getShowrooms: async (
     params?: ShowroomSearchParams
   ): Promise<ApiResponse<PaginatedResponse<Showroom>>> => {
-    const response = await api.get<any>(
+    const response = await api.get<PaginatedResponse<Showroom>>(
       API_ENDPOINTS.showrooms.base,
       { params }
     );
@@ -141,16 +140,12 @@ export const showroomService = {
   },
 
   getShowroomById: async (id: string): Promise<ApiResponse<ShowroomDetail>> => {
-    const response = await api.get<any>(API_ENDPOINTS.showrooms.byId(id));
-    return {
-      data: extractData<ShowroomDetail>(response.data),
-      message: "Showroom detail fetched successfully",
-      success: true,
-    };
+    const response = await api.get<ShowroomDetail>(API_ENDPOINTS.showrooms.byId(id));
+    return { data: response.data, message: "Showroom detail fetched successfully", success: true };
   },
 
   searchShowrooms: async (query: string): Promise<ApiResponse<Showroom[]>> => {
-    const response = await api.get<Showroom[]>(`${API_ENDPOINTS.showrooms.base}/search`, {
+    const response = await api.get<Showroom[]>('/showrooms/search', {
       params: { q: query },
     });
     return { data: response.data, message: "Showrooms search completed", success: true };
@@ -161,7 +156,7 @@ export const showroomService = {
     longitude: number,
     radius?: number
   ): Promise<ApiResponse<ShowroomNearby[]>> => {
-    const response = await api.get<ShowroomNearby[]>(API_ENDPOINTS.showrooms.nearby, {
+    const response = await api.get<ShowroomNearby[]>('/showrooms/nearby', {
       params: { lat: latitude, lng: longitude, radius: radius || 50 },
     });
     return { data: response.data, message: "Nearby showrooms fetched successfully", success: true };
@@ -172,7 +167,7 @@ export const showroomService = {
     date: string
   ): Promise<ApiResponse<ShowroomAvailability>> => {
     const response = await api.get<ShowroomAvailability>(
-      `${API_ENDPOINTS.showrooms.byId(showroomId)}/availability`,
+      `/showrooms/${showroomId}/availability`,
       { params: { date } }
     );
     return { data: response.data, message: "Showroom availability fetched successfully", success: true };
@@ -184,7 +179,7 @@ export const showroomService = {
     serviceType?: "kitchen" | "bedroom" | "both"
   ): Promise<ApiResponse<ShowroomTimeslot[]>> => {
     const response = await api.get<ShowroomTimeslot[]>(
-      `${API_ENDPOINTS.showrooms.byId(showroomId)}/timeslots`,
+      `/showrooms/${showroomId}/timeslots`,
       { params: { date, service_type: serviceType } }
     );
     return { data: response.data, message: "Available timeslots fetched successfully", success: true };
@@ -195,7 +190,7 @@ export const showroomService = {
     bookingData: Omit<ShowroomBooking, "id" | "showroom_id" | "status" | "created_at">
   ): Promise<ApiResponse<ShowroomBooking>> => {
     const response = await api.post<ShowroomBooking>(
-      `${API_ENDPOINTS.showrooms.byId(showroomId)}/book`,
+      `/showrooms/${showroomId}/book`,
       bookingData
     );
     return { data: response.data, message: "Showroom appointment booked successfully", success: true };
@@ -207,7 +202,7 @@ export const showroomService = {
     limit = 10
   ): Promise<ApiResponse<PaginatedResponse<ShowroomReview>>> => {
     const response = await api.get<PaginatedResponse<ShowroomReview>>(
-      API_ENDPOINTS.showrooms.reviews(showroomId),
+      `/showrooms/${showroomId}/reviews`,
       { params: { page, limit } }
     );
     return { data: response.data, message: "Showroom reviews fetched successfully", success: true };
@@ -218,7 +213,7 @@ export const showroomService = {
     reviewData: Omit<ShowroomReview, "id" | "showroom_id" | "created_at" | "updated_at">
   ): Promise<ApiResponse<ShowroomReview>> => {
     const response = await api.post<ShowroomReview>(
-      API_ENDPOINTS.showrooms.addReview(showroomId),
+      `/showrooms/${showroomId}/reviews`,
       reviewData
     );
     return { data: response.data, message: "Review submitted successfully", success: true };
@@ -229,7 +224,7 @@ export const showroomService = {
     origin: { latitude: number; longitude: number }
   ): Promise<ApiResponse<ShowroomDirection>> => {
     const response = await api.get<ShowroomDirection>(
-      `${API_ENDPOINTS.showrooms.byId(showroomId)}/directions`,
+      `/showrooms/${showroomId}/directions`,
       { params: { origin_lat: origin.latitude, origin_lng: origin.longitude } }
     );
     return { data: response.data, message: "Directions fetched successfully", success: true };
@@ -239,7 +234,7 @@ export const showroomService = {
     showroomId: string
   ): Promise<ApiResponse<ShowroomDetail["operating_hours"]>> => {
     const response = await api.get<ShowroomDetail["operating_hours"]>(
-      `${API_ENDPOINTS.showrooms.byId(showroomId)}/hours`
+      `/showrooms/${showroomId}/hours`
     );
     return { data: response.data, message: "Operating hours fetched successfully", success: true };
   },
@@ -248,7 +243,7 @@ export const showroomService = {
     showroomId: string
   ): Promise<ApiResponse<{ is_open: boolean; next_opening?: string }>> => {
     const response = await api.get<{ is_open: boolean; next_opening?: string }>(
-      `${API_ENDPOINTS.showrooms.byId(showroomId)}/status`
+      `/showrooms/${showroomId}/status`
     );
     return { data: response.data, message: "Showroom status fetched successfully", success: true };
   },
@@ -257,14 +252,14 @@ export const showroomService = {
     showroomId: string
   ): Promise<ApiResponse<ShowroomDetail["amenities"]>> => {
     const response = await api.get<ShowroomDetail["amenities"]>(
-      `${API_ENDPOINTS.showrooms.byId(showroomId)}/amenities`
+      `/showrooms/${showroomId}/amenities`
     );
     return { data: response.data, message: "Showroom amenities fetched successfully", success: true };
   },
 
   getShowroomGallery: async (showroomId: string): Promise<ApiResponse<string[]>> => {
     const response = await api.get<string[]>(
-      `${API_ENDPOINTS.showrooms.byId(showroomId)}/gallery`
+      `/showrooms/${showroomId}/gallery`
     );
     return { data: response.data, message: "Showroom gallery fetched successfully", success: true };
   },
@@ -273,13 +268,13 @@ export const showroomService = {
     showroomId: string
   ): Promise<ApiResponse<ShowroomDetail["staff"]>> => {
     const response = await api.get<ShowroomDetail["staff"]>(
-      `${API_ENDPOINTS.showrooms.byId(showroomId)}/staff`
+      `/showrooms/${showroomId}/staff`
     );
     return { data: response.data, message: "Showroom staff fetched successfully", success: true };
   },
 
   getShowroomFilters: async (): Promise<ApiResponse<ShowroomFilter>> => {
-    const response = await api.get<ShowroomFilter>(`${API_ENDPOINTS.showrooms.base}/filters`);
+    const response = await api.get<ShowroomFilter>('/showrooms/filters');
     return { data: response.data, message: "Showroom filters fetched successfully", success: true };
   },
 
@@ -288,7 +283,7 @@ export const showroomService = {
     email: string
   ): Promise<ApiResponse<{ subscribed: boolean }>> => {
     const response = await api.post<{ subscribed: boolean }>(
-      `${API_ENDPOINTS.showrooms.byId(showroomId)}/subscribe`,
+      `/showrooms/${showroomId}/subscribe`,
       { email }
     );
     return { data: response.data, message: "Subscribed to showroom updates successfully", success: true };
@@ -303,21 +298,21 @@ export const showroomService = {
     }
   ): Promise<ApiResponse<{ reported: boolean }>> => {
     const response = await api.post<{ reported: boolean }>(
-      `${API_ENDPOINTS.showrooms.byId(showroomId)}/report`,
+      `/showrooms/${showroomId}/report`,
       issueData
     );
     return { data: response.data, message: "Issue reported successfully", success: true };
   },
 
   getShowroomsByCity: async (city: string): Promise<ApiResponse<Showroom[]>> => {
-    const response = await api.get<Showroom[]>(`${API_ENDPOINTS.showrooms.base}/city`, {
+    const response = await api.get<Showroom[]>('/showrooms/city', {
       params: { city },
     });
     return { data: response.data, message: "Showrooms by city fetched successfully", success: true };
   },
 
   getFeaturedShowrooms: async (): Promise<ApiResponse<Showroom[]>> => {
-    const response = await api.get<Showroom[]>(`${API_ENDPOINTS.showrooms.base}/featured`);
+    const response = await api.get<Showroom[]>('/showrooms/featured');
     return { data: response.data, message: "Featured showrooms fetched successfully", success: true };
   },
 
@@ -334,7 +329,7 @@ export const showroomService = {
       total_appointments: number;
       average_rating: number;
       total_reviews: number;
-    }>(`${API_ENDPOINTS.showrooms.byId(showroomId)}/stats`);
+    }>(`/showrooms/${showroomId}/stats`);
     return { data: response.data, message: "Showroom stats fetched successfully", success: true };
   },
 
@@ -344,7 +339,7 @@ export const showroomService = {
     reason?: string
   ): Promise<ApiResponse<{ cancelled: boolean }>> => {
     const response = await api.post<{ cancelled: boolean }>(
-      API_ENDPOINTS.showrooms.cancelAppointment(appointmentId),
+      `/showrooms/appointments/${appointmentId}/cancel`,
       { reason, showroomId }
     );
     return { data: response.data, message: "Appointment cancelled successfully", success: true };
@@ -357,7 +352,7 @@ export const showroomService = {
     newTimeslot: string
   ): Promise<ApiResponse<ShowroomBooking>> => {
     const response = await api.patch<ShowroomBooking>(
-      `${API_ENDPOINTS.showrooms.byId(showroomId)}/appointments/${appointmentId}/reschedule`,
+      `/showrooms/${showroomId}/appointments/${appointmentId}/reschedule`,
       { date: newDate, timeslot: newTimeslot }
     );
     return { data: response.data, message: "Appointment rescheduled successfully", success: true };
@@ -386,7 +381,7 @@ export const showroomService = {
       capacity: number;
       registered: number;
       image?: string;
-    }>>(`${API_ENDPOINTS.showrooms.byId(showroomId)}/events`);
+    }>>(`/showrooms/${showroomId}/events`);
     return { data: response.data, message: "Showroom events fetched successfully", success: true };
   },
 
@@ -396,7 +391,7 @@ export const showroomService = {
     userData: { name: string; email: string; phone: string; guests?: number }
   ): Promise<ApiResponse<{ registered: boolean; confirmation_code: string }>> => {
     const response = await api.post<{ registered: boolean; confirmation_code: string }>(
-      `${API_ENDPOINTS.showrooms.byId(showroomId)}/events/${eventId}/register`,
+      `/showrooms/${showroomId}/events/${eventId}/register`,
       userData
     );
     return { data: response.data, message: "Registered for event successfully", success: true };

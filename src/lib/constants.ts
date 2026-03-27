@@ -48,7 +48,7 @@ export const HAMBURGER_MENU_LINKS = [
 
 export const FOOTER_LINKS = {
   company: [
-    { label: "About Us", href: "/about" },
+
     { label: "Our Process", href: "/our-process" },
     { label: "Why Choose Us", href: "/why-choose-us" },
     { label: "Contact Us", href: "/contact" },

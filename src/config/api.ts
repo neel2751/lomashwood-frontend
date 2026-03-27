@@ -1,5 +1,5 @@
 export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://lomashwood-backend.vercel.app/api/v1";
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
 
 export const API_VERSION = "v1";
 

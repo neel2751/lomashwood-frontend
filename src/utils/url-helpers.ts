@@ -232,7 +232,7 @@ export function getCanonicalUrl(url: string): string {
 
 export const routes = {
   home: '/',
-  about: '/about',
+
   contact: '/contact',
   products: '/products',
   categories: '/categories',

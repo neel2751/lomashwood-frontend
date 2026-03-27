@@ -17,15 +17,16 @@ export const queryClient = new QueryClient({
 export const QUERY_KEYS = {
   products: {
     all: ["products"] as const,
-    lists: () => [...QUERY_KEYS.products.all, "list"] as const,
+    lists: () => ["products", "list"] as const,
     list: (filters?: any) =>
-      [...QUERY_KEYS.products.lists(), filters] as const,
-    details: () => [...QUERY_KEYS.products.all, "detail"] as const,
-    detail: (id: string) => [...QUERY_KEYS.products.details(), id] as const,
+      ["products", "list", filters] as const,
+    details: () => ["products", "detail"] as const,
+    detail: (id: string) => ["products", "detail", id] as const,
+    featured: ["products", "featured"] as const,
     kitchen: (filters?: any) =>
-      [...QUERY_KEYS.products.all, "kitchen", filters] as const,
+      ["products", "kitchen", filters] as const,
     bedroom: (filters?: any) =>
-      [...QUERY_KEYS.products.all, "bedroom", filters] as const,
+      ["products", "bedroom", filters] as const,
   },
 
   colours: {

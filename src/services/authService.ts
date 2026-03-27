@@ -72,7 +72,7 @@ class AuthService {
 
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
-      const response = await api.post<AuthResponse>('/api/auth/login', credentials);
+      const response = await api.post<AuthResponse>('/auth/login', credentials);
       
       if (response.data) {
         this.setSession(response.data);
@@ -99,7 +99,7 @@ class AuthService {
 
   async register(data: RegisterData): Promise<AuthResponse> {
     try {
-      const response = await api.post<AuthResponse>('/api/auth/register', data);
+      const response = await api.post<AuthResponse>('/auth/register', data);
       
       if (response.data) {
         this.setSession(response.data);
@@ -126,7 +126,7 @@ class AuthService {
 
   async logout(): Promise<void> {
     try {
-      await api.post('/api/auth/logout');
+      await api.post('/auth/logout');
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
@@ -144,7 +144,7 @@ class AuthService {
   async forgotPassword(data: ForgotPasswordData): Promise<{ message: string }> {
     try {
       const response = await api.post<{ message: string }>(
-        '/api/auth/forgot-password',
+        '/auth/forgot-password',
         data
       );
       
@@ -164,7 +164,7 @@ class AuthService {
   async resetPassword(data: ResetPasswordData): Promise<{ message: string }> {
     try {
       const response = await api.post<{ message: string }>(
-        '/api/auth/reset-password',
+        '/auth/reset-password',
         data
       );
       
@@ -184,7 +184,7 @@ class AuthService {
   async changePassword(data: ChangePasswordData): Promise<{ message: string }> {
     try {
       const response = await api.post<{ message: string }>(
-        '/api/auth/change-password',
+        '/auth/change-password',
         data
       );
       
@@ -204,7 +204,7 @@ class AuthService {
   async verifyEmail(data: VerifyEmailData): Promise<{ message: string; user: User }> {
     try {
       const response = await api.post<{ message: string; user: User }>(
-        '/api/auth/verify-email',
+        '/auth/verify-email',
         data
       );
 
@@ -228,7 +228,7 @@ class AuthService {
   async resendVerification(data: ResendVerificationData): Promise<{ message: string }> {
     try {
       const response = await api.post<{ message: string }>(
-        '/api/auth/resend-verification',
+        '/auth/resend-verification',
         data
       );
       
@@ -246,7 +246,7 @@ class AuthService {
         throw new Error('No refresh token available');
       }
       
-      const response = await api.post<AuthResponse>('/api/auth/refresh', {
+      const response = await api.post<AuthResponse>('/auth/refresh', {
         refreshToken,
       });
       
@@ -263,7 +263,7 @@ class AuthService {
 
   async getCurrentUser(): Promise<User> {
     try {
-      const response = await api.get<User>('/api/auth/me');
+      const response = await api.get<User>('/auth/me');
       
       if (response.data) {
         this.setUser(response.data);
@@ -326,7 +326,7 @@ class AuthService {
 
   async socialLogin(provider: 'google' | 'facebook', token: string): Promise<AuthResponse> {
     try {
-      const response = await api.post<AuthResponse>(`/api/auth/${provider}`, {
+      const response = await api.post<AuthResponse>(`/auth/${provider}`, {
         token,
       });
       

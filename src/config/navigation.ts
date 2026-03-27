@@ -273,7 +273,7 @@ export const breadcrumbConfig = {
   "/blog": { label: "Our Blog" },
   "/brochure": { label: "Download Brochure" },
   "/book-appointment": { label: "Book Consultation" },
-  "/about": { label: "About Us" },
+
   "/our-process": { label: "Our Process" },
   "/why-choose-us": { label: "Why Choose Us" },
   "/contact": { label: "Contact Us" },
