@@ -35,6 +35,12 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === 'production',
   },
   staticPageGenerationTimeout: 120,
+  webpack: (config) => {
+    config.ignoreWarnings = [
+      { module: /lomashwood-frontend/ },
+    ];
+    return config;
+  },
   async rewrites() {
     return [
       {
