@@ -114,6 +114,7 @@ export default function NotFound() {
               Categories
             </Link>
             <Link
+              href="/about"
               className="link-muted text-sm transition-colors hover:text-lomash-primary"
             >
               About Us

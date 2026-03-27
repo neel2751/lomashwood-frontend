@@ -1,4 +1,5 @@
 import { api } from "@/lib/axios";
+import { API_ENDPOINTS } from "@/config/api";
 import type {
   Showroom,
   ShowroomSearchParams,
@@ -116,7 +117,7 @@ export const showroomService = {
     );
     const payload = response.data;
     const list = extractData<Showroom[]>(payload);
-    const total = payload?.total ?? list.length;
+    const total = payload?.pagination?.total ?? list.length;
     const page = params?.page ?? 1;
     const limit = params?.limit ?? (list.length || 1);
     const totalPages = Math.max(1, Math.ceil(total / limit));

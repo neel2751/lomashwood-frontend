@@ -1,5 +1,4 @@
-import { api } from "@/lib/axios";
-import { API_ENDPOINTS } from "@/constants/api.endpoints";
+import api from "@/lib/api";
 import type {
   Appointment,
   AppointmentFormData,
@@ -8,34 +7,13 @@ import type {
   AppointmentStats,
 } from "@/types/booking.types";
 
-type ApiEnvelope<T> = T | { data: T };
-
-const mapAppointmentType = (value?: string) => {
-  if (value === "showroom-visit" || value === "showroom") return "showroom";
-  if (value === "home-visit" || value === "home") return "home";
-  if (value === "video-call" || value === "virtual" || value === "online") return "online";
-  return value;
-};
-
-const buildSlotsParams = (params: {
-  date: string;
-  serviceType?: "kitchen" | "bedroom" | "both";
-  showroomId?: string;
-}) => ({
-  date: params.date,
-  serviceType: params.serviceType,
-  appointmentType: mapAppointmentType(params.serviceType),
-  showroomId: params.showroomId,
-});
-
 export const appointmentService = {
-
   async getAvailability(params: {
     date: string;
     serviceType?: "kitchen" | "bedroom" | "both";
     showroomId?: string;
   }): Promise<AvailabilityResponse> {
-    const { data } = await api.get(API_ENDPOINTS.appointments.slots, { params });
+    const { data } = await api.get("/appointments/availability", { params });
     return data;
   },
 
@@ -45,7 +23,7 @@ export const appointmentService = {
     serviceType?: "kitchen" | "bedroom" | "both";
     showroomId?: string;
   }): Promise<string[]> {
-    const { data } = await api.get(API_ENDPOINTS.appointments.slots, { params });
+    const { data } = await api.get("/appointments/available-dates", { params });
     return data;
   },
 
@@ -54,7 +32,7 @@ export const appointmentService = {
     serviceType?: "kitchen" | "bedroom" | "both";
     showroomId?: string;
   }): Promise<TimeSlot[]> {
-    const { data } = await api.get(API_ENDPOINTS.appointments.slots, { params });
+    const { data } = await api.get("/appointments/time-slots", { params });
     return data;
   },
 
@@ -62,8 +40,8 @@ export const appointmentService = {
     date: string;
     serviceType?: "kitchen" | "bedroom" | "both";
     showroomId?: string;
-  }): Promise<{ count: number }> {
-    const { data } = await api.get(API_ENDPOINTS.appointments.slotsCount, { params });
+  }): Promise<number> {
+    const { data } = await api.get("/appointments/slots/count", { params });
     return data;
   },
 
@@ -71,7 +49,7 @@ export const appointmentService = {
     appointment: Appointment;
     confirmationNumber: string;
   }> {
-    const { data } = await api.post(API_ENDPOINTS.appointments.create, formData);
+    const { data } = await api.post("/appointments", formData);
     return data;
   },
 
@@ -85,7 +63,7 @@ export const appointmentService = {
     page?: number;
     limit?: number;
   }) {
-    const { data } = await api.get('/appointments/my-appointments', { params });
+    const { data } = await api.get("/appointments/my-appointments", { params });
     return data;
   },
 
@@ -99,14 +77,11 @@ export const appointmentService = {
     return data;
   },
 
-  async rescheduleAppointment(
-    id: string,
-    rescheduleData: {
-      date: string;
-      timeSlot: string;
-      reason?: string;
-    }
-  ): Promise<Appointment> {
+  async rescheduleAppointment(id: string, rescheduleData: {
+    date: string;
+    timeSlot: string;
+    reason?: string;
+  }): Promise<Appointment> {
     const { data } = await api.post(`/appointments/${id}/reschedule`, rescheduleData);
     return data;
   },
@@ -124,12 +99,15 @@ export const appointmentService = {
   async uploadFiles(id: string, files: File[]) {
     const formData = new FormData();
     files.forEach((file) => formData.append("files", file));
-    const { data } = await api.post(`/appointments/${id}/upload`, formData, { headers: { "Content-Type": "multipart/form-data" } });
+
+    const { data } = await api.post(`/appointments/${id}/upload`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     return data;
   },
 
   async getAppointmentStats(): Promise<AppointmentStats> {
-    const { data } = await api.get('/appointments/stats');
+    const { data } = await api.get("/appointments/stats");
     return data;
   },
 
@@ -139,7 +117,9 @@ export const appointmentService = {
   },
 
   async getAppointmentByConfirmation(confirmationNumber: string): Promise<Appointment> {
-    const { data } = await api.get('/appointments/confirmation', { params: { number: confirmationNumber } });
+    const { data } = await api.get("/appointments/confirmation", {
+      params: { number: confirmationNumber },
+    });
     return data;
   },
 
@@ -148,7 +128,7 @@ export const appointmentService = {
     timeSlot: string;
     showroomId?: string;
   }) {
-    const { data } = await api.post('/appointments/check-availability', params);
+    const { data } = await api.post("/appointments/check-availability", params);
     return data;
   },
 };
