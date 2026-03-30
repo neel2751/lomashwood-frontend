@@ -4,20 +4,51 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
+import { ProjectCard } from "./ProjectCard";
+
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { apiClient } from "@/lib/api";
 import { QUERY_KEYS } from "@/lib/react-query";
+import type { Project } from "@/types";
 
-import { ProjectCard } from "./ProjectCard";
+const projectsDemoData: Project[] = [
+  {
+    id: "1",
+    title: "Modern Kitchen Renovation in London",
+    description: "A complete transformation of a dated kitchen into a sleek, modern space with high-end appliances and custom cabinetry.",
+    image: "/LomashLogo.png",
+    category: "kitchen",
+  },
+  {
+    id: "2",
+    title: "Contemporary Bedroom Makeover in Manchester",
+    description: "A stylish bedroom redesign featuring minimalist furniture, soft lighting, and a calming color palette.",
+    image: "/LomashLogo.png",
+    category: "bedroom",
+  },
+  {
+    id: "3",
+    title: "Luxury Kitchen Remodel in Birmingham",
+    description: "An upscale kitchen renovation with marble countertops, state-of-the-art appliances, and elegant finishes.",
+    image: "/LomashLogo.png",
+    category: "media-wall",
+  },
+];
+
 
 export function Projects() {
   const { data: projectsData, isLoading } = useQuery({
     queryKey: QUERY_KEYS.projects.all,
     queryFn: () => apiClient.projects.getAll(),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 
-  const projects = projectsData?.data || [];
+  const projects = projectsData?.data || projectsDemoData || [];
 
   return (
     <section className="section-padding bg-white

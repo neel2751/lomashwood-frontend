@@ -1,4 +1,5 @@
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
+
 import { QUERY_KEYS } from "@/config/api";
 import { productService } from "@/services/productService";
 import type { ProductFilters } from "@/types";
@@ -102,8 +103,13 @@ export function useProduct(id: string) {
 
 export function useFeaturedProducts(category?: "kitchen" | "bedroom") {
   return useQuery({
-    queryKey: QUERY_KEYS.products.featured,
+    queryKey: [...QUERY_KEYS.products.featured, category],
     queryFn: () => productService.getFeaturedProducts(category),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 }
 

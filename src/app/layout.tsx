@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
 import { Figtree, Poppins } from "next/font/google";
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import { Suspense } from "react";
 
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { Analytics } from "@/components/shared/Analytics";
 import { siteConfig, defaultSEO } from "@/config/site";
 import { Providers } from "@/providers/Providers";
 import "@/styles/globals.css";
+
+const facebookPixelId = process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID || process.env.NEXT_PUBLIC_FB_PIXEL_ID || "";
 
 const figtree = Figtree({
   weight: ["400", "500", "600", "700", "800"],
@@ -82,6 +86,21 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${figtree.className} ${poppins.variable}`}>
       <body className="font-sans antialiased m-0 p-0">
+        <Suspense fallback={null}>
+          <Analytics facebookPixelId={facebookPixelId} />
+        </Suspense>
+        {facebookPixelId && (
+          <noscript>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              alt=""
+              height="1"
+              width="1"
+              style={{ display: "none" }}
+              src={`https://www.facebook.com/tr?id=${facebookPixelId}&ev=PageView&noscript=1`}
+            />
+          </noscript>
+        )}
         <NuqsAdapter>
           <Providers>
             <div className="flex flex-col min-h-[100dvh] w-full mx-w-full overflow-x-hidden">

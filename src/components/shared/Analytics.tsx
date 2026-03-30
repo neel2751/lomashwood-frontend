@@ -11,7 +11,7 @@ interface AnalyticsProps {
 
 export function Analytics({
   googleAnalyticsId = process.env.NEXT_PUBLIC_GA_ID,
-  facebookPixelId = process.env.NEXT_PUBLIC_FB_PIXEL_ID,
+  facebookPixelId = process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID || process.env.NEXT_PUBLIC_FB_PIXEL_ID,
 }: AnalyticsProps) {
   const pathname = usePathname()
   const searchParams = useSearchParams()

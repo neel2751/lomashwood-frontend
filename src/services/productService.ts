@@ -21,7 +21,58 @@ const handleError = (functionName: string, error: unknown) => {
   } else {
     console.error(`[${functionName}] Unknown Error:`, error);
   }
-  throw error;
+
+  if (error instanceof Error) {
+    throw error;
+  }
+
+  const safeMessage =
+    typeof error === "string"
+      ? error
+      : `Unexpected error in ${functionName}`;
+
+  throw new Error(safeMessage);
+};
+
+const extractProducts = (payload: unknown): Product[] => {
+  if (Array.isArray(payload)) return payload as Product[];
+
+  if (payload && typeof payload === "object") {
+    const candidate = payload as {
+      products?: unknown;
+      data?: unknown;
+    };
+
+    if (Array.isArray(candidate.products)) {
+      return candidate.products as Product[];
+    }
+
+    if (Array.isArray(candidate.data)) {
+      return candidate.data as Product[];
+    }
+
+    if (candidate.data && typeof candidate.data === "object") {
+      const nestedData = candidate.data as { products?: unknown };
+      if (Array.isArray(nestedData.products)) {
+        return nestedData.products as Product[];
+      }
+    }
+  }
+
+  return [];
+};
+
+const normalizeProductFlags = (product: Product): Product => {
+  const productWithFlags = product as Product & {
+    isFeatured?: boolean;
+    isPopular?: boolean;
+  };
+
+  return {
+    ...productWithFlags,
+    featured: productWithFlags.featured ?? productWithFlags.isFeatured,
+    popular: productWithFlags.popular ?? productWithFlags.isPopular,
+  };
 };
 
 export const productService = {
@@ -83,17 +134,64 @@ export const productService = {
     }
   },
 
-  async getFeaturedProducts(category?: "kitchen" | "bedroom", featured?: boolean): Promise<Product[]> {
-    console.log("getFeaturedProducts called with:", { category, featured });
+  async getFeaturedProducts(category?: "kitchen" | "bedroom", featured: boolean = true): Promise<Product[]> {
     try {
-      const { data } = await api.get('/products', {
-        params: { category, featured, limit: 8 },
-      });
-      console.log("getFeaturedProducts API response:", data);
-      return data.products || [];
+      const proxyUrl = `/api/featured-products?category=${encodeURIComponent(category ?? "kitchen")}`;
+      const proxyRes = await fetch(proxyUrl, { method: "GET", cache: "no-store" });
+
+      if (proxyRes.ok) {
+        const proxyPayload = await proxyRes.json();
+        const proxyRows = extractProducts(proxyPayload).map(normalizeProductFlags);
+        if (proxyRows.length > 0) {
+          return proxyRows;
+        }
+      }
+
+      const configuredBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
+      const publicBase = "https://lomashwood-backend.vercel.app/api/v1";
+
+      const directBaseCandidates = [
+        configuredBase?.endsWith("/api/v1")
+          ? configuredBase
+          : configuredBase?.endsWith("/api")
+            ? `${configuredBase}/v1`
+            : configuredBase
+              ? `${configuredBase}/api/v1`
+              : undefined,
+        publicBase,
+      ].filter((value): value is string => Boolean(value));
+
+      for (const base of Array.from(new Set(directBaseCandidates))) {
+        const directUrl = `${base}/products?category=${encodeURIComponent(category ?? "kitchen")}&featured=${String(featured)}&limit=8`;
+        const directRes = await fetch(directUrl, { method: "GET", cache: "no-store" });
+        if (!directRes.ok) {
+          continue;
+        }
+
+        const directPayload = await directRes.json();
+        const directRows = extractProducts(directPayload).map(normalizeProductFlags);
+        if (directRows.length > 0) {
+          return directRows;
+        }
+      }
+
+      return [];
     } catch (error) {
-      console.error("getFeaturedProducts error:", error);
-      return handleError("getFeaturedProducts", error);
+      if (axios.isAxiosError(error)) {
+        console.error("[getFeaturedProducts] API Error:", {
+          status: error.response?.status,
+          message: error.message,
+          url: error.config?.url,
+        });
+      } else if (error instanceof Error) {
+        console.error("[getFeaturedProducts] Error:", {
+          message: error.message,
+        });
+      } else {
+        console.error("[getFeaturedProducts] Unknown Error:", error);
+      }
+
+      return [];
     }
   },
 

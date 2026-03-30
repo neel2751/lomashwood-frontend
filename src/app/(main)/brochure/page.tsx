@@ -205,12 +205,14 @@ const requestBrochures = [
   {
     id: 'kitchen',
     label: 'Lomash Wood Premium Kitchen Brochure',
-    img: 'https://plus.unsplash.com/premium_photo-1683140941523-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    thumbnail: 'https://plus.unsplash.com/premium_photo-1683140941523-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    tags: ['Kitchen', 'Bespoke', 'Design'],
   },
   {
     id: 'bedroom',
     label: 'Lomash Wood Luxury Bedroom Brochure',
-    img: 'https://images.unsplash.com/photo-1615874959474-d609969a20ed?q=80&w=3280&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    thumbnail: 'https://images.unsplash.com/photo-1615874959474-d609969a20ed?q=80&w=3280&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    tags: ['Bedroom', 'Luxury', 'Design'],
   },
 ];
 
@@ -347,7 +349,7 @@ export default function BrochurePage() {
                       {/* Image */}
                       <div className="relative h-44 bg-lomash-gray-100">
                         <Image
-                          src={brochure.img}
+                          src={brochure.thumbnail}
                           alt={brochure.label}
                           fill
                           className="object-cover"

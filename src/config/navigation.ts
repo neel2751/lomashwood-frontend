@@ -56,59 +56,59 @@ export const mainNavigation: NavItem[] = [
             { label: "Greens", href: "/kitchen?colour=green" },
           ],
         },
-        {
-          heading: "#RENOVATION",
-          links: [
-            {
-              label: "Kitchen makeovers & renovations",
-              href: "/inspiration/kitchen-makeovers",
-            },
-            {
-              label: "Karren's kitchen",
-              href: "/inspiration/karriens-kitchen",
-              subtitle: "Shaker Chelsea in Mushroom",
-              image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=200&auto=format&fit=crop",
-            },
-            {
-              label: "Heidi's kitchen",
-              href: "/inspiration/heidis-kitchen",
-              subtitle: "Milano Shaker in Ceramic",
-              image: "https://images.unsplash.com/photo-1565538810643-b5bdb714032a?q=80&w=200&auto=format&fit=crop",
-            },
-            {
-              label: "Shelley's kitchen",
-              href: "/inspiration/shelleys-kitchen",
-              subtitle: "Milano Ultra in Nero",
-              image: "https://images.unsplash.com/photo-1556909172-54557c7e4fb7?q=80&w=200&auto=format&fit=crop",
-            },
-          ],
-        },
-        {
-          heading: "FINISHING TOUCHES",
-          links: [
-            { label: "All accessories & appliances", href: "/kitchen/accessories" },
-            { label: "Kitchen worktops", href: "/kitchen/worktops" },
-            { label: "Kitchen sinks", href: "/kitchen/sinks" },
-            { label: "Kitchen taps", href: "/kitchen/taps" },
-            { label: "Kitchen handles", href: "/kitchen/handles" },
-            { label: "Kitchen flooring", href: "/kitchen/flooring" },
-          ],
-        },
+        // {
+        //   heading: "#RENOVATION",
+        //   links: [
+        //     {
+        //       label: "Kitchen makeovers & renovations",
+        //       href: "/inspiration/kitchen-makeovers",
+        //     },
+        //     {
+        //       label: "Karren's kitchen",
+        //       href: "/inspiration/karriens-kitchen",
+        //       subtitle: "Shaker Chelsea in Mushroom",
+        //       image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=200&auto=format&fit=crop",
+        //     },
+        //     {
+        //       label: "Heidi's kitchen",
+        //       href: "/inspiration/heidis-kitchen",
+        //       subtitle: "Milano Shaker in Ceramic",
+        //       image: "https://images.unsplash.com/photo-1565538810643-b5bdb714032a?q=80&w=200&auto=format&fit=crop",
+        //     },
+        //     {
+        //       label: "Shelley's kitchen",
+        //       href: "/inspiration/shelleys-kitchen",
+        //       subtitle: "Milano Ultra in Nero",
+        //       image: "https://images.unsplash.com/photo-1556909172-54557c7e4fb7?q=80&w=200&auto=format&fit=crop",
+        //     },
+        //   ],
+        // },
+        // {
+        //   heading: "FINISHING TOUCHES",
+        //   links: [
+        //     { label: "All accessories & appliances", href: "/kitchen/accessories" },
+        //     { label: "Kitchen worktops", href: "/kitchen/worktops" },
+        //     { label: "Kitchen sinks", href: "/kitchen/sinks" },
+        //     { label: "Kitchen taps", href: "/kitchen/taps" },
+        //     { label: "Kitchen handles", href: "/kitchen/handles" },
+        //     { label: "Kitchen flooring", href: "/kitchen/flooring" },
+        //   ],
+        // },
       ],
-      promos: [
-        {
-          label: "EXCLUSIVE OFFERS",
-          title: "End soon",
-          href: "/sale",
-          variant: "red",
-        },
-        {
-          label: "UP TO",
-          title: "7 years",
-          href: "/finance",
-          variant: "blue",
-        },
-      ],
+      // promos: [
+      //   {
+      //     label: "EXCLUSIVE OFFERS",
+      //     title: "End soon",
+      //     href: "/sale",
+      //     variant: "red",
+      //   },
+      //   {
+      //     label: "UP TO",
+      //     title: "7 years",
+      //     href: "/finance",
+      //     variant: "blue",
+      //   },
+      // ],
     },
   },
   {
@@ -142,52 +142,52 @@ export const mainNavigation: NavItem[] = [
             { label: "Blacks", href: "/bedroom?colour=black" },
           ],
         },
-        {
-          heading: "INSPIRATION",
-          links: [
-            {
-              label: "Bedroom makeovers",
-              href: "/inspiration/bedroom-makeovers",
-            },
-            {
-              label: "Modern bedroom",
-              href: "/inspiration/modern-bedroom",
-              subtitle: "White gloss finish",
-              image: "https://images.unsplash.com/photo-1615874959474-d609969a20ed?q=80&w=200&auto=format&fit=crop",
-            },
-            {
-              label: "Classic bedroom",
-              href: "/inspiration/classic-bedroom",
-              subtitle: "Oak wood grain",
-              image: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=200&auto=format&fit=crop",
-            },
-          ],
-        },
-        {
-          heading: "STORAGE",
-          links: [
-            { label: "All storage solutions", href: "/bedroom/storage" },
-            { label: "Wardrobes", href: "/bedroom/wardrobes" },
-            { label: "Drawers", href: "/bedroom/drawers" },
-            { label: "Shelving", href: "/bedroom/shelving" },
-            { label: "Bedside tables", href: "/bedroom/bedside-tables" },
-          ],
-        },
+        // {
+        //   heading: "INSPIRATION",
+        //   links: [
+        //     {
+        //       label: "Bedroom makeovers",
+        //       href: "/inspiration/bedroom-makeovers",
+        //     },
+        //     {
+        //       label: "Modern bedroom",
+        //       href: "/inspiration/modern-bedroom",
+        //       subtitle: "White gloss finish",
+        //       image: "https://images.unsplash.com/photo-1615874959474-d609969a20ed?q=80&w=200&auto=format&fit=crop",
+        //     },
+        //     {
+        //       label: "Classic bedroom",
+        //       href: "/inspiration/classic-bedroom",
+        //       subtitle: "Oak wood grain",
+        //       image: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=200&auto=format&fit=crop",
+        //     },
+        //   ],
+        // },
+        // {
+        //   heading: "STORAGE",
+        //   links: [
+        //     { label: "All storage solutions", href: "/bedroom/storage" },
+        //     { label: "Wardrobes", href: "/bedroom/wardrobes" },
+        //     { label: "Drawers", href: "/bedroom/drawers" },
+        //     { label: "Shelving", href: "/bedroom/shelving" },
+        //     { label: "Bedside tables", href: "/bedroom/bedside-tables" },
+        //   ],
+        // },
       ],
-      promos: [
-        {
-          label: "EXCLUSIVE OFFERS",
-          title: "End soon",
-          href: "/sale",
-          variant: "red",
-        },
-        {
-          label: "UP TO",
-          title: "7 years",
-          href: "/finance",
-          variant: "blue",
-        },
-      ],
+      // promos: [
+      //   {
+      //     label: "EXCLUSIVE OFFERS",
+      //     title: "End soon",
+      //     href: "/sale",
+      //     variant: "red",
+      //   },
+      //   {
+      //     label: "UP TO",
+      //     title: "7 years",
+      //     href: "/finance",
+      //     variant: "blue",
+      //   },
+      // ],
     },
   },
   {

@@ -3,14 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
-
-import { Card, CardContent } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
-import { appointmentService } from "@/services/appointmentService";
 
 import AppointmentType from "../Steps/AppointmentType";
 import Confirmation from "../Steps/Confirmation";
@@ -20,6 +15,11 @@ import ServiceSelection from "../Steps/ServiceSelection";
 
 import Navigation from "./Navigation";
 import StepIndicator from "./StepIndicator";
+
+import { Card, CardContent } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
+import { appointmentService } from "@/services/appointmentService";
 
 const bookingSchema = z.object({
   appointmentType:   z.string(),
@@ -93,12 +93,19 @@ export default function BookingWizard({ className, product: _product, category: 
   const router = useRouter();
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(1);
+  const formContainerRef = useRef<HTMLDivElement>(null);
 
   const methods = useForm<BookingFormData>({
     resolver: zodResolver(bookingSchema),
     defaultValues: DEFAULT_VALUES,
     mode: "onChange",
   });
+
+  useEffect(() => {
+    if (formContainerRef.current) {
+      formContainerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [currentStep]);
 
   const { mutate: submitBooking, isPending } = useMutation({
     mutationFn: async (data: BookingFormData) => {
@@ -171,9 +178,7 @@ export default function BookingWizard({ className, product: _product, category: 
         agreeToTerms: rawData.termsAccepted,
       };
 
-      console.log("[Booking] Submitting appointment:", payload);
-
-      return appointmentService.createAppointment(payload as any);
+      return appointmentService.createAppointment(payload as Parameters<typeof appointmentService.createAppointment>[0]);
     },
 
     onSuccess: (data) => {
@@ -248,7 +253,7 @@ export default function BookingWizard({ className, product: _product, category: 
 
   return (
     <FormProvider {...methods}>
-      <div className={cn("space-y-6", className)}>
+      <div className={cn("space-y-6", className)} ref={formContainerRef}>
         <StepIndicator
           steps={STEPS}
           currentStep={currentStep}

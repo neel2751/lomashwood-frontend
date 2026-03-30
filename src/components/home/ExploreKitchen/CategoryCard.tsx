@@ -15,6 +15,18 @@ interface CategoryCardProps {
 }
 
 export function CategoryCard({ product, className }: CategoryCardProps) {
+  const uiProduct = product as Product & {
+    name?: string;
+    isFeatured?: boolean;
+    isPopular?: boolean;
+  };
+
+  const title = uiProduct.title || uiProduct.name || "Product";
+  const imageSrc = uiProduct.images?.[0] || "/images/placeholder.jpg";
+  const isFeatured = Boolean(uiProduct.featured ?? uiProduct.isFeatured);
+  const isPopular = Boolean(uiProduct.popular ?? uiProduct.isPopular);
+  const productSlug = uiProduct.slug || uiProduct.id;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -22,7 +34,7 @@ export function CategoryCard({ product, className }: CategoryCardProps) {
       transition={{ duration: 0.6, ease: "easeOut" }}
       whileHover={{ y: -5 }}
     >
-      <Link href={`/product/${product.slug}?category=${product.category}`} className="group">
+      <Link href={`/product/${productSlug}?category=${product.category}`} className="group">
         <div
           className={cn(
             "product-card-pdf overflow-hidden rounded-lg group hover:shadow-xl transition-all duration-300 cursor-pointer",
@@ -32,8 +44,8 @@ export function CategoryCard({ product, className }: CategoryCardProps) {
           {/* Image Container */}
           <div className="relative aspect-[4/3] overflow-hidden bg-lomash-gray-100 rounded-t-lg">
             <Image
-              src={product.images[0] || "/images/placeholder.jpg"}
-              alt={product.title}
+              src={imageSrc}
+              alt={title}
               fill
               className="object-cover transition-transform duration-500 group-hover:scale-110 rounded-t-lg"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
@@ -42,12 +54,12 @@ export function CategoryCard({ product, className }: CategoryCardProps) {
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-t-lg" />
 
             <div className="absolute top-3 left-3 flex gap-2">
-              {product.featured && (
+              {isFeatured && (
                 <Badge variant="default" className="shadow-md">
                   Featured
                 </Badge>
               )}
-              {product.popular && (
+              {isPopular && (
                 <Badge variant="accent" className="shadow-md">
                   Popular
                 </Badge>
@@ -65,7 +77,7 @@ export function CategoryCard({ product, className }: CategoryCardProps) {
 
 
             <h3 className="font-bold tracking-normal text-xl text-lomash-dark mb-1 line-clamp-1 group-hover:text-lomash-primary transition-colors">
-              {product.title}
+              {title}
             </h3>
 
 

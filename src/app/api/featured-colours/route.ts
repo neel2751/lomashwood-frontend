@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const pickRows = (payload: any): any[] => {
   if (Array.isArray(payload?.data)) return payload.data;
   if (Array.isArray(payload)) return payload;
@@ -32,19 +35,28 @@ export async function GET() {
   for (const base of baseCandidates) {
     try {
       const directRes = await fetch(`${base}/products/colours?featured=true`, {
-        next: { revalidate: 300 },
+        cache: 'no-store',
       });
 
       if (directRes.ok) {
         const directPayload = await directRes.json();
         const directRows = pickRows(directPayload);
         if (directRows.length > 0) {
-          return NextResponse.json({ data: directRows });
+          return NextResponse.json(
+            { data: directRows },
+            {
+              headers: {
+                'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+                Pragma: 'no-cache',
+                Expires: '0',
+              },
+            }
+          );
         }
       }
 
       const fallbackRes = await fetch(`${base}/products/colours`, {
-        next: { revalidate: 300 },
+        cache: 'no-store',
       });
 
       if (!fallbackRes.ok) {
@@ -55,11 +67,29 @@ export async function GET() {
       const fallbackRows = pickRows(fallbackPayload)
         .filter((row: any) => Boolean(row?.isFeatured ?? row?.featured));
 
-      return NextResponse.json({ data: fallbackRows });
+      return NextResponse.json(
+        { data: fallbackRows },
+        {
+          headers: {
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+            Pragma: 'no-cache',
+            Expires: '0',
+          },
+        }
+      );
     } catch {
       continue;
     }
   }
 
-  return NextResponse.json({ data: [] });
+  return NextResponse.json(
+    { data: [] },
+    {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        Pragma: 'no-cache',
+        Expires: '0',
+      },
+    }
+  );
 }

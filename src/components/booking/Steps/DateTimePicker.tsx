@@ -23,15 +23,15 @@ import {
   Info,
   MapPin,
 } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { cn } from '@/lib/utils';
 import { API_BASE_URL } from '@/config/api';
+import { cn } from '@/lib/utils';
 
 interface TimeSlot {
   id: string;
@@ -75,7 +75,7 @@ function formatClockTime(hour: number, minute: number) {
   return `${hour24}:${minuteLabel}`;
 }
 
-function formatSlotRange(startTime: string, durationMinutes = 30) {
+function formatSlotRange(startTime: string, durationMinutes = 60) {
   const [hourText, minuteText = '0'] = startTime.split(':');
   const startHour = Number(hourText);
   const startMinute = Number(minuteText);
@@ -173,13 +173,13 @@ export default function DateTimePicker() {
     return slotDateTime >= leadTimeCutoff;
   };
 
-  const isSlotBookable = (date: Date, slot: TimeSlot) => {
+  const isSlotBookable = useCallback((date: Date, slot: TimeSlot) => {
     if (!slot.available) {
       return false;
     }
 
     return isSlotWithinLeadTime(date, slot.time);
-  };
+  }, []);
 
   const fetchSlotsForDate = async (date: Date) => {
     const dateKey = toDateKey(date);
@@ -189,7 +189,7 @@ export default function DateTimePicker() {
       const response = await fetch(url, {
         cache: 'no-store',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
         },
       });
 
@@ -332,7 +332,7 @@ export default function DateTimePicker() {
     if (!matchingSlot || !isSlotBookable(selectedDate, matchingSlot)) {
       setValue('appointmentTime', '', { shouldValidate: true });
     }
-  }, [selectedDate, selectedDateSlots, selectedTime, setValue]);
+  }, [selectedDate, selectedDateSlots, selectedTime, setValue, isSlotBookable]);
 
   useEffect(() => {
     if (selectedDate && !isSameMonth(selectedDate, currentMonth)) {
@@ -378,6 +378,19 @@ export default function DateTimePicker() {
 
   const morningSlots = selectedDateSlots.filter((slot) => parseInt(slot.time.split(':')[0], 10) < 12);
   const afternoonSlots = selectedDateSlots.filter((slot) => parseInt(slot.time.split(':')[0], 10) >= 12);
+
+  const sortSlotsByTime = (slots: TimeSlot[]): TimeSlot[] => {
+    return [...slots].sort((a, b) => {
+      const [aHour, aMin = '0'] = a.time.split(':');
+      const [bHour, bMin = '0'] = b.time.split(':');
+      const aMinutes = parseInt(aHour, 10) * 60 + parseInt(aMin, 10);
+      const bMinutes = parseInt(bHour, 10) * 60 + parseInt(bMin, 10);
+      return aMinutes - bMinutes;
+    });
+  };
+
+  const sortedMorningSlots = sortSlotsByTime(morningSlots);
+  const sortedAfternoonSlots = sortSlotsByTime(afternoonSlots);
 
   return (
     <div className="space-y-6">
@@ -535,7 +548,7 @@ export default function DateTimePicker() {
                 <div className="space-y-3">
                   <label className="text-sm font-medium text-gray-700">Morning</label>
                   <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                    {morningSlots.map((slot) => {
+                    {sortedMorningSlots.map((slot) => {
                       const disabledSlot = !selectedDate || !isSlotBookable(selectedDate, slot);
                       const selectedSlot = selectedTime === slot.time;
 
@@ -566,7 +579,7 @@ export default function DateTimePicker() {
                 <div className="space-y-3">
                   <label className="text-sm font-medium text-gray-700">Afternoon</label>
                   <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                    {afternoonSlots.map((slot) => {
+                    {sortedAfternoonSlots.map((slot) => {
                       const disabledSlot = !selectedDate || !isSlotBookable(selectedDate, slot);
                       const selectedSlot = selectedTime === slot.time;
 

@@ -3,10 +3,10 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
+import { ColorPicker } from "./ColorPicker";
+
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-
-import { ColorPicker } from "./ColorPicker";
 
 interface FeaturedColour {
   id: string;
@@ -21,6 +21,7 @@ export function ColorOptions() {
       const response = await fetch('/api/featured-colours', {
         method: 'GET',
         headers: { Accept: 'application/json' },
+        cache: 'no-store',
       });
 
       if (!response.ok) {
@@ -30,6 +31,11 @@ export function ColorOptions() {
       const payload = await response.json();
       return Array.isArray(payload?.data) ? payload.data : [];
     },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 
   const colours = Array.isArray(coloursData) ? coloursData : [];
@@ -46,7 +52,7 @@ export function ColorOptions() {
           <p className="text-base md:text-lg text-slate-600 leading-relaxed">
             Explore our kitchen collections and discover unrivalled quality
           </p>
-          <div className="mt-6 w-16 h-1 bg-gradient-to-r from-green-600 to-transparent"></div>
+          <div className="mt-6 h-1 w-16 bg-gradient-to-r from-green-600 to-transparent" />
         </div>
 
         {/* Colors Grid */}
@@ -68,7 +74,7 @@ export function ColorOptions() {
         )}
 
         {/* Divider */}
-        <div className="my-10 md:my-12 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
+        <div className="my-10 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent md:my-12" />
 
         {/* CTA Button */}
         <div className="flex justify-center">
@@ -76,8 +82,8 @@ export function ColorOptions() {
             <Button 
               size="lg" 
               variant="outline" 
-              className="border-green-600 text-green-600 hover:bg-green-50 rounded-full px-8 font-medium transition-all duration-300"
-            >
+              className="rounded-full px-8 font-medium transition-all duration-300
+                hover:bg-lomash-primary hover:text-white hover:border-lomash-primary">
               View All Colours
               <span className="ml-2">→</span>
             </Button>

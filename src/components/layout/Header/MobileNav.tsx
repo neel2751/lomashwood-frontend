@@ -19,6 +19,7 @@ import {
   type MegaMenuColumn,
 } from "@/config/navigation";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 const COLOR_SWATCHES: Record<string, string> = {
   whites:  "#FFFFFF",
@@ -87,7 +88,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
           <SheetHeader className="p-6 pb-4">
             <div className="flex items-center justify-between">
               <SheetTitle className="text-2xl font-bold text-lomash-primary">
-                Lomash Wood
+                <Image src="/Logo.svg" alt="Lomash Wood Logo" width={120} height={100} />
               </SheetTitle>
               <SheetClose asChild>
                 <Button variant="ghost" size="icon">
@@ -222,10 +223,12 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
                           onClick={() => goToL3(column)}
                           className="w-full flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-lomash-gray-100 transition-colors text-left"
                         >
-                          <img
+                          <Image
                             src={link.image}
                             alt={link.label}
-                            className="w-12 h-12 rounded-md object-cover flex-shrink-0"
+                            width={48}
+                            height={48}
+                            className="rounded-md object-cover flex-shrink-0"
                           />
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-lomash-dark truncate">
@@ -338,10 +341,12 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
                       className="flex items-center gap-3 px-2 py-3 rounded-lg hover:bg-lomash-gray-100 transition-colors"
                     >
                       {link.image && (
-                        <img
+                        <Image
                           src={link.image}
                           alt={link.label}
-                          className="w-14 h-14 rounded-md object-cover flex-shrink-0"
+                          width={56}
+                          height={56}
+                          className="rounded-md object-cover flex-shrink-0"
                         />
                       )}
                       {!link.image && swatch && (
