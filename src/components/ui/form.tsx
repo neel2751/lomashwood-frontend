@@ -38,14 +38,13 @@ const FormFieldContext = React.createContext<FormFieldContextValue>(
   {} as FormFieldContextValue
 );
 
-const FormField = React.forwardRef<
-  any,
-  React.ComponentPropsWithoutRef<typeof Controller> & { render?: any }
->(({ ...props }: any) => (
-  <FormFieldContext.Provider value={{ name: props.name as any }}>
-    <Controller {...props} />
-  </FormFieldContext.Provider>
-));
+function FormField({ ...props }: React.ComponentPropsWithoutRef<typeof Controller> & { render?: any }) {
+  return (
+    <FormFieldContext.Provider value={{ name: (props as any).name as any }}>
+      <Controller {...(props as any)} />
+    </FormFieldContext.Provider>
+  );
+}
 FormField.displayName = "FormField";
 
 const useFormField = () => {

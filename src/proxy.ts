@@ -32,7 +32,7 @@ export function proxy(request: NextRequest) {
   }
 
   if (isAuthRoute && isAuthenticated) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/my-account", request.url));
   }
 
   const response = NextResponse.next();
