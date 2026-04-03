@@ -7,12 +7,14 @@ import { cn } from '@/lib/utils';
 interface VideoBackgroundProps {
   src: string;
   isActive: boolean;
+  shouldPreload?: boolean;
   overlayOpacity?: number;
 }
 
 export default function VideoBackground({
   src,
   isActive,
+  shouldPreload = false,
   overlayOpacity = 0.5,
 }: VideoBackgroundProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -23,6 +25,10 @@ export default function VideoBackground({
     const video = videoRef.current;
     if (!video) return;
 
+    if (shouldPreload) {
+      video.load();
+    }
+
     if (isActive) {
       video.play().catch((error) => {
         console.error('Video playback failed:', error);
@@ -31,7 +37,7 @@ export default function VideoBackground({
     } else {
       video.pause();
     }
-  }, [isActive]);
+  }, [isActive, shouldPreload]);
 
   const handleLoadedData = () => {
     setIsLoaded(true);
@@ -58,14 +64,15 @@ export default function VideoBackground({
       {/* Video Element */}
       <video
         ref={videoRef}
+        autoPlay={isActive}
         muted
         loop
         playsInline
-        preload="metadata"
+        preload={shouldPreload ? 'auto' : 'metadata'}
         onLoadedData={handleLoadedData}
         onError={handleError}
         className={cn(
-          'h-full w-full object-cover transition-opacity duration-700',
+          'h-full w-full object-cover transition-opacity duration-500',
           isLoaded ? 'opacity-100' : 'opacity-0'
         )}
       >

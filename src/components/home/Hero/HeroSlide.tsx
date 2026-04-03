@@ -29,12 +29,13 @@ export default function HeroSlide({
           alt={alt}
           fill
           priority={priority}
-          quality={90}
+          quality={85}
           sizes="100vw"
+          loading={priority ? 'eager' : 'lazy'}
           className={cn(
-            'object-cover transition-all duration-700',
+            'object-cover will-change-transform transition-all duration-500',
             isLoaded ? 'scale-100 opacity-100' : 'scale-105 opacity-0',
-            'group-hover:scale-110'
+            'group-hover:scale-105'
           )}
           onLoadingComplete={() => setIsLoaded(true)}
         />

@@ -1,16 +1,16 @@
 'use client';
 
+import { useQuery } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect, useCallback } from 'react';
-import { useQuery } from '@tanstack/react-query';
-
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { apiClient } from '@/lib/api';
 
 import CTAButton from './CTAButton';
 import HeroSlide from './HeroSlide';
 import VideoBackground from './VideoBackground';
+
+import { Button } from '@/components/ui/button';
+import { apiClient } from '@/lib/api';
+import { cn } from '@/lib/utils';
 
 interface Slide {
   id: string;
@@ -68,51 +68,88 @@ const fallbackSlides: Slide[] = [
   },
 ];
 
+function toPath(value?: string): string | undefined {
+  if (!value) return value;
+  return value.startsWith('/') ? value : `/${value}`;
+}
+
+function normalizeSlides(payload: unknown): Slide[] {
+  const rows = Array.isArray(payload)
+    ? payload
+    : Array.isArray((payload as { data?: unknown[] } | null)?.data)
+      ? ((payload as { data: unknown[] }).data)
+      : [];
+
+  return rows
+    .map((item) => item as Partial<Slide>)
+    .filter((item) => !!item?.id && !!item?.src && !!item?.title)
+    .map((item) => ({
+      id: String(item.id),
+      type: item.type === 'video' ? 'video' : 'image',
+      src: String(item.src),
+      title: String(item.title),
+      subtitle: item.subtitle ?? '',
+      description: item.description,
+      ctaText: item.ctaText ?? 'Explore',
+      ctaLink: toPath(item.ctaLink) ?? '/',
+      secondaryCtaText: item.secondaryCtaText,
+      secondaryCtaLink: toPath(item.secondaryCtaLink),
+      overlayOpacity: item.overlayOpacity,
+    }));
+}
+
 export function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // Fetch slides from API
-  const { data: heroData } = useQuery({
+  const { data: apiSlides } = useQuery<Slide[]>({
     queryKey: ['hero-slides'],
-    queryFn: () => apiClient.heroSlider.getAll(),
+    queryFn: async () => {
+      const response = await apiClient.heroSlider.getAll();
+      return normalizeSlides(response);
+    },
   });
 
-  const slides: Slide[] = (heroData?.data as unknown as Slide[]) ?? fallbackSlides;
+  const slides = apiSlides && apiSlides.length > 0 ? apiSlides : fallbackSlides;
+  const hasMultipleSlides = slides.length > 1;
 
   const nextSlide = useCallback(() => {
-    if (isTransitioning) return;
+    if (!hasMultipleSlides || isTransitioning) return;
     setIsTransitioning(true);
     setCurrentSlide((prev) => (prev + 1) % slides.length);
     setTimeout(() => setIsTransitioning(false), 500);
-  }, [isTransitioning, slides.length]);
+  }, [hasMultipleSlides, isTransitioning, slides.length]);
 
   const prevSlide = useCallback(() => {
-    if (isTransitioning) return;
+    if (!hasMultipleSlides || isTransitioning) return;
     setIsTransitioning(true);
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
     setTimeout(() => setIsTransitioning(false), 500);
-  }, [isTransitioning, slides.length]);
+  }, [hasMultipleSlides, isTransitioning, slides.length]);
 
   const goToSlide = useCallback(
     (index: number) => {
-      if (isTransitioning || index === currentSlide) return;
+      if (!hasMultipleSlides || isTransitioning || index === currentSlide) return;
       setIsTransitioning(true);
       setCurrentSlide(index);
       setTimeout(() => setIsTransitioning(false), 500);
     },
-    [currentSlide, isTransitioning]
+    [currentSlide, hasMultipleSlides, isTransitioning]
   );
 
   useEffect(() => {
+    if (!hasMultipleSlides) return;
+
     const interval = setInterval(() => {
       nextSlide();
     }, 8000);
 
     return () => clearInterval(interval);
-  }, [nextSlide]);
+  }, [hasMultipleSlides, nextSlide]);
 
   useEffect(() => {
+    if (!hasMultipleSlides) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft') prevSlide();
       if (e.key === 'ArrowRight') nextSlide();
@@ -120,11 +157,17 @@ export function Hero() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [nextSlide, prevSlide]);
+  }, [hasMultipleSlides, nextSlide, prevSlide]);
+
+  useEffect(() => {
+    if (currentSlide >= slides.length) {
+      setCurrentSlide(0);
+    }
+  }, [currentSlide, slides.length]);
 
   return (
     <section
-      className="relative h-screen w-full overflow-hidden bg-gray-900"
+      className="relative h-[78svh] min-h-[560px] w-full overflow-hidden bg-gray-900 md:h-screen"
       aria-label="Hero Slider"
     >
       {/* Slides */}
@@ -141,6 +184,7 @@ export function Hero() {
               <VideoBackground
                 src={slide.src}
                 isActive={index === currentSlide}
+                shouldPreload={index === 0 || index === currentSlide}
                 overlayOpacity={slide.overlayOpacity}
               />
             ) : (
@@ -148,13 +192,14 @@ export function Hero() {
                 src={slide.src}
                 alt={slide.title}
                 overlayOpacity={slide.overlayOpacity}
+                priority={index === 0}
               />
             )}
 
             {/* Content Overlay */}
             <div className="absolute inset-0 z-20 flex items-center">
-              <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-10 lg:px-16">
-                <div className="max-w-3xl">
+              <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-8 lg:px-16">
+                <div className="max-w-3xl pb-14 pt-24 sm:pt-28 md:pb-6 md:pt-20">
                   {/* Subtitle */}
                   <div
                     className={cn(
@@ -172,7 +217,7 @@ export function Hero() {
                   {/* Title */}
                   <h1
                     className={cn(
-                      'mb-6 text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl',
+                      'mb-4 text-3xl font-bold leading-tight text-white sm:mb-6 sm:text-5xl lg:text-6xl xl:text-7xl',
                       'transform transition-all duration-700 delay-200',
                       index === currentSlide
                         ? 'translate-y-0 opacity-100'
@@ -186,7 +231,7 @@ export function Hero() {
                   {slide.description && (
                     <p
                       className={cn(
-                        'mb-8 text-lg text-white/90 sm:text-xl lg:text-2xl',
+                        'mb-6 text-base text-white/90 sm:mb-8 sm:text-xl lg:text-2xl',
                         'transform transition-all duration-700 delay-300',
                         index === currentSlide
                           ? 'translate-y-0 opacity-100'
@@ -200,7 +245,7 @@ export function Hero() {
                   {/* CTAs */}
                   <div
                     className={cn(
-                      'flex flex-col gap-4 sm:flex-row',
+                      'flex flex-col gap-3 sm:flex-row sm:gap-4',
                       'transform transition-all duration-700 delay-400',
                       index === currentSlide
                         ? 'translate-y-0 opacity-100'
@@ -211,6 +256,7 @@ export function Hero() {
                       href={slide.ctaLink}
                       variant="primary"
                       size="lg"
+                      className="w-full sm:w-auto"
                     >
                       {slide.ctaText}
                     </CTAButton>
@@ -220,6 +266,7 @@ export function Hero() {
                         href={slide.secondaryCtaLink}
                         variant="secondary"
                         size="lg"
+                        className="w-full sm:w-auto"
                       >
                         {slide.secondaryCtaText}
                       </CTAButton>
@@ -233,46 +280,52 @@ export function Hero() {
       </div>
 
       {/* Navigation Arrows */}
-      <Button
-        variant="ghost"
-        size="icon"
-        className="absolute left-4 top-1/2 z-30 hidden -translate-y-1/2 rounded-full bg-white/10 text-white backdrop-blur-sm transition-all hover:bg-white/20 md:flex"
-        onClick={prevSlide}
-        disabled={isTransitioning}
-        aria-label="Previous slide"
-      >
-        <ChevronLeft className="h-6 w-6" />
-      </Button>
+      {hasMultipleSlides && (
+        <>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute left-3 top-1/2 z-30 hidden -translate-y-1/2 rounded-full bg-white/10 text-white backdrop-blur-sm transition-all hover:bg-white/20 md:flex"
+            onClick={prevSlide}
+            disabled={isTransitioning}
+            aria-label="Previous slide"
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
 
-      <Button
-        variant="ghost"
-        size="icon"
-        className="absolute right-4 top-1/2 z-30 hidden -translate-y-1/2 rounded-full bg-white/10 text-white backdrop-blur-sm transition-all hover:bg-white/20 md:flex"
-        onClick={nextSlide}
-        disabled={isTransitioning}
-        aria-label="Next slide"
-      >
-        <ChevronRight className="h-6 w-6" />
-      </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute right-3 top-1/2 z-30 hidden -translate-y-1/2 rounded-full bg-white/10 text-white backdrop-blur-sm transition-all hover:bg-white/20 md:flex"
+            onClick={nextSlide}
+            disabled={isTransitioning}
+            aria-label="Next slide"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </Button>
+        </>
+      )}
 
       {/* Slide Indicators */}
-      <div className="absolute bottom-8 left-1/2 z-30 flex -translate-x-1/2 gap-2">
-        {slides.map((slide, index) => (
-          <button
-            key={slide.id}
-            onClick={() => goToSlide(index)}
-            disabled={isTransitioning}
-            className={cn(
-              'h-2 rounded-full transition-all duration-300',
-              index === currentSlide
-                ? 'w-8 bg-white'
-                : 'w-2 bg-white/50 hover:bg-white/75'
-            )}
-            aria-label={`Go to slide ${index + 1}`}
-            aria-current={index === currentSlide ? 'true' : 'false'}
-          />
-        ))}
-      </div>
+      {hasMultipleSlides && (
+        <div className="absolute bottom-6 left-1/2 z-30 flex -translate-x-1/2 gap-2 sm:bottom-8">
+          {slides.map((slide, index) => (
+            <button
+              key={slide.id}
+              onClick={() => goToSlide(index)}
+              disabled={isTransitioning}
+              className={cn(
+                'h-2 rounded-full transition-all duration-300',
+                index === currentSlide
+                  ? 'w-8 bg-white'
+                  : 'w-2 bg-white/50 hover:bg-white/75'
+              )}
+              aria-label={`Go to slide ${index + 1}`}
+              aria-current={index === currentSlide ? 'true' : 'false'}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Scroll Indicator */}
       <div className="absolute bottom-8 right-8 z-30 hidden animate-bounce lg:block">
