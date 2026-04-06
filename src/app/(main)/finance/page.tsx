@@ -233,9 +233,9 @@ export default function FinancePage() {
               size="lg"
               variant="secondary"
               className="text-lg bg-white text-lomash-primary hover:bg-lomash-primary hover:text-white shadow-md hover:shadow-lg font-semibold"
-              onClick={() => window.location.href = 'tel:+919876543210'}
+              onClick={() => window.location.href = 'tel:07459324138'}
             >
-              Call +91 98765 43210
+              Call 07459 324 138
             </Button>
             <Button
               size="lg"

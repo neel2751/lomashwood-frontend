@@ -37,76 +37,55 @@ export default function ProductDetailLoading() {
 
           {/* Product Info & Actions Skeleton */}
           <div className="space-y-6">
-            {/* Product Info */}
-            <div className="space-y-4">
-              <Skeleton className="h-8 w-3/4" />
-              <div className="flex items-center gap-2">
-                <Skeleton className="h-5 w-24" />
-                <Skeleton className="h-5 w-20" />
+            {/* Premium Info Card */}
+            <Card className="border-primary/10 p-6">
+              <div className="space-y-4">
+                <Skeleton className="h-3 w-36" />
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-5 w-20" />
+                  <Skeleton className="h-5 w-16" />
+                </div>
+                <Skeleton className="h-8 w-4/5" />
+                <Skeleton className="h-10 w-32" />
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  <Skeleton className="h-4 w-40" />
+                  <Skeleton className="h-4 w-40" />
+                </div>
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-5/6" />
+                  <Skeleton className="h-4 w-4/5" />
+                </div>
+                <div className="grid grid-cols-2 gap-3 pt-2">
+                  {[...Array(4)].map((_, i) => (
+                    <Skeleton key={i} className="h-16 w-full rounded-lg" />
+                  ))}
+                </div>
               </div>
-              <Skeleton className="h-10 w-32" />
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-5/6" />
-                <Skeleton className="h-4 w-4/5" />
-              </div>
-            </div>
+            </Card>
 
-            {/* Color Selector Skeleton */}
-            <div className="space-y-3">
-              <Skeleton className="h-5 w-32" />
-              <div className="flex gap-3">
+            {/* Colours Card */}
+            <Card className="border-primary/10 p-5">
+              <Skeleton className="h-5 w-36 mb-3" />
+              <div className="flex flex-wrap gap-2.5">
                 {[...Array(6)].map((_, i) => (
-                  <Skeleton key={i} className="h-12 w-12 rounded-full" />
-                ))}
-              </div>
-            </div>
-
-            {/* Finish Selector Skeleton */}
-            <div className="space-y-3">
-              <Skeleton className="h-5 w-28" />
-              <div className="flex gap-3">
-                {[...Array(4)].map((_, i) => (
-                  <Skeleton key={i} className="h-10 w-24 rounded" />
-                ))}
-              </div>
-            </div>
-
-            {/* Price Calculator Skeleton */}
-            <div className="space-y-3 p-4 border rounded-lg">
-              <Skeleton className="h-5 w-36" />
-              <Skeleton className="h-8 w-40" />
-            </div>
-
-            <div className="h-px bg-border" />
-
-            {/* Product Actions Skeleton */}
-            <div className="space-y-3">
-              <Skeleton className="h-12 w-full" />
-              <Skeleton className="h-12 w-full" />
-              <div className="flex gap-3">
-                <Skeleton className="h-10 flex-1" />
-                <Skeleton className="h-10 w-10 rounded-full" />
-              </div>
-            </div>
-
-            {/* Trust Badges Skeleton */}
-            <Card className="p-4 bg-muted/50">
-              <div className="grid grid-cols-2 gap-4">
-                {[...Array(4)].map((_, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <Skeleton className="w-10 h-10 rounded-full flex-shrink-0" />
-                    <div className="flex-1 space-y-2">
-                      <Skeleton className="h-4 w-24" />
-                      <Skeleton className="h-3 w-20" />
-                    </div>
-                  </div>
+                  <Skeleton key={i} className="h-8 w-24 rounded-full" />
                 ))}
               </div>
             </Card>
 
-            {/* What's Included Skeleton */}
-            <Card className="p-6">
+            {/* Sizes Card */}
+            <Card className="border-primary/10 p-5">
+              <Skeleton className="h-5 w-32 mb-3" />
+              <div className="flex flex-wrap gap-2">
+                {[...Array(4)].map((_, i) => (
+                  <Skeleton key={i} className="h-7 w-20 rounded-full" />
+                ))}
+              </div>
+            </Card>
+
+            {/* What's Included Card */}
+            <Card className="border-primary/10 p-6">
               <Skeleton className="h-6 w-32 mb-4" />
               <ul className="space-y-3">
                 {[...Array(5)].map((_, i) => (
@@ -117,6 +96,19 @@ export default function ProductDetailLoading() {
                 ))}
               </ul>
             </Card>
+
+            {/* Help Card */}
+            <Card className="border-primary/10 bg-muted/30 p-5">
+              <Skeleton className="h-5 w-64 mb-2" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-5/6 mt-1" />
+            </Card>
+
+            {/* Product Actions Skeleton */}
+            <div className="space-y-3">
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+            </div>
           </div>
         </div>
 
@@ -124,9 +116,9 @@ export default function ProductDetailLoading() {
         <div className="mb-12">
           {/* Tabs Header */}
           <div className="border-b mb-6">
-            <div className="flex gap-6">
-              {['Description', 'Specifications', 'Delivery & Returns', 'Reviews'].map((_, i) => (
-                <Skeleton key={i} className="h-10 w-32" />
+            <div className="flex gap-3">
+              {['Description', 'Specifications'].map((_, i) => (
+                <Skeleton key={i} className="h-10 w-32 rounded-md" />
               ))}
             </div>
           </div>

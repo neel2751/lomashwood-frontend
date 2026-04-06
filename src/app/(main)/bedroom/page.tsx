@@ -21,7 +21,7 @@ interface BackendProduct {
   finish?: string;
   price?: number;
   images?: string[];
-  colours?: Array<{ name: string }>;
+  colours?: Array<{ name: string; hexCode?: string }>;
   isPublished?: boolean;
   isFeatured?: boolean;
 }
@@ -37,6 +37,13 @@ const normalizeParam = (value?: string) => {
   if (!value) return undefined;
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : undefined;
+};
+
+const normalizeColorValue = (colour?: { name?: string; hexCode?: string }) => {
+  if (!colour) return null;
+  if (colour.hexCode && colour.hexCode.trim()) return colour.hexCode.trim();
+  if (colour.name && colour.name.trim()) return colour.name.trim().toLowerCase();
+  return null;
 };
 
 async function getBedroomProducts(searchParams?: BedroomSearchParams) {
@@ -84,7 +91,7 @@ async function getBedroomProducts(searchParams?: BedroomSearchParams) {
 
     for (const url of urlsToTry) {
       try {
-        const response = await fetch(url, { next: { revalidate: 300 } });
+        const response = await fetch(url, { cache: 'no-store' });
         if (!response.ok) {
           continue;
         }
@@ -111,7 +118,17 @@ async function getBedroomProducts(searchParams?: BedroomSearchParams) {
       return [];
     }
 
-    return rows.map((product) => ({
+    const normalizedRows = rows.filter((product) => {
+      if (!product?.id) return false;
+      if (!product?.title) return false;
+      return product.category === 'bedroom';
+    });
+
+    const uniqueRows = Array.from(
+      new Map(normalizedRows.map((product) => [product.id, product])).values()
+    );
+
+    return uniqueRows.map((product) => ({
       id: product.id,
       slug: product.slug,
       name: product.title,
@@ -121,7 +138,9 @@ async function getBedroomProducts(searchParams?: BedroomSearchParams) {
       image: product.images?.[0] || '/images/placeholder-product.jpg',
       images: product.images || [],
       price: { from: product.price || 0 },
-      colors: product.colours?.map((colour) => colour.name.toLowerCase()) || [],
+      colors: (product.colours || [])
+        .map((colour) => normalizeColorValue(colour))
+        .filter((value): value is string => Boolean(value)),
       inStock: product.isPublished ?? true,
       isNew: false,
       rating: 0,

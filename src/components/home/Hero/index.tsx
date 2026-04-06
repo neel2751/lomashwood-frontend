@@ -102,15 +102,18 @@ export function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const { data: apiSlides } = useQuery<Slide[]>({
+  const { data: apiSlides, isLoading, isFetching } = useQuery<Slide[]>({
     queryKey: ['hero-slides'],
     queryFn: async () => {
       const response = await apiClient.heroSlider.getAll();
       return normalizeSlides(response);
     },
+    retry: 1,
   });
 
-  const slides = apiSlides && apiSlides.length > 0 ? apiSlides : fallbackSlides;
+  const hasApiSlides = Boolean(apiSlides && apiSlides.length > 0);
+  const shouldShowLoading = (isLoading || isFetching) && !hasApiSlides;
+  const slides: Slide[] = hasApiSlides ? apiSlides ?? fallbackSlides : fallbackSlides;
   const hasMultipleSlides = slides.length > 1;
 
   const nextSlide = useCallback(() => {
@@ -170,6 +173,18 @@ export function Hero() {
       className="relative h-[78svh] min-h-[560px] w-full overflow-hidden bg-gray-900 md:h-screen"
       aria-label="Hero Slider"
     >
+      {shouldShowLoading ? (
+        <div className="absolute inset-0 z-40 flex items-center justify-center bg-gray-950">
+          <div className="flex flex-col items-center gap-4 text-center text-white">
+            <div className="h-10 w-10 animate-spin rounded-full border-2 border-white/20 border-t-white" />
+            <div>
+              <p className="text-sm font-medium uppercase tracking-[0.18em] text-white/70">Lomash Wood</p>
+              <p className="mt-2 text-lg font-medium">Loading featured designs</p>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       {/* Slides */}
       <div className="relative h-full w-full">
         {slides.map((slide, index) => (

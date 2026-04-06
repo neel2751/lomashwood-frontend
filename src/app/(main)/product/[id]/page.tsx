@@ -1,16 +1,13 @@
-import { Shield, Truck, Award, Clock, CheckCircle2 } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import DeliveryInfo from '@/components/product/DeliveryInfo';
 import ImageGallery from '@/components/product/ImageGallery';
 import ProductSpecs from '@/components/product/ProductSpecs';
 import RelatedProducts from '@/components/product/RelatedProducts';
-import Reviews from '@/components/product/Reviews';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 type PageParams = { id: string };
@@ -47,6 +44,12 @@ interface ApiProduct {
   reviewCount?: number;
 }
 
+interface ProductColour {
+  id?: string;
+  name?: string;
+  hexCode?: string;
+}
+
 const normalizeIdentifier = (raw: string) => decodeURIComponent(raw || '').trim();
 
 const toAbsoluteImage = (url: string): string => {
@@ -54,6 +57,28 @@ const toAbsoluteImage = (url: string): string => {
   if (url.startsWith('http://') || url.startsWith('https://')) return url;
   if (url.startsWith('/')) return `https://lomashwood-backend.vercel.app${url}`;
   return url;
+};
+
+const descriptionBlocklist = [
+  /shipping/i,
+  /return\s*&?\s*warranty/i,
+  /customi[sz]ation options?/i,
+];
+
+const shouldHideContent = (text?: string): boolean => {
+  if (!text) return false;
+  return descriptionBlocklist.some((pattern) => pattern.test(text));
+};
+
+const sanitizeDescription = (text?: string): string => {
+  if (!text) return '';
+
+  return text
+    .split(/\n+/)
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0)
+    .filter((line) => !descriptionBlocklist.some((pattern) => pattern.test(line)))
+    .join('\n\n');
 };
 
 async function fetchProductById(id: string): Promise<ApiProduct | null> {
@@ -130,7 +155,8 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
   const category = product.category || 'kitchen';
   const style = product.style || '';
   const finish = product.finish || '';
-  const description = product.description || 'No product description available.';
+  const description = sanitizeDescription(product.description || 'No product description available.');
+  const packageDescription = sanitizeDescription(product.package?.description);
   const imageUrls = (product.images && product.images.length > 0)
     ? product.images.map(toAbsoluteImage)
     : ['/images/placeholder-product.jpg'];
@@ -141,13 +167,20 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
     alt: `${productName} ${index + 1}`,
   }));
 
-  const colorNames = (product.colours || []).map((colour) => colour.name || '').filter(Boolean);
-  const sizeTitles = (product.sizes || []).map((size) => size.title || '').filter(Boolean);
-  const packageFeatures = product.package?.features || [];
+  const productColours = (product.colours || []) as ProductColour[];
+  const colorNames = Array.from(new Set(productColours.map((colour) => colour.name || '').filter(Boolean)));
+  const sizeTitles = Array.from(new Set((product.sizes || []).map((size) => size.title || '').filter(Boolean)));
+  const packageFeatures = (product.package?.features || []).filter((feature) => !shouldHideContent(feature));
+  const highlights = [
+    style && style !== '0' ? { label: 'Style', value: style } : null,
+    finish && finish !== '0' ? { label: 'Finish', value: finish } : null,
+    product.rangeName ? { label: 'Range', value: product.rangeName } : null,
+    colorNames.length > 0 ? { label: 'Colours', value: `${colorNames.length} options` } : null,
+  ].filter((item): item is { label: string; value: string } => Boolean(item));
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="border-t bg-muted/50">
+      <div className="border-t bg-gradient-to-b from-muted/70 to-background">
         <div className="container mx-auto px-8 lg:px-18 py-4">
           <nav className="flex items-center gap-2 text-sm text-muted-foreground">
             <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
@@ -166,62 +199,80 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           </div>
 
           <div className="space-y-6">
-            <div className="space-y-4">
+            <Card className="border-primary/10 bg-card/90 p-6 shadow-sm">
+              <div className="space-y-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary/80">Bespoke Collection</p>
               <div className="flex items-center gap-2 flex-wrap">
                 <Badge variant="secondary" className="capitalize">{category}</Badge>
                 {style && style !== '0' && <Badge variant="outline">{style}</Badge>}
                 {!product.isPublished && <Badge variant="destructive">Unpublished</Badge>}
               </div>
 
-              <h1 className="text-3xl lg:text-4xl font-bold text-foreground">{productName}</h1>
+                <h1 className="text-3xl lg:text-4xl font-bold text-foreground leading-tight">{productName}</h1>
 
-              {typeof product.price === 'number' ? (
-                <p className="text-2xl font-semibold text-primary">£{product.price.toLocaleString('en-GB')}</p>
-              ) : (
-                <p className="text-lg text-muted-foreground">Price on request</p>
-              )}
+                {typeof product.price === 'number' ? (
+                  <p className="text-3xl font-semibold text-primary">£{product.price.toLocaleString('en-GB')}</p>
+                ) : (
+                  <p className="text-lg text-muted-foreground">Price on request</p>
+                )}
 
-              {finish && finish !== '0' && (
-                <p className="text-sm text-muted-foreground">
-                  Finish: <span className="font-medium text-foreground capitalize">{finish}</span>
-                </p>
-              )}
+                <div className="grid grid-cols-1 gap-2 text-sm text-muted-foreground sm:grid-cols-2">
+                  {finish && finish !== '0' && (
+                    <p>
+                      Finish: <span className="font-medium text-foreground capitalize">{finish}</span>
+                    </p>
+                  )}
 
-              {product.package?.title && (
-                <p className="text-sm text-muted-foreground">
-                  Package: <span className="font-medium text-foreground">{product.package.title}</span>
-                </p>
-              )}
+                  {product.package?.title && (
+                    <p>
+                      Package: <span className="font-medium text-foreground">{product.package.title}</span>
+                    </p>
+                  )}
+                </div>
 
-              <p className="text-muted-foreground leading-relaxed">{description}</p>
-            </div>
+                <p className="text-muted-foreground leading-relaxed">{description}</p>
 
-            <Separator />
-
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div className={`rounded-lg border p-3 ${product.inStock === false ? 'border-orange-300 bg-orange-50' : 'border-green-300 bg-green-50'}`}>
-                <p className="font-medium">Availability</p>
-                <p className="text-muted-foreground">{product.inStock === false ? 'Contact us for availability' : 'In stock'}</p>
+                {highlights.length > 0 && (
+                  <div className="grid grid-cols-2 gap-3 pt-2">
+                    {highlights.map((item) => (
+                      <div key={item.label} className="rounded-lg border border-primary/10 bg-background/80 p-3">
+                        <p className="text-[11px] uppercase tracking-wider text-muted-foreground">{item.label}</p>
+                        <p className="mt-1 text-sm font-medium text-foreground capitalize">{item.value}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-              <div className="rounded-lg border p-3">
-                <p className="font-medium">Product ID</p>
-                <p className="text-muted-foreground break-all">{product.id}</p>
-              </div>
-            </div>
+            </Card>
 
             {colorNames.length > 0 && (
-              <Card className="p-4">
+              <Card className="p-5 border-primary/10">
                 <h3 className="font-semibold mb-2">Available Colours</h3>
-                <div className="flex flex-wrap gap-2">
-                  {colorNames.map((name) => (
-                    <Badge key={name} variant="outline">{name}</Badge>
-                  ))}
+                <div className="flex flex-wrap gap-2.5">
+                  {productColours.map((colour) => {
+                    const label = colour.name || 'Colour';
+                    const hex = colour.hexCode;
+
+                    return (
+                      <span
+                        key={colour.id || label}
+                        className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-foreground"
+                      >
+                        <span
+                          className="h-3 w-3 rounded-full border border-black/10"
+                          style={{ backgroundColor: hex || '#D4D4D8' }}
+                          aria-hidden="true"
+                        />
+                        {label}
+                      </span>
+                    );
+                  })}
                 </div>
               </Card>
             )}
 
             {sizeTitles.length > 0 && (
-              <Card className="p-4">
+              <Card className="p-5 border-primary/10">
                 <h3 className="font-semibold mb-2">Available Sizes</h3>
                 <div className="flex flex-wrap gap-2">
                   {sizeTitles.map((title) => (
@@ -232,7 +283,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             )}
 
             {packageFeatures.length > 0 && (
-              <Card className="p-6">
+              <Card className="p-6 border-primary/10 bg-gradient-to-br from-primary/5 via-background to-background">
                 <h3 className="font-semibold mb-4">What's Included</h3>
                 <ul className="space-y-3">
                   {packageFeatures.map((feature, index) => (
@@ -245,51 +296,17 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
               </Card>
             )}
 
-            <Card className="p-4 bg-muted/50">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Shield className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Lifetime Warranty</p>
-                    <p className="text-xs text-muted-foreground">Quality guaranteed</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Truck className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Free Delivery</p>
-                    <p className="text-xs text-muted-foreground">On all orders</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Award className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Premium Quality</p>
-                    <p className="text-xs text-muted-foreground">Certified materials</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Clock className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Expert Install</p>
-                    <p className="text-xs text-muted-foreground">Professional service</p>
-                  </div>
-                </div>
-              </div>
+            <Card className="border-primary/10 bg-muted/30 p-5">
+              <p className="text-sm font-semibold text-foreground">Need Help Choosing The Right Design?</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Visit a showroom or book a consultation for tailored bedroom planning with our design team.
+              </p>
             </Card>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href={`/book-appointment?product=${product.id}&category=${category}`}
-                className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors"
               >
                 Book Free Consultation
               </Link>
@@ -303,27 +320,21 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           </div>
         </div>
 
-        <Tabs defaultValue="description" className="mb-12">
-          <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent">
-            <TabsTrigger value="description" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent">
+        <Tabs defaultValue="description" className="mb-12 rounded-xl border border-primary/10 bg-card p-6 shadow-sm">
+          <TabsList className="w-full justify-start rounded-lg bg-muted/60 p-1">
+            <TabsTrigger value="description" className="rounded-md data-[state=active]:bg-background data-[state=active]:text-foreground">
               Description
             </TabsTrigger>
-            <TabsTrigger value="specifications" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent">
+            <TabsTrigger value="specifications" className="rounded-md data-[state=active]:bg-background data-[state=active]:text-foreground">
               Specifications
-            </TabsTrigger>
-            <TabsTrigger value="delivery" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent">
-              Delivery & Returns
-            </TabsTrigger>
-            <TabsTrigger value="reviews" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent">
-              Reviews
             </TabsTrigger>
           </TabsList>
 
           <div className="mt-6">
             <TabsContent value="description" className="mt-0">
-              <div className="prose prose-sm max-w-none">
+              <div className="prose prose-sm max-w-none text-foreground/90">
                 <p>{description}</p>
-                {product.package?.description && <p>{product.package.description}</p>}
+                {packageDescription && <p>{packageDescription}</p>}
               </div>
             </TabsContent>
 
@@ -333,20 +344,6 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 finish={finish ? [finish] : []}
                 colors={colorNames}
                 features={packageFeatures.map((feature) => ({ name: feature }))}
-              />
-            </TabsContent>
-
-            <TabsContent value="delivery" className="mt-0">
-              <DeliveryInfo />
-            </TabsContent>
-
-            <TabsContent value="reviews" className="mt-0">
-              <Reviews
-                productId={product.id}
-                averageRating={product.rating || 0}
-                totalReviews={product.reviewCount || 0}
-                ratingDistribution={{ 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }}
-                reviews={[]}
               />
             </TabsContent>
           </div>

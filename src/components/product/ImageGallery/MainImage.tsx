@@ -62,6 +62,7 @@ export default function MainImage({
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
           priority={currentIndex === 0}
           quality={90}
+          onClick={() => setShowFullscreen(true)}
         />
 
         {/* Navigation Arrows */}
@@ -71,7 +72,10 @@ export default function MainImage({
               variant="secondary"
               size="icon"
               className="absolute left-2 top-1/2 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100"
-              onClick={handlePrevious}
+              onClick={(event) => {
+                event.stopPropagation();
+                handlePrevious();
+              }}
               aria-label="Previous image"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -81,7 +85,10 @@ export default function MainImage({
               variant="secondary"
               size="icon"
               className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100"
-              onClick={handleNext}
+              onClick={(event) => {
+                event.stopPropagation();
+                handleNext();
+              }}
               aria-label="Next image"
             >
               <ChevronRight className="h-4 w-4" />
@@ -90,7 +97,7 @@ export default function MainImage({
         )}
 
         {/* Action Buttons */}
-        <div className="absolute right-2 top-2 flex flex-col gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+        <div className="absolute right-2 top-2 flex flex-col gap-2 opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100">
           {/* Zoom Button */}
           <Dialog open={showFullscreen} onOpenChange={setShowFullscreen}>
             <DialogTrigger asChild>
@@ -98,12 +105,13 @@ export default function MainImage({
                 variant="secondary"
                 size="icon"
                 className="h-9 w-9"
+                onClick={(event) => event.stopPropagation()}
                 aria-label="View fullscreen"
               >
                 <Maximize2 className="h-4 w-4" />
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-7xl p-0">
+            <DialogContent className="h-[90vh] w-[96vw] max-w-6xl overflow-hidden p-0">
               <ZoomImage
                 image={image}
                 productName={productName}

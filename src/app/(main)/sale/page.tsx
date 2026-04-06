@@ -141,7 +141,7 @@ export default function SalePage() {
                     size="sm"
                     className="w-full gap-2"
                   >
-                    <Link href="tel:+1234567890">
+                    <Link href="tel:07459324138">
                       <Phone className="h-4 w-4" />
                       Call Now
                     </Link>

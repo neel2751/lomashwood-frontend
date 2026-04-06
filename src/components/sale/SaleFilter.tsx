@@ -11,7 +11,7 @@ import {
   Filter,
   RotateCcw,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Accordion,
@@ -89,6 +89,12 @@ export default function SaleFilter({
   className,
 }: SaleFilterProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [discountDraft, setDiscountDraft] = useState<number[]>([filters.discountRange[1]]);
+  const maxDiscount = discountDraft[0] ?? filters.discountRange[1];
+
+  useEffect(() => {
+    setDiscountDraft([filters.discountRange[1]]);
+  }, [filters.discountRange]);
 
   const handleCategoryToggle = (categoryId: string) => {
     const newCategories = filters.categories.includes(categoryId)
@@ -111,8 +117,18 @@ export default function SaleFilter({
     onFiltersChange({ ...filters, status: newStatus });
   };
 
+  const clampDiscount = (value?: number) => {
+    return Math.max(0, Math.min(100, value ?? defaultFilters.discountRange[1]));
+  };
+
   const handleDiscountRangeChange = (value: number[]) => {
-    onFiltersChange({ ...filters, discountRange: [value[0], value[1]] });
+    const nextValue = clampDiscount(value[0]);
+    setDiscountDraft([nextValue]);
+  };
+
+  const handleDiscountRangeCommit = (value: number[]) => {
+    const nextValue = clampDiscount(value[0]);
+    onFiltersChange({ ...filters, discountRange: [0, nextValue] });
   };
 
   const handleResetFilters = () => {
@@ -223,14 +239,15 @@ export default function SaleFilter({
           <Slider
             min={0}
             max={100}
-            step={5}
-            value={filters.discountRange}
+            step={1}
+            value={discountDraft}
             onValueChange={handleDiscountRangeChange}
+            onValueCommit={handleDiscountRangeCommit}
             className="w-full"
           />
           <div className="flex items-center justify-between text-sm text-muted-foreground">
-            <span>{filters.discountRange[0]}%</span>
-            <span>{filters.discountRange[1]}%</span>
+            <span>0%</span>
+            <span>Up to {maxDiscount}%</span>
           </div>
         </div>
       </div>
@@ -430,13 +447,14 @@ export default function SaleFilter({
                   <Slider
                     min={0}
                     max={100}
-                    step={5}
-                    value={filters.discountRange}
+                    step={1}
+                    value={discountDraft}
                     onValueChange={handleDiscountRangeChange}
+                    onValueCommit={handleDiscountRangeCommit}
                   />
                   <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>{filters.discountRange[0]}%</span>
-                    <span>{filters.discountRange[1]}%</span>
+                    <span>0%</span>
+                    <span>Up to {maxDiscount}%</span>
                   </div>
                 </div>
               </AccordionContent>
