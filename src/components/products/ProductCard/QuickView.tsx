@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dialog';
 
 
-import { WishlistButton } from './WishlistButton';
+// import { WishlistButton } from './WishlistButton';
 
 interface QuickViewProps {
   product: {

@@ -42,7 +42,7 @@ interface FiltersProps {
   onFiltersChange?: (filters: ActiveFilter[], sort: string) => void;
 }
 
-export default function Filters({ resultCount = 0, onFiltersChange }: FiltersProps) {
+export default function Filters({ onFiltersChange }: FiltersProps) {
   const normalizeFilterValue = (input: string) =>
     input
       .trim()
@@ -266,9 +266,9 @@ export default function Filters({ resultCount = 0, onFiltersChange }: FiltersPro
     });
   };
 
-  const handleSortChange = (newSort: string) => {
-    void setQueryState({ sort: newSort });
-  };
+  // const handleSortChange = (newSort: string) => {
+  //   void setQueryState({ sort: newSort });
+  // };
 
   const onFiltersChangeRef = useRef(onFiltersChange);
 

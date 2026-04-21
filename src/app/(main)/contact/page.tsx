@@ -4,12 +4,9 @@ import {
   MapPin,
   Clock,
   Send,
-  MessageCircle,
   User,
   Building2,
-  Image as ImageIcon,
   CheckCircle2,
-  AlertCircle,
   Facebook,
   Instagram,
   Twitter,
@@ -17,7 +14,6 @@ import {
   Youtube,
   Navigation,
   Smartphone,
-  Video,
   HeadphonesIcon,
   Store,
   Map,
@@ -42,40 +38,40 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
-  const contactMethods = [
-    {
-      icon: Phone,
-      title: 'Call Us',
-      primary: '020 8434 7800',
-      secondary: '01708 898755',
-      description: 'Monday - Saturday: 9:00 AM - 6:00 PM',
-      action: 'tel:02084347800',
-    },
-    {
-      icon: Mail,
-      title: 'Email Us',
-      primary: 'contact@lomashwood.com',
-      secondary: 'projects@lomashwood.com',
-      description: 'We respond within 24 hours',
-      action: 'mailto:contact@lomashwood.com',
-    },
-    {
-      icon: MessageCircle,
-      title: 'Live Chat',
-      primary: 'Chat with our team',
-      secondary: 'Available now',
-      description: 'Get instant answers to your questions',
-      action: '#',
-    },
-    {
-      icon: Video,
-      title: 'Video Consultation',
-      primary: 'Schedule a virtual tour',
-      secondary: 'Free 30-minute session',
-      description: 'Discuss your project from home',
-      action: '#',
-    },
-  ];
+  // const contactMethods = [
+  //   {
+  //     icon: Phone,
+  //     title: 'Call Us',
+  //     primary: '020 8434 7800',
+  //     secondary: '01708 898755',
+  //     description: 'Monday - Saturday: 9:00 AM - 6:00 PM',
+  //     action: 'tel:02084347800',
+  //   },
+  //   {
+  //     icon: Mail,
+  //     title: 'Email Us',
+  //     primary: 'contact@lomashwood.com',
+  //     secondary: 'projects@lomashwood.com',
+  //     description: 'We respond within 24 hours',
+  //     action: 'mailto:contact@lomashwood.com',
+  //   },
+  //   {
+  //     icon: MessageCircle,
+  //     title: 'Live Chat',
+  //     primary: 'Chat with our team',
+  //     secondary: 'Available now',
+  //     description: 'Get instant answers to your questions',
+  //     action: '#',
+  //   },
+  //   {
+  //     icon: Video,
+  //     title: 'Video Consultation',
+  //     primary: 'Schedule a virtual tour',
+  //     secondary: 'Free 30-minute session',
+  //     description: 'Discuss your project from home',
+  //     action: '#',
+  //   },
+  // ];
 
   const locations = [
     {
@@ -198,36 +194,36 @@ export default function ContactPage() {
     { icon: '♻️', highlight: 'Sustainably sourced', rest: 'premium hardwoods' },
   ];
 
-  const reviews = [
-    {
-      name: 'Priya S.',
-      date: '2 days ago',
-      title: 'Absolutely stunning craftsmanship',
-      body: 'The team at Lomash Wood were exceptional from start to finish. Our kitchen looks incredible and the quality is outstanding. Would highly recommend to anyone.',
-      rating: 5,
-    },
-    {
-      name: 'Rajesh M.',
-      date: '3 days ago',
-      title: 'Patience and product knowledge',
-      body: 'The designer listened patiently to all our requirements and was so knowledgeable about their ranges. Offered great advice and let us take our time to see what was right.',
-      rating: 5,
-    },
-    {
-      name: 'Anjali K.',
-      date: '3 days ago',
-      title: 'Brilliant service throughout',
-      body: 'From the initial appointment to installation, the whole process was seamless. The team kept us updated at every stage and the final result is beyond what we imagined.',
-      rating: 5,
-    },
-    {
-      name: 'Vikram T.',
-      date: '4 days ago',
-      title: 'Excellent quality and experience',
-      body: 'Brought my furniture from Lomash Wood. The quality of the cabinets is superb and the finish is perfect. The installer was professional and tidy throughout.',
-      rating: 5,
-    },
-  ];
+  // const reviews = [
+  //   {
+  //     name: 'Priya S.',
+  //     date: '2 days ago',
+  //     title: 'Absolutely stunning craftsmanship',
+  //     body: 'The team at Lomash Wood were exceptional from start to finish. Our kitchen looks incredible and the quality is outstanding. Would highly recommend to anyone.',
+  //     rating: 5,
+  //   },
+  //   {
+  //     name: 'Rajesh M.',
+  //     date: '3 days ago',
+  //     title: 'Patience and product knowledge',
+  //     body: 'The designer listened patiently to all our requirements and was so knowledgeable about their ranges. Offered great advice and let us take our time to see what was right.',
+  //     rating: 5,
+  //   },
+  //   {
+  //     name: 'Anjali K.',
+  //     date: '3 days ago',
+  //     title: 'Brilliant service throughout',
+  //     body: 'From the initial appointment to installation, the whole process was seamless. The team kept us updated at every stage and the final result is beyond what we imagined.',
+  //     rating: 5,
+  //   },
+  //   {
+  //     name: 'Vikram T.',
+  //     date: '4 days ago',
+  //     title: 'Excellent quality and experience',
+  //     body: 'Brought my furniture from Lomash Wood. The quality of the cabinets is superb and the finish is perfect. The installer was professional and tidy throughout.',
+  //     rating: 5,
+  //   },
+  // ];
 
   return (
     <div className="overflow-hidden">

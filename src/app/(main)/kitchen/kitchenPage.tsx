@@ -2,13 +2,11 @@
 import { Phone, Shield, Paintbrush, CreditCard, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import { parseAsString, useQueryStates } from 'nuqs';
-import { Suspense, useMemo, useState } from 'react';
+import { Suspense, useMemo } from 'react';
 
 import CategoryHero from '@/components/category/CategoryHero';
 import Filters from '@/components/products/Filters';
 import ProductGrid from '@/components/products/ProductGrid';
-import ProductSort from '@/components/products/ProductSort';
-import ViewToggle from '@/components/products/ViewToggle';
 import { Button } from '@/components/ui/button';
 
 interface KitchenPageComProps {
@@ -20,9 +18,8 @@ interface KitchenPageComProps {
 export default function KitchenPageCom({ 
   products,
   filterBarSpacing = "pt-10 pb-6",
-  productsSpacing = "pb-16"
 }: KitchenPageComProps) {
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  // const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   // Read filter/sort state from URL
   const [filterParams] = useQueryStates({
@@ -97,7 +94,7 @@ export default function KitchenPageCom({
             </div>
 
             {/* Toolbar */}
-            <div className={`mb-6 space-y-4 ${productsSpacing}`}>
+            {/* <div className={`mb-6 space-y-4 ${productsSpacing}`}>
               <div className="flex items-center justify-between gap-4 lg:hidden">
                 <ProductSort />
                 <ViewToggle view={viewMode} onChange={(view) => setViewMode(view)} />
@@ -109,16 +106,16 @@ export default function KitchenPageCom({
                     Showing {filteredProducts.length} of {products.length} results
                   </span>
                 </div>
-                {/* <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4">
                   <ProductSort />
                   <ViewToggle view={viewMode} onChange={setViewMode} />
-                </div> */}
+                </div>
               </div>
-            </div>
+            </div> */}
 
             {/* Products Grid */}
             <Suspense fallback={<ProductGridSkeleton />}>
-              <ProductGrid products={filteredProducts} viewMode={viewMode} />
+              <ProductGrid products={filteredProducts} />
             </Suspense>
 
             {/* CTA Section */}

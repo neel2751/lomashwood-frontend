@@ -2,13 +2,11 @@
 import { Phone, Shield, Paintbrush, CreditCard, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import { parseAsString, useQueryStates } from 'nuqs';
-import { Suspense, useMemo, useState } from 'react';
+import { Suspense, useMemo } from 'react';
 
 import CategoryHero from '@/components/category/CategoryHero';
 import Filters from '@/components/products/Filters';
 import ProductGrid from '@/components/products/ProductGrid';
-import ProductSort from '@/components/products/ProductSort';
-import ViewToggle from '@/components/products/ViewToggle';
 import { Button } from '@/components/ui/button';
 
 interface Product {
@@ -32,7 +30,7 @@ interface Product {
 }
 
 export default function BedroomPageCom({ products }: { products: Product[] }) {
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  // const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   const [queryState] = useQueryStates({
     sort: parseAsString.withDefault('popular'),
@@ -130,7 +128,7 @@ export default function BedroomPageCom({ products }: { products: Product[] }) {
 
             {/* Products Grid */}
             <Suspense fallback={<ProductGridSkeleton />}>
-              <ProductGrid products={filteredProducts} viewMode={viewMode} />
+              <ProductGrid products={filteredProducts} />
             </Suspense>
 
             {/* CTA Section */}
