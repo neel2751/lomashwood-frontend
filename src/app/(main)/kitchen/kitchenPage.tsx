@@ -136,7 +136,7 @@ export default function KitchenPageCom({
                   <Link href="/book-appointment">Book Free Consultation</Link>
                 </Button>
                 <Button asChild variant="outline" size="lg" className="border-[#77c117] text-[#77c117] hover:bg-[#77c117]/5 font-semibold px-8 rounded-full">
-                  <Link href="tel:+1234567890" className="flex items-center gap-2">
+                  <Link href="tel:01708898755" className="flex items-center gap-2">
                     <Phone className="h-4 w-4" />
                     Call Us Now
                   </Link>
@@ -149,7 +149,7 @@ export default function KitchenPageCom({
               {[
                 { icon: <Shield className="w-6 h-6 text-[#77c117]" />, title: "Lifetime Warranty", desc: "Premium quality with comprehensive coverage" },
                 { icon: <Paintbrush className="w-6 h-6 text-[#77c117]" />, title: "Bespoke Designs", desc: "Tailored furniture to match your space" },
-                { icon: <CreditCard className="w-6 h-6 text-[#77c117]" />, title: "Flexible Payment", desc: "0% APR finance options available" },
+                { icon: <CreditCard className="w-6 h-6 text-[#77c117]" />, title: "Flexible Payment", desc: "Easy financing options available" },
               ].map((card) => (
                 <div key={card.title} className="text-center p-6 border border-gray-100 rounded-xl hover:border-[#77c117]/30 hover:shadow-sm transition-all duration-200 bg-white">
                   <div className="w-12 h-12 bg-[#77c117]/10 rounded-full flex items-center justify-center mx-auto mb-4">{card.icon}</div>

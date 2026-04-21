@@ -4,93 +4,44 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, MapPin } from "lucide-react";
 import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { apiClient } from "@/lib/api";
+import { QUERY_KEYS } from "@/lib/react-query";
 
 const categories = ["All", "Kitchen", "Bedroom", "Media Wall"];
 
-const projects = [
-  {
-    id: "1",
-    title: "Modern White Kitchen",
-    category: "Kitchen",
-    location: "London",
-    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=600&auto=format&fit=crop",
-    completedAt: "2024-03-01",
-  },
-  {
-    id: "2",
-    title: "Shaker Style Kitchen",
-    category: "Kitchen",
-    location: "Manchester",
-    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=600&auto=format&fit=crop",
-    completedAt: "2024-02-15",
-  },
-  {
-    id: "3",
-    title: "Fitted Bedroom Wardrobe",
-    category: "Bedroom",
-    location: "Birmingham",
-    image: "https://images.unsplash.com/photo-1615874959474-d609969a20ed?q=80&w=600&auto=format&fit=crop",
-    completedAt: "2024-01-20",
-  },
-  {
-    id: "4",
-    title: "Luxury Master Bedroom",
-    category: "Bedroom",
-    location: "Leeds",
-    image: "https://images.unsplash.com/photo-1615874959474-d609969a20ed?q=80&w=600&auto=format&fit=crop",
-    completedAt: "2024-01-10",
-  },
-  {
-    id: "5",
-    title: "Contemporary Kitchen",
-    category: "Kitchen",
-    location: "Bristol",
-    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=600&auto=format&fit=crop",
-    completedAt: "2023-12-05",
-  },
-  {
-    id: "6",
-    title: "Media Wall Living Room",
-    category: "Media Wall",
-    location: "Sheffield",
-    image: "https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=600&auto=format&fit=crop",
-    completedAt: "2023-11-20",
-  },
-  {
-    id: "7",
-    title: "Handleless Kitchen",
-    category: "Kitchen",
-    location: "Liverpool",
-    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=600&auto=format&fit=crop",
-    completedAt: "2023-11-01",
-  },
-  {
-    id: "8",
-    title: "Walk-in Wardrobe",
-    category: "Bedroom",
-    location: "Edinburgh",
-    image: "https://images.unsplash.com/photo-1615874959474-d609969a20ed?q=80&w=600&auto=format&fit=crop",
-    completedAt: "2023-10-15",
-  },
-  {
-    id: "9",
-    title: "Traditional Kitchen",
-    category: "Kitchen",
-    location: "Cardiff",
-    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=600&auto=format&fit=crop",
-    completedAt: "2023-10-01",
-  },
-];
-
 export default function ProjectsPage() {
   const [activeCategory, setActiveCategory] = useState("All");
+
+  // Fetch projects from API
+  const { data: projectsData, isLoading, isError } = useQuery({
+    queryKey: QUERY_KEYS.projects.all,
+    queryFn: () => apiClient.projects.getAll(),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+  });
+
+  // Transform API data to match component expectations
+  const projects = useMemo(() => {
+    if (!projectsData?.data) return [];
+    
+    return projectsData.data.map((project: any) => ({
+      id: project.id,
+      title: project.title,
+      category: project.category === "Kitchen" ? "Kitchen" : project.category === "Bedroom" ? "Bedroom" : "Media Wall",
+      location: project.location || "Location TBA",
+      image: project.image || (Array.isArray(project.images) && project.images[0]) || "/LomashLogo.png",
+      completedAt: project.completedAt,
+    }));
+  }, [projectsData?.data]);
 
   // ── Filter projects by active category ─────────────────────────────────────
   const filteredProjects = useMemo(() => {
     if (activeCategory === "All") return projects;
     return projects.filter((p) => p.category === activeCategory);
-  }, [activeCategory]);
+  }, [activeCategory, projects]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -132,10 +83,10 @@ export default function ProjectsPage() {
         <p className="text-sm text-gray-500">
           Showing{" "}
           <span className="font-semibold text-lomash-dark">
-            {filteredProjects.length}
+            {isLoading ? "-" : filteredProjects.length}
           </span>{" "}
           of{" "}
-          <span className="font-semibold text-lomash-dark">{projects.length}</span>{" "}
+          <span className="font-semibold text-lomash-dark">{isLoading ? "-" : projects.length}</span>{" "}
           projects
           {activeCategory !== "All" && (
             <span className="ml-1">
@@ -150,20 +101,32 @@ export default function ProjectsPage() {
 
       {/* Projects Grid */}
       <section className="container mx-auto px-4 py-6">
-        {filteredProjects.length === 0 ? (
+        {isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="space-y-4">
+                <Skeleton className="h-48 w-full rounded-lg" />
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            ))}
+          </div>
+        ) : isError || filteredProjects.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
             <h3 className="text-lg font-semibold text-gray-700 mb-2">
-              No projects found
+              {isError ? "Failed to load projects" : "No projects found"}
             </h3>
             <p className="text-sm text-gray-400 mb-6">
-              No projects in this category yet. Check back soon!
+              {isError ? "Please try again later." : "No projects in this category yet. Check back soon!"}
             </p>
-            <button
-              onClick={() => setActiveCategory("All")}
-              className="px-5 py-2 rounded-full bg-lomash-primary text-white text-sm font-medium hover:opacity-90 transition"
-            >
-              View All Projects
-            </button>
+            {!isError && (
+              <button
+                onClick={() => setActiveCategory("All")}
+                className="px-5 py-2 rounded-full bg-lomash-primary text-white text-sm font-medium hover:opacity-90 transition"
+              >
+                View All Projects
+              </button>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -181,6 +144,7 @@ export default function ProjectsPage() {
                       alt={project.title}
                       fill
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                     <div className="absolute top-3 left-3">
                       <Badge className="bg-white text-lomash-dark text-xs font-medium border-0 shadow-sm">

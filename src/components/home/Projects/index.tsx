@@ -48,7 +48,11 @@ export function Projects() {
     refetchOnReconnect: false,
   });
 
-  const projects = projectsData?.data || projectsDemoData || [];
+  const projects = (projectsData?.data || projectsDemoData || []).map(project => ({
+    ...project,
+    // Map images array to single image property (use first image if available)
+    image: project.image || (Array.isArray(project.images) && project.images[0]) || "/LomashLogo.png"
+  }));
 
   return (
     <section className="section-padding bg-white

@@ -353,13 +353,13 @@ export default async function BookingSuccessPage({ searchParams }: SuccessPagePr
               </div>
               <div className="flex flex-wrap gap-3">
                 <Button asChild variant="outline" size="sm">
-                  <Link href="tel:+1234567890">
+                  <Link href="tel:01708898755" className="flex items-center gap-2">
                     <Phone className="h-4 w-4 mr-2" />
                     Call Us
                   </Link>
                 </Button>
                 <Button asChild variant="outline" size="sm">
-                  <Link href="mailto:info@lomashwood.com">
+                  <Link href="mailto:contact@lomashwood.com" className="flex items-center gap-2">
                     <Mail className="h-4 w-4 mr-2" />
                     Email Us
                   </Link>

@@ -66,7 +66,6 @@ interface ShowroomListProps {
 export default function ShowroomList({
   showrooms,
   isLoading = false,
-  onShowroomClick,
   showSearch = true,
   showFilters = true,
   viewMode = "grid",
@@ -123,6 +122,16 @@ export default function ShowroomList({
     setSelectedCity("All Cities");
     setSortBy("name");
   };
+
+  const showroomclick = (showroom: Showroom) => {
+    // const queryParams = new URLSearchParams({
+    //   name: showroom.name,
+    //   city: showroom.city,
+    //   postcode: showroom.postcode,
+    // }).toString();
+
+    window.location.href = `/showrooms/${showroom.slug}`;
+  }
 
   const hasActiveFilters =
     searchQuery || selectedState !== "All States" || selectedCity !== "All Cities";
@@ -296,7 +305,7 @@ export default function ShowroomList({
             <ShowroomCard
               key={showroom.slug}
               showroom={showroom}
-              onClick={() => onShowroomClick?.(showroom)}
+              onClick={() => showroomclick(showroom)}
               viewMode={viewMode}
             />
           ))}
@@ -347,7 +356,7 @@ export default function ShowroomList({
             </div>
             <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
               <Button variant="default" asChild>
-                <Link href="tel:+919876543210">
+                <Link href="tel:01708898755">
                   <Phone className="mr-2 h-4 w-4" />
                   Call Us
                 </Link>

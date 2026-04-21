@@ -75,6 +75,7 @@ export const QUERY_KEYS = {
 
   projects: {
     all: ["projects"] as const,
+    detail: (id: string) => ["projects", "detail", id] as const,
   },
 
   reviews: {

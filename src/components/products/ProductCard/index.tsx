@@ -103,7 +103,7 @@ export function ProductCard({ product }: ProductCardProps) {
           {/* Color Options Preview */}
           {product.colors && product.colors.length > 0 && (
             <div className="absolute bottom-3 left-3 right-3 flex items-center gap-2 bg-white/90 backdrop-blur-sm rounded-full px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <span className="text-xs font-medium text-gray-700">Colors:</span>
+              <span className="text-xs font-medium text-gray-700">Colours:</span>
               <div className="flex gap-1.5">
                 {product.colors.slice(0, 4).map((color, index) => (
                   <div

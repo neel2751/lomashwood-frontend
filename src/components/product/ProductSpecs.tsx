@@ -169,10 +169,10 @@ export default function ProductSpecs({
       {specificationGroups.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            {/* <CardTitle className="flex items-center gap-2">
               <Info className="h-5 w-5" />
               Product Specifications
-            </CardTitle>
+            </CardTitle> */}
           </CardHeader>
           <CardContent className="space-y-4">
             {specificationGroups.map((group, groupIndex) => (
@@ -268,7 +268,7 @@ export default function ProductSpecs({
       )}
 
       {/* Additional Information Accordion */}
-      <Accordion type="single" collapsible className="w-full">
+      {/* <Accordion type="single" collapsible className="w-full">
         <AccordionItem value="shipping" className="border rounded-lg px-4">
           <AccordionTrigger className="hover:no-underline">
             <div className="flex items-center gap-2">
@@ -332,7 +332,7 @@ export default function ProductSpecs({
           <AccordionContent className="text-sm text-muted-foreground">
             <div className="space-y-2 pt-2">
               <p>
-                This product can be customized to your exact requirements.
+                This product can be customised to your exact requirements.
               </p>
               <p>
                 Choose from our range of colors, finishes, and size options.
@@ -344,7 +344,7 @@ export default function ProductSpecs({
             </div>
           </AccordionContent>
         </AccordionItem>
-      </Accordion>
+      </Accordion> */}
     </div>
   );
 }

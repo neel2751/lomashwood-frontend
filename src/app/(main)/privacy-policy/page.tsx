@@ -290,8 +290,8 @@ export default function PrivacyPolicyPage() {
 
   const dataProtectionOfficer = {
     name: 'Privacy Team',
-    email: 'privacy@lomashwood.com',
-    phone: '+91 79 2658 1234',
+    email: 'contact@lomashwood.com',
+    phone: '01708 898 755',
   };
 
   return (

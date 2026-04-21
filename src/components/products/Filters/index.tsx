@@ -350,7 +350,7 @@ export default function Filters({ resultCount = 0, onFiltersChange }: FiltersPro
           })}
 
 
-          <div className="ml-auto flex items-center gap-3">
+          {/* <div className="ml-auto flex items-center gap-3">
             <span className="text-sm text-gray-500 shrink-0">{resultCount} kitchens</span>
             <div className="relative">
               <select
@@ -366,7 +366,7 @@ export default function Filters({ resultCount = 0, onFiltersChange }: FiltersPro
               </select>
               <ChevronDown size={14} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" />
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 

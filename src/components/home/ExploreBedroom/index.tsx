@@ -1,7 +1,11 @@
 "use client";
 
+import Autoplay from "embla-carousel-autoplay";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useRef } from "react";
+
+import { CategoryCard } from "../ExploreKitchen/CategoryCard";
 
 import { AnimatedContent, AnimatedSection, fadeUp } from "@/components/ui/animated-section";
 import { Button } from "@/components/ui/button";
@@ -9,15 +13,18 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Skeleton } from "@/components/ui/skeleton";
 import { useFeaturedProducts } from "@/hooks/useProducts";
 
-import { CategoryCard } from "../ExploreKitchen/CategoryCard";
-
 export function ExploreBedroom() {
   const { data: products, isLoading } = useFeaturedProducts("bedroom");
   const productData = Array.isArray(products) ? products : [];
 
+  const plugin = useRef(
+    Autoplay({ delay: 3000, stopOnInteraction: true })
+  );
+
   return (
     <AnimatedSection>
       <section
+        id="explore-bedroom"
         className="section-padding bg-lomash-gray-50
           px-6 sm:px-10 lg:px-18
           pt-12 md:pt-16 lg:pt-20
@@ -27,10 +34,12 @@ export function ExploreBedroom() {
           <AnimatedSection className="flex items-center justify-between mb-8 md:mb-12">
             <div>
               <AnimatedContent variants={fadeUp} custom={0}>
-                <h2 className="heading-2 text-lomash-dark mb-2">Explore Bedroom</h2>
+                <h2 className="heading-2 text-lomash-dark mb-2">Customised Bedroom</h2>
               </AnimatedContent>
               <AnimatedContent variants={fadeUp} custom={1}>
-                <p className="text-lg text-lomash-gray-600">Featured bedroom products from our API</p>
+                <p className="text-lg text-lomash-gray-600">
+                  Customised bedrooms designed around your lifestyle.
+                </p>
               </AnimatedContent>
             </div>
             <AnimatedContent variants={fadeUp} custom={2}>
@@ -54,14 +63,20 @@ export function ExploreBedroom() {
               ))}
             </div>
           ) : (
-            <Carousel opts={{ align: "start", slidesToScroll: 1 }} className="w-full">
+            <Carousel
+              plugins={[plugin.current]}
+              onMouseEnter={() => plugin.current.stop()}
+              onMouseLeave={() => plugin.current.play()}
+              opts={{ align: "start", slidesToScroll: 1 }}
+              className="w-full"
+            > 
               <CarouselContent>
                 {productData.slice(0, 8).map((product) => (
                   <CarouselItem
                     key={product.id}
                     className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/4 pb-2"
                   >
-                    <CategoryCard product={product} />
+                    <CategoryCard product={product} sourceSection="explore-bedroom" />
                   </CarouselItem>
                 ))}
               </CarouselContent>

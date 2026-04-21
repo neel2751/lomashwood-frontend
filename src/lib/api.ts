@@ -144,6 +144,19 @@ export const apiClient = {
   projects: {
     getAll: (params?: any): Promise<ApiResponse<Project[]>> =>
       api.get("/projects", { params }).then((res) => res.data),
+
+    getById: (id: string): Promise<ApiResponse<Project>> =>
+      api.get(`/projects/${id}`).then((res) => {
+        const payload = res.data;
+        if (payload && typeof payload === "object" && "data" in payload) {
+          return payload;
+        }
+
+        return {
+          success: true,
+          data: payload as Project,
+        };
+      }),
   },
 
   reviews: {

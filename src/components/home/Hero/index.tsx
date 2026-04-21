@@ -68,6 +68,8 @@ const fallbackSlides: Slide[] = [
   },
 ];
 
+const HERO_CACHE_KEY = 'hero-slides-cache-v1';
+
 function toPath(value?: string): string | undefined {
   if (!value) return value;
   return value.startsWith('/') ? value : `/${value}`;
@@ -99,6 +101,7 @@ function normalizeSlides(payload: unknown): Slide[] {
 }
 
 export function Hero() {
+  const [cachedSlides, setCachedSlides] = useState<Slide[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
@@ -112,9 +115,65 @@ export function Hero() {
   });
 
   const hasApiSlides = Boolean(apiSlides && apiSlides.length > 0);
-  const shouldShowLoading = (isLoading || isFetching) && !hasApiSlides;
-  const slides: Slide[] = hasApiSlides ? apiSlides ?? fallbackSlides : fallbackSlides;
+  const hasCachedSlides = cachedSlides.length > 0;
+  const shouldShowLoading = (isLoading || isFetching) && !hasApiSlides && !hasCachedSlides;
+  const slides: Slide[] = hasApiSlides
+    ? apiSlides ?? fallbackSlides
+    : hasCachedSlides
+      ? cachedSlides
+      : fallbackSlides;
   const hasMultipleSlides = slides.length > 1;
+
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(HERO_CACHE_KEY);
+      if (!raw) return;
+
+      const parsed = JSON.parse(raw) as unknown;
+      const normalized = normalizeSlides(parsed);
+
+      if (normalized.length > 0) {
+        setCachedSlides(normalized);
+      }
+    } catch {
+      // Ignore cache parsing/storage errors.
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!apiSlides || apiSlides.length === 0) return;
+
+    try {
+      sessionStorage.setItem(HERO_CACHE_KEY, JSON.stringify(apiSlides));
+      setCachedSlides(apiSlides);
+    } catch {
+      // Ignore storage quota or serialization errors.
+    }
+  }, [apiSlides]);
+
+  useEffect(() => {
+    const firstVideo = slides.find((slide) => slide.type === 'video')?.src;
+    if (!firstVideo || typeof document === 'undefined') return;
+
+    const url = new URL(firstVideo);
+
+    const preconnect = document.createElement('link');
+    preconnect.rel = 'preconnect';
+    preconnect.href = `${url.protocol}//${url.host}`;
+
+    const preload = document.createElement('link');
+    preload.rel = 'preload';
+    preload.as = 'video';
+    preload.href = firstVideo;
+
+    document.head.appendChild(preconnect);
+    document.head.appendChild(preload);
+
+    return () => {
+      preconnect.remove();
+      preload.remove();
+    };
+  }, [slides]);
 
   const nextSlide = useCallback(() => {
     if (!hasMultipleSlides || isTransitioning) return;
@@ -199,7 +258,7 @@ export function Hero() {
               <VideoBackground
                 src={slide.src}
                 isActive={index === currentSlide}
-                shouldPreload={index === 0 || index === currentSlide}
+                shouldPreload={index <= 1 || index === currentSlide}
                 overlayOpacity={slide.overlayOpacity}
               />
             ) : (

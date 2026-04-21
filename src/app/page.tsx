@@ -5,6 +5,7 @@
   import { ExploreKitchen } from "@/components/home/ExploreKitchen";
   import { FinanceSection } from "@/components/home/FinanceSection";
   import { Hero } from "@/components/home/Hero";
+  import HomeScrollRestore from "@/components/home/HomeScrollRestore";
   import { MainCTA } from "@/components/home/MainCTA";
   import { MediaWall } from "@/components/home/MediaWall";
   import { OurProcess } from "@/components/home/OurProcess";
@@ -27,6 +28,8 @@
   export default function HomePage() {
     return (
       <main>
+        <HomeScrollRestore />
+
         {/* Hero Section - Full width slider with CTA */}
         <Hero />
 

@@ -457,7 +457,7 @@ export default function BrochureForm({
             <Link href="/contact">Contact Us</Link>
           </Button>
           <Button variant="outline" size="sm" asChild>
-            <Link href="tel:+917912345678">Call: +91 79 1234 5678</Link>
+            <Link href="tel:01708898755">Call: 01708 898 755</Link>
           </Button>
         </div>
       </div>

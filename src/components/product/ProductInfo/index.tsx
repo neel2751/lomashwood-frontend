@@ -294,7 +294,7 @@ export default function ProductInfo({ product}: ProductInfoProps) {
         <Alert>
           <Ruler className="h-4 w-4" />
           <AlertDescription>
-            This product can be customized to your exact requirements. Use the size
+            This product can be customised to your exact requirements. Use the size
             calculator above to get an estimated price, or book a consultation for
             detailed planning.
           </AlertDescription>

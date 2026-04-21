@@ -111,8 +111,8 @@ export default function BedroomPageCom({ products }: { products: Product[] }) {
             {/* Toolbar */}
             <div className="mb-6 space-y-4">
               <div className="flex items-center justify-between gap-4 lg:hidden">
-                <ProductSort />
-                <ViewToggle view={viewMode} onChange={(view) => setViewMode(view)} />
+                {/* <ProductSort /> */}
+                {/* <ViewToggle view={viewMode} onChange={(view) => setViewMode(view)} /> */}
               </div>
               <div className="hidden lg:flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -149,7 +149,7 @@ export default function BedroomPageCom({ products }: { products: Product[] }) {
                   <Link href="/book-appointment">Book Free Consultation</Link>
                 </Button>
                 <Button asChild variant="outline" size="lg">
-                  <Link href="tel:+1234567890" className="flex items-center gap-2">
+                  <Link href="tel:01708898755" className="flex items-center gap-2">
                     <Phone className="h-4 w-4" />
                     Call Us Now
                   </Link>
@@ -162,7 +162,7 @@ export default function BedroomPageCom({ products }: { products: Product[] }) {
               {[
                 { icon: <Shield className="w-6 h-6 text-primary" />, title: "Lifetime Warranty", desc: "Premium quality with comprehensive coverage" },
                 { icon: <Paintbrush className="w-6 h-6 text-primary" />, title: "Bespoke Designs", desc: "Tailored furniture to match your space" },
-                { icon: <CreditCard className="w-6 h-6 text-primary" />, title: "Flexible Payment", desc: "0% APR finance options available" },
+                { icon: <CreditCard className="w-6 h-6 text-primary" />, title: "Flexible Payment", desc: "Easy financing options available" },
               ].map((card) => (
                 <div
                   key={card.title}

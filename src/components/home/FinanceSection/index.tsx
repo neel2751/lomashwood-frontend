@@ -9,22 +9,22 @@ import { Card, CardContent } from "@/components/ui/card";
 const financeFeatures = [
   {
     icon: CreditCard,
-    title: "Flexible Payment Plans",
+    title: "Flexible Payment Methods",
     description: "Choose from various payment options that suit your budget",
   },
   {
     icon: Calculator,
-    title: "Easy EMI Options",
+    title: "Affordable Monthly Installments",
     description: "Convert your purchase into affordable monthly installments",
   },
   {
     icon: ShieldCheck,
-    title: "Quick Approval",
+    title: "Quick Approval Process",
     description: "Get instant approval with minimal documentation",
   },
   {
     icon: Clock,
-    title: "Extended Tenure",
+    title: "Extended Repayment Terms",
     description: "Flexible repayment periods up to 48 months",
   },
 ];
@@ -61,7 +61,7 @@ export function FinanceSection() {
                 </div>
                 <div>
                   <h4 className="font-semibold text-lomash-dark mb-1">
-                    Interest rates from 0%
+                    Competitive Interest Rates
                   </h4>
                   <p className="text-sm text-lomash-gray-600">
                     Special promotional rates available on selected products

@@ -1,20 +1,22 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
 
+import { markHomeScrollForRestore } from "@/components/home/HomeScrollRestore";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { Product } from "@/types";
 
 interface CategoryCardProps {
   product: Product;
+  sourceSection?: "explore-kitchen" | "explore-bedroom";
   className?: string;
 }
 
-export function CategoryCard({ product, className }: CategoryCardProps) {
+export function CategoryCard({ product, sourceSection = "explore-kitchen", className }: CategoryCardProps) {
   const uiProduct = product as Product & {
     name?: string;
     isFeatured?: boolean;
@@ -27,6 +29,10 @@ export function CategoryCard({ product, className }: CategoryCardProps) {
   const isPopular = Boolean(uiProduct.popular ?? uiProduct.isPopular);
   const productSlug = uiProduct.slug || uiProduct.id;
 
+  const handleNavigateToDetails = () => {
+    markHomeScrollForRestore(sourceSection);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -34,7 +40,11 @@ export function CategoryCard({ product, className }: CategoryCardProps) {
       transition={{ duration: 0.6, ease: "easeOut" }}
       whileHover={{ y: -5 }}
     >
-      <Link href={`/product/${productSlug}?category=${product.category}`} className="group">
+      <Link
+        href={`/product/${productSlug}?category=${product.category}`}
+        className="group"
+        onClick={handleNavigateToDetails}
+      >
         <div
           className={cn(
             "product-card-pdf overflow-hidden rounded-lg group hover:shadow-xl transition-all duration-300 cursor-pointer",

@@ -105,11 +105,12 @@ export function useFeaturedProducts(category?: "kitchen" | "bedroom") {
   return useQuery({
     queryKey: [...QUERY_KEYS.products.featured, category],
     queryFn: () => productService.getFeaturedProducts(category),
-    staleTime: 5 * 60 * 1000,
+    staleTime: 60 * 1000,
     gcTime: 30 * 60 * 1000,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
+    retry: 2,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 }
 

@@ -359,13 +359,13 @@ export default function DeliveryInfo({
             <p className="font-medium">Need help with your delivery?</p>
             <div className="flex flex-col gap-3 sm:flex-row sm:gap-6">
               <Button variant="outline" className="gap-2" asChild>
-                <Link href="tel:+441234567890">
+                <Link href="tel:01708898755">
                   <Phone className="h-4 w-4" />
                   Call Us
                 </Link>
               </Button>
               <Button variant="outline" className="gap-2" asChild>
-                <Link href="mailto:delivery@lomashwood.com">
+                <Link href="mailto:contact@lomashwood.com">
                   <Mail className="h-4 w-4" />
                   Email Support
                 </Link>

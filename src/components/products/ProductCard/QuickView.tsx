@@ -252,7 +252,7 @@ export function QuickView({ product, isOpen, onClose }: QuickViewProps) {
             )}
 
             {/* Stock Status */}
-            <div className="mb-6">
+            {/* <div className="mb-6">
               <span
                 className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
                   product.inStock
@@ -262,7 +262,7 @@ export function QuickView({ product, isOpen, onClose }: QuickViewProps) {
               >
                 {product.inStock ? '✓ In Stock' : '✗ Out of Stock'}
               </span>
-            </div>
+            </div> */}
 
             {/* Action Buttons */}
             <div className="space-y-3">
@@ -272,7 +272,7 @@ export function QuickView({ product, isOpen, onClose }: QuickViewProps) {
                 </Link>
               </Button>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3">
                 <Button
                   asChild
                   variant="outline"
@@ -284,12 +284,12 @@ export function QuickView({ product, isOpen, onClose }: QuickViewProps) {
                   </Link>
                 </Button>
 
-                <WishlistButton
+                {/* <WishlistButton
                   productId={product.id}
                   variant="outline"
                   size="lg"
                   className="w-full"
-                />
+                /> */}
               </div>
             </div>
           </div>

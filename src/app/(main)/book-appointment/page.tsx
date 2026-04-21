@@ -155,7 +155,7 @@ export default async function BookAppointmentPage({searchParams}: { searchParams
                     <div>
                       <p className="font-medium text-sm">Free Home Measure Appointment</p>
                       <p className="text-xs text-muted-foreground mt-1">
-                        In just 60 minutes, our expert will visit your home to measure your space and discuss your design needs in detail.
+                        Our designers visit your home to take precise measurements and discuss your vision in detail.
                       </p>
                     </div>
                   </div>
@@ -187,7 +187,7 @@ export default async function BookAppointmentPage({searchParams}: { searchParams
                   Call our team directly and we'll help you book an appointment over the phone.
                 </p>
                 <Link
-                  href="tel:+1234567890"
+                  href="tel:01708898755"
                   className="flex items-center justify-center gap-2 w-full rounded-md bg-lomash-primary px-4 py-3 text-base font-medium text-primary-foreground hover:bg-lomash-secondary transition-colors"
                 >
                   <Phone className="h-4 w-4" />
@@ -199,7 +199,7 @@ export default async function BookAppointmentPage({searchParams}: { searchParams
               </Card>
 
               {/* Trust Signals */}
-              <Card className="p-6">
+              {/* <Card className="p-6">
                 <h3 className="font-semibold mb-4 text-lg">Why Book With Us?</h3>
                 <ul className="space-y-3 text-sm">
                   <li className="flex items-start gap-2">
@@ -223,10 +223,10 @@ export default async function BookAppointmentPage({searchParams}: { searchParams
                     <span>Flexible appointment times to suit you</span>
                   </li>
                 </ul>
-              </Card>
+              </Card> */}
 
               {/* FAQ Quick Links */}
-              <Card className="p-6">
+              {/* <Card className="p-6">
                 <h3 className="font-semibold mb-3">Common Questions</h3>
                 <ul className="space-y-2 text-sm">
                   <li>
@@ -250,7 +250,7 @@ export default async function BookAppointmentPage({searchParams}: { searchParams
                     </Link>
                   </li>
                 </ul>
-              </Card>
+              </Card> */}
             </div>
           </aside>
         </div>

@@ -218,7 +218,7 @@ export default function FinanceOptions({
             </div>
             <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
               <Button asChild>
-                <Link href="tel:+919876543210">Call Us</Link>
+                <Link href="tel:01708898755">Call Us</Link>
               </Button>
               <Button variant="outline" asChild>
                 <Link href="/contact">Contact Support</Link>

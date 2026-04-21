@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { markHomeScrollForRestore } from "@/components/home/HomeScrollRestore";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { Product } from "@/types";
@@ -13,8 +14,12 @@ interface CategoryCardProps {
 }
 
 export function CategoryCard({ product, className }: CategoryCardProps) {
+  const handleNavigateToDetails = () => {
+    markHomeScrollForRestore();
+  };
+
   return (
-    <Link href={`/product/${product.id}`} className="group">
+    <Link href={`/product/${product.id}`} className="group" onClick={handleNavigateToDetails}>
       <div
         className={cn(
           "product-card-pdf overflow-hidden rounded-lg group hover:shadow-xl transition-all duration-300 cursor-pointer",

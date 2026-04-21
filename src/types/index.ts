@@ -19,10 +19,15 @@ export interface Project {
   id: string;
   title: string;
   description: string;
-  image: string;
-  category: 'kitchen' | 'bedroom' | 'media-wall';
+  image?: string;
+  images?: string[];
+  category: 'kitchen' | 'bedroom' | 'media-wall' | string;
   location?: string;
   completedAt?: string;
+  style?: string;
+  finish?: string;
+  layout?: string;
+  duration?: string;
 }
 
 export interface CustomerReview {

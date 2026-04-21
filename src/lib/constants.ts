@@ -157,7 +157,7 @@ export const PROCESS_STEPS = [
   {
     step: 2,
     title: "Design & Planning",
-    description: "We create a customized design that perfectly fits your space and style",
+    description: "We create a customised design that perfectly fits your space and style",
     icon: "PenTool",
   },
   {

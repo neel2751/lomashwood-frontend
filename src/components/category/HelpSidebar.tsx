@@ -61,7 +61,7 @@ export default function HelpSidebar({
     {
       question: "Can I customize the design?",
       answer:
-        "Absolutely! All our products can be customized in terms of size, color, finish, and configuration. Book a consultation to discuss your requirements.",
+        "Absolutely! All our products can be customised in terms of size, color, finish, and configuration. Book a consultation to discuss your requirements.",
     },
   ];
 
@@ -106,9 +106,9 @@ export default function HelpSidebar({
               className="w-full justify-start"
               asChild
             >
-              <Link href="tel:+441234567890">
+              <Link href="tel:01708898755">
                 <Phone className="mr-2 h-4 w-4" />
-                Call: 01234 567890
+                Call: 01708 898 755
               </Link>
             </Button>
 
@@ -117,7 +117,7 @@ export default function HelpSidebar({
               className="w-full justify-start"
               asChild
             >
-              <Link href="mailto:info@lomashwood.com">
+              <Link href="mailto:contact@lomashwood.com">
                 <Mail className="mr-2 h-4 w-4" />
                 Email Us
               </Link>

@@ -1,7 +1,5 @@
 "use client"
 
-import Image from "next/image"
-import Link from "next/link"
 import {
   Phone,
   Mail,
@@ -18,10 +16,15 @@ import {
   Bath,
   Users,
 } from "lucide-react"
+import Image from "next/image"
+import Link from "next/link"
+
+import ShowroomCard from "./ShowroomCard"
+
 import { Button } from "@/components/ui/button"
 // import { ShowroomCard } from "@/components/showroom-card"
 import type { Showroom } from "@/types/showrooms.types"
-import ShowroomCard from "./ShowroomCard"
+
 
 const facilityIconMap: Record<string, React.ElementType> = {
   "Dog friendly": Dog,
@@ -180,9 +183,9 @@ export function ShowroomDetail({ showroom, nearbyStores = [] }: ShowroomDetailPr
                   </div>
                 ))}
               </div>
-              <Button className="mt-6 w-full bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto">
+              {/* <Button className="mt-6 w-full bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto">
                 Book a Free Appointment
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>

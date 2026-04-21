@@ -87,15 +87,15 @@ export default function ForgotPasswordPage() {
               <p className="text-xs text-stone-600 text-center">
                 <strong>Need help?</strong> Contact our support team at{' '}
                 
-                  href="mailto:support@lomashwood.com"
+                  href="mailto:contact@lomashwood.com"
                   className="text-amber-700 hover:text-amber-800 underline"
-                  support@lomashwood.com
+                  contact@lomashwood.com
                 <a>{' '}
                 or call{' '}
                 
-                  href="tel:+911234567890"
+                  href="tel:01708898755"
                   className="text-amber-700 hover:text-amber-800 underline"
-                  +91 123 456 7890
+                  01708 898 755
                 </a>
               </p>
             </div>

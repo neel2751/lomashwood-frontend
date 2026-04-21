@@ -47,7 +47,7 @@ export default function Thumbnails({
               aria-label={`View image ${index + 1}`}
               aria-pressed={isSelected}
             >
-              <div className="relative h-20 w-20 bg-muted">
+              <div className="relative h-40 w-40 bg-muted">
                 {image.is360 ? (
                   // 360 View Indicator
                   <div className="flex h-full w-full items-center justify-center">

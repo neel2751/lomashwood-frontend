@@ -210,11 +210,11 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
                 <h1 className="text-3xl lg:text-4xl font-bold text-foreground leading-tight">{productName}</h1>
 
-                {typeof product.price === 'number' ? (
+                {/* {typeof product.price === 'number' ? (
                   <p className="text-3xl font-semibold text-primary">£{product.price.toLocaleString('en-GB')}</p>
                 ) : (
                   <p className="text-lg text-muted-foreground">Price on request</p>
-                )}
+                )} */}
 
                 <div className="grid grid-cols-1 gap-2 text-sm text-muted-foreground sm:grid-cols-2">
                   {finish && finish !== '0' && (
@@ -350,9 +350,6 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         </Tabs>
 
         <div className="mb-12">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-semibold">You May Also Like</h2>
-          </div>
           <RelatedProducts productId={product.id} category={category} style={style} />
         </div>
       </div>

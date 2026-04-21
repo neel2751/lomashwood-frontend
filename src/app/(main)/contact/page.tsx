@@ -46,18 +46,18 @@ export default function ContactPage() {
     {
       icon: Phone,
       title: 'Call Us',
-      primary: '+91 79 2658 1234',
-      secondary: '+91 98250 12345',
+      primary: '020 8434 7800',
+      secondary: '01708 898755',
       description: 'Monday - Saturday: 9:00 AM - 6:00 PM',
-      action: 'tel:+917926581234',
+      action: 'tel:02084347800',
     },
     {
       icon: Mail,
       title: 'Email Us',
-      primary: 'hello@lomashwood.com',
+      primary: 'contact@lomashwood.com',
       secondary: 'projects@lomashwood.com',
       description: 'We respond within 24 hours',
-      action: 'mailto:hello@lomashwood.com',
+      action: 'mailto:contact@lomashwood.com',
     },
     {
       icon: MessageCircle,
@@ -79,12 +79,10 @@ export default function ContactPage() {
 
   const locations = [
     {
-      name: 'Main Workshop & Showroom',
-      address: '123 Craftsman Lane, Satellite Road',
-      city: 'Ahmedabad, Gujarat 380015',
-      country: 'India',
-      phone: '+91 79 2658 1234',
-      email: 'ahmedabad@lomashwood.com',
+      name: 'Office & Showroom - Ilford, UK',
+      address: '623 Cranbrook Road, Gants Hill, Ilford IG2 6SU',
+      phone: '+44 20 8434 7800',
+      email: 'contact@lomashwood.com',
       hours: [
         'Monday - Friday: 9:00 AM - 7:00 PM',
         'Saturday: 10:00 AM - 6:00 PM',
@@ -93,12 +91,10 @@ export default function ContactPage() {
       isPrimary: true,
     },
     {
-      name: 'Design Studio',
-      address: '456 Ashram Road',
-      city: 'Ahmedabad, Gujarat 380009',
-      country: 'India',
-      phone: '+91 79 2658 5678',
-      email: 'design@lomashwood.com',
+      name: 'Factory - Harold Hill, UK',
+      address: 'Unit 3B, Tonbridge Works, Tonbridge Rd, Harold Hill Romford RM3 8TS',
+      phone: '+44 20 8434 7800',
+      email: 'contact@lomashwood.com',
       hours: [
         'Monday - Friday: 10:00 AM - 6:00 PM',
         'Saturday: By appointment',
@@ -195,11 +191,11 @@ export default function ContactPage() {
   ];
 
   const differentiators = [
-    { icon: '🏅', highlight: 'Lifetime guarantee', rest: 'on all craftsmanship' },
-    { icon: '🏠', highlight: '5+ Showrooms', rest: 'across the region' },
-    { icon: '🪵', highlight: 'Over 15 years', rest: 'of design expertise' },
-    { icon: '🇮🇳', highlight: 'Beautifully crafted', rest: 'with Indian hardwoods' },
-    { icon: '♻️', highlight: '100% Responsibly', rest: 'sourced timber' },
+    { icon: '🏅', highlight: 'Award-winning design', rest: 'on all craftsmanship' },
+    { icon: '🏠', highlight: '2+ Showrooms', rest: 'across the region' },
+    { icon: '🪵', highlight: 'Expert joiners', rest: 'with decades of experience' },
+    { icon: '🇬🇧', highlight: 'Beautifully crafted', rest: 'in the United Kingdom' },
+    { icon: '♻️', highlight: 'Sustainably sourced', rest: 'premium hardwoods' },
   ];
 
   const reviews = [
@@ -322,16 +318,16 @@ export default function ContactPage() {
             </div>
             <div className="mt-6 space-y-3">
               <a
-                href="tel:+917926581234"
+                href="tel:01708898755"
                 className="block text-lomash-dark text-sm underline underline-offset-4 hover:text-lomash-primary transition-colors"
               >
-                Telephone: +91 79 2658 1234
+                Telephone: 01708898755
               </a>
               <a
-                href="mailto:hello@lomashwood.com"
+                href="mailto:contact@lomashwood.com"
                 className="block text-lomash-dark text-sm underline underline-offset-4 hover:text-lomash-primary transition-colors"
               >
-                hello@lomashwood.com
+                contact@lomashwood.com
               </a>
             </div>
           </div>
@@ -339,7 +335,7 @@ export default function ContactPage() {
       </section>
 
       {/* ─── Get In Touch – Contact Methods ─── */}
-      <section className="px-6 md:px-16 pb-16 max-w-7xl mx-auto">
+      {/* <section className="px-6 md:px-16 pb-16 max-w-7xl mx-auto">
         <div className="mb-8">
           <h2 className="font-heading text-2xl md:text-3xl font-bold text-lomash-dark mb-2">
             Get in Touch
@@ -373,7 +369,7 @@ export default function ContactPage() {
             );
           })}
         </div>
-      </section>
+      </section> */}
 
       {/* ─── Contact Form + Sidebar ─── */}
       <section className="px-6 md:px-16 pb-16 max-w-7xl mx-auto">
@@ -450,7 +446,7 @@ export default function ContactPage() {
                       id="phone"
                       type="tel"
                       required
-                      placeholder="+91 98250 12345"
+                      placeholder="+44 7123 456789"
                       className="w-full h-10 pl-10 pr-4 border border-lomash-gray-300 rounded-sm text-sm text-lomash-dark placeholder:text-lomash-gray-400 focus:outline-none focus:border-lomash-primary"
                     />
                   </div>
@@ -518,7 +514,7 @@ export default function ContactPage() {
               </div>
 
               {/* File upload */}
-              <div className="space-y-1.5">
+              {/* <div className="space-y-1.5">
                 <Label className="text-sm font-medium text-lomash-dark">
                   Attachments{' '}
                   <span className="text-lomash-gray-400 font-normal">(Optional)</span>
@@ -536,7 +532,7 @@ export default function ContactPage() {
                     Choose Files
                   </button>
                 </div>
-              </div>
+              </div> */}
 
               {/* Consent */}
               <div className="flex items-start gap-2">
@@ -639,41 +635,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* ─── FAQ Section ─── */}
-      <section className="px-6 md:px-16 pb-16 max-w-7xl mx-auto">
-        <h2 className="font-heading text-2xl md:text-3xl font-bold text-lomash-dark text-center mb-10">
-          Frequently Asked Questions
-        </h2>
-        <Accordion
-          type="single"
-          collapsible
-          className="w-full divide-y divide-lomash-gray-200 border-t border-lomash-gray-200"
-        >
-          {faqCategories.map((cat) => (
-            <AccordionItem
-              key={cat.value}
-              value={cat.value}
-              className="border-b border-lomash-gray-200"
-            >
-              <AccordionTrigger className="font-heading text-base md:text-lg font-normal text-lomash-dark py-5 hover:text-lomash-primary hover:no-underline">
-                {cat.label}
-              </AccordionTrigger>
-              <AccordionContent className="pb-6">
-                <div className="space-y-5">
-                  {cat.items.map((item, i) => (
-                    <div key={i}>
-                      <h4 className="font-heading font-semibold text-lomash-dark text-sm mb-1">
-                        {item.q}
-                      </h4>
-                      <p className="text-lomash-gray-600 text-sm leading-relaxed">{item.a}</p>
-                    </div>
-                  ))}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-      </section>
+     
 
       {/* ─── Bespoke Design Service ─── */}
       <section className="bg-lomash-gray-50 py-14 px-6 md:px-16">
@@ -748,7 +710,7 @@ export default function ContactPage() {
             Our Locations
           </h2>
           <p className="text-lomash-gray-500 text-sm md:text-base">
-            Visit our workshop and showroom to see our craftsmanship firsthand
+            Visit us in-store to experience our furniture firsthand and get expert design advice
           </p>
         </div>
         <div className="grid md:grid-cols-2 gap-6">
@@ -764,7 +726,7 @@ export default function ContactPage() {
               {location.isPrimary && (
                 <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-lomash-primary text-white text-xs font-semibold mb-3">
                   <Store className="w-3 h-3" />
-                  Main Location
+                  Flagship Showroom
                 </div>
               )}
               <h3 className="font-heading font-bold text-lg text-lomash-dark mb-4">
@@ -775,8 +737,6 @@ export default function ContactPage() {
                   <Navigation className="w-5 h-5 text-lomash-gray-500 flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="text-sm text-lomash-gray-700">{location.address}</p>
-                    <p className="text-sm text-lomash-gray-700">{location.city}</p>
-                    <p className="text-sm text-lomash-gray-700">{location.country}</p>
                   </div>
                 </div>
                 <Separator className="bg-lomash-gray-200" />
@@ -825,10 +785,10 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto">
           <div className="mb-8">
             <h2 className="font-heading text-2xl md:text-3xl font-bold text-lomash-dark mb-2">
-              The Lomash Difference
+              The Lomash Wood Difference
             </h2>
             <p className="text-lomash-gray-600 text-sm md:text-base">
-              Inspiring better living through purposeful design.
+              Discover why our customers choose us for their bespoke furniture needs
             </p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -849,7 +809,7 @@ export default function ContactPage() {
       </section>
 
       {/* ─── Trustpilot Reviews ─── */}
-      <section className="bg-lomash-gray-50 py-14 px-6 md:px-16">
+      {/* <section className="bg-lomash-gray-50 py-14 px-6 md:px-16">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-10">
             <p className="font-heading text-2xl font-bold text-lomash-dark mb-2">Excellent</p>
@@ -905,10 +865,10 @@ export default function ContactPage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* ─── FAQ Quick Links ─── */}
-      <section className="py-14 px-6 md:px-16 max-w-7xl mx-auto">
+      {/* <section className="py-14 px-6 md:px-16 max-w-7xl mx-auto">
         <div className="mb-6">
           <h2 className="font-heading text-xl font-bold text-lomash-dark flex items-center gap-2 mb-1">
             <AlertCircle className="w-5 h-5 text-lomash-primary" />
@@ -945,7 +905,44 @@ export default function ContactPage() {
             View All FAQs
           </Link>
         </div>
+      </section> */}
+
+ {/* ─── FAQ Section ─── */}
+      <section className="px-6 md:px-16 py-16 max-w-7xl mx-auto">
+        <h2 className="font-heading text-2xl md:text-3xl font-bold text-lomash-dark text-center mb-10">
+          Frequently Asked Questions
+        </h2>
+        <Accordion
+          type="single"
+          collapsible
+          className="w-full divide-y divide-lomash-gray-200 border-t border-lomash-gray-200"
+        >
+          {faqCategories.map((cat) => (
+            <AccordionItem
+              key={cat.value}
+              value={cat.value}
+              className="border-b border-lomash-gray-200"
+            >
+              <AccordionTrigger className="font-heading text-base md:text-lg font-normal text-lomash-dark py-5 hover:text-lomash-primary hover:no-underline">
+                {cat.label}
+              </AccordionTrigger>
+              <AccordionContent className="pb-6">
+                <div className="space-y-5">
+                  {cat.items.map((item, i) => (
+                    <div key={i}>
+                      <h4 className="font-heading font-semibold text-lomash-dark text-sm mb-1">
+                        {item.q}
+                      </h4>
+                      <p className="text-lomash-gray-600 text-sm leading-relaxed">{item.a}</p>
+                    </div>
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </section>
+
     </div>
   );
 }

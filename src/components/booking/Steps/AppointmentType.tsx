@@ -10,7 +10,7 @@ const appointmentTypes = [
   {
     value: "home-visit",
     label: "Home Measure Appointment",
-    description: "In just 60 minutes, our expert will visit your home to measure your space and discuss your design needs in detail.",
+    description: "Our design consultant will visit your home to take accurate measurements and provide personalised design advice based on your space and style preferences.",
     icon: Home,
     features: [
       "Free home visit",
@@ -22,7 +22,7 @@ const appointmentTypes = [
   {
     value: "video-call",
     label: "Free Online Design Consultation",
-    description: "Online video consultation with our design experts. Share your space and ideas for personalised advice and design guidance.",
+    description: "Connect with our design experts from the comfort of your home. Share your measurements and inspiration photos for personalised design recommendations during a convenient video call.",
     icon: Video,
     features: [
       "Convenient online meeting",
@@ -34,7 +34,7 @@ const appointmentTypes = [
   {
     value: "showroom-visit",
     label: "Showroom Visit",
-    description: "Visit our showroom to explore our full range of products and materials with the guidance of our designers. Experience our quality in person.",
+    description: "Visit our showroom to explore our full range of products in person. Our design consultants will be on hand to provide expert guidance and help you find the perfect fit for your home.",
     icon: MapPin,
     features: [
       "See products in person",

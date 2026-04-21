@@ -25,7 +25,7 @@ export function WhyChooseUs() {
           </div>
 
           <h2 className="heading-2 text-lomash-dark mb-4">
-            Why Thousands Choose Lomash Wood
+            Why Choose Lomash Wood
           </h2>
 
           <p className="text-lg text-lomash-gray-600 max-w-2xl mx-auto">

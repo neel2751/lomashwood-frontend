@@ -167,7 +167,7 @@ function RegisterForm() {
               <FormControl>
                 <Input
                   type="tel"
-                  placeholder="+91 123 456 7890"
+                  placeholder="07812345678"
                   autoComplete="tel"
                   disabled={isLoading}
                   {...field}
@@ -342,12 +342,12 @@ export default function RegisterPage() {
             <div className="mt-6 p-4 bg-amber-50 rounded-lg border border-amber-100">
               <p className="text-xs text-stone-600 text-center">
                 <strong>Need assistance?</strong> Contact us at{' '}
-                <Link href="mailto:support@lomashwood.com" className="text-amber-700 hover:text-amber-800 underline">
-                  support@lomashwood.com
+                <Link href="mailto:contact@lomashwood.com" className="text-amber-700 hover:text-amber-800 underline">
+                  contact@lomashwood.com
                 </Link>{' '}
                 or call{' '}
-                <Link href="tel:+911234567890" className="text-amber-700 hover:text-amber-800 underline">
-                  +91 123 456 7890
+                <Link href="tel:01708898755" className="text-amber-700 hover:text-amber-800 underline">
+                  01708 898 755
                 </Link>
               </p>
             </div>

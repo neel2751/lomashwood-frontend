@@ -36,7 +36,41 @@ export const metadata: Metadata = {
     'Discover what sets Lomash Wood apart - from our master craftsmanship and sustainable practices to our lifetime warranty and personalized service.',
 };
 
-export default function WhyChooseUsPage() {
+type LatestProject = {
+  id: string;
+  title: string;
+  image: string;
+};
+
+async function getLatestProjects(): Promise<LatestProject[]> {
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://lomashwood-backend.vercel.app/api/v1';
+
+  try {
+    const response = await fetch(`${apiBaseUrl}/projects`, {
+      next: { revalidate: 300 },
+    });
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const payload = await response.json();
+    const rows = Array.isArray(payload?.data) ? payload.data : Array.isArray(payload) ? payload : [];
+
+    return rows.slice(0, 4).map((project: any) => ({
+      id: project.id,
+      title: project.title || 'Untitled Project',
+      image:
+        (Array.isArray(project.images) && project.images[0]) ||
+        project.image ||
+        '/LomashLogo.png',
+    }));
+  } catch {
+    return [];
+  }
+}
+
+export default async function WhyChooseUsPage() {
   const keyDifferentiators = [
     {
       icon: Hammer,
@@ -96,7 +130,7 @@ export default function WhyChooseUsPage() {
       ],
     },
     {
-      category: 'Design & Customization',
+      category: 'Design & Customisation',
       icon: Lightbulb,
       items: [
         'Fully customizable dimensions and specifications',
@@ -147,7 +181,7 @@ export default function WhyChooseUsPage() {
       icon: Leaf,
     },
     {
-      feature: 'Customization',
+      feature: 'Customisation',
       us: 'Fully bespoke to your specifications',
       others: 'Limited to standard sizes and options',
       icon: Ruler,
@@ -172,27 +206,6 @@ export default function WhyChooseUsPage() {
     },
   ];
 
-  const testimonialHighlights = [
-    {
-      quote: 'The craftsmanship is extraordinary. Our dining table is the centerpiece of our home.',
-      author: 'Priya S.',
-      project: 'Custom Dining Table',
-      rating: 5,
-    },
-    {
-      quote: "Worth every penny. This isn't furniture — it's an investment in quality.",
-      author: 'Rajesh M.',
-      project: 'Bedroom Suite',
-      rating: 5,
-    },
-    {
-      quote: 'The team listened to every detail. They brought our vision to life perfectly.',
-      author: 'Anjali K.',
-      project: 'Built-in Bookshelf',
-      rating: 5,
-    },
-  ];
-
   const guarantees = [
     {
       icon: BadgeCheck,
@@ -202,7 +215,7 @@ export default function WhyChooseUsPage() {
     {
       icon: RefreshCw,
       title: 'Free Design Revisions',
-      description: 'Unlimited design changes during the planning phase at no extra cost.',
+      description: 'We work with you until your design is perfect, with unlimited revisions*.',
     },
     {
       icon: FileCheck,
@@ -216,12 +229,7 @@ export default function WhyChooseUsPage() {
     },
   ];
 
-  const projects = [
-    { label: 'Modern Kitchen', img: '/images/projects/project-1.jpg' },
-    { label: 'Classic Bedroom', img: '/images/projects/project-2.jpg', green: true },
-    { label: 'Handleless Style', img: '/images/projects/project-3.jpg' },
-    { label: 'Shaker Kitchen', img: '/images/projects/project-4.jpg' },
-  ];
+  const projects = await getLatestProjects();
 
   return (
     <div className="overflow-hidden">
@@ -498,7 +506,7 @@ export default function WhyChooseUsPage() {
       </section>
 
       {/* ─── Testimonials ─── */}
-      <section className="py-16 px-6 md:px-20 container mx-auto">
+      {/* <section className="py-16 px-6 md:px-20 container mx-auto">
         <div className="mb-10">
           <h2 className="font-heading text-3xl md:text-4xl font-semibold text-lomash-dark mb-3">
             What Our Customers Say
@@ -530,7 +538,7 @@ export default function WhyChooseUsPage() {
             </div>
           ))}
         </div>
-      </section>
+      </section> */}
 
       {/* ─── Our Guarantees ─── */}
       <section className="py-16 px-6 md:px-20 bg-lomash-gray-50">
@@ -641,29 +649,24 @@ export default function WhyChooseUsPage() {
             </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-1">
-            {projects.map(({ label, img, green }) => (
+            {projects.map((project) => (
               <Link
-                key={label}
-                href="/inspiration"
-                className={`relative group h-56 md:h-72 overflow-hidden ${
-                  green ? 'bg-lomash-primary' : ''
-                }`}
+                key={project.id}
+                href={`/projects/${project.id}`}
+                className="relative group h-56 md:h-72 overflow-hidden"
               >
-                {!green && (
-                  <Image
-                    src={img}
-                    alt={label}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                )}
+                <Image
+                  src={project.image}
+                  alt={project.title}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                />
                 <div
-                  className={`absolute inset-0 flex items-end p-4 ${
-                    green ? '' : 'bg-gradient-to-t from-black/50 to-transparent'
-                  }`}
+                  className="absolute inset-0 flex items-end p-4 bg-gradient-to-t from-black/50 to-transparent"
                 >
                   <span className="text-white text-xs tracking-widest font-medium uppercase">
-                    {label}
+                    {project.title}
                   </span>
                 </div>
               </Link>

@@ -190,7 +190,8 @@ export default async function ShowroomsPage() {
 
               <TabsContent value="list" className="mt-0">
                 <Suspense fallback={<PageLoader />}>
-                  <ShowroomList showrooms={showrooms} />
+                  <ShowroomList
+                   showrooms={showrooms} />
                 </Suspense>
               </TabsContent>
 

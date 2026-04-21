@@ -360,8 +360,8 @@ export default function ContactForm({
             </div>
             <div>
               <h4 className="font-semibold text-gray-900 mb-1">Phone</h4>
-              <Link href="tel:+917912345678" className="text-gray-600 hover:text-primary transition-colors">
-                +91 79 1234 5678
+              <Link href="tel:01708898755" className="text-gray-600 hover:text-primary transition-colors">
+              01708 898 755
               </Link>
               <p className="text-sm text-gray-500 mt-1">Mon-Sat: 10am - 8pm</p>
             </div>
@@ -376,8 +376,8 @@ export default function ContactForm({
             </div>
             <div>
               <h4 className="font-semibold text-gray-900 mb-1">Email</h4>
-              <Link href="mailto:info@lomashwood.com" className="text-gray-600 hover:text-primary transition-colors break-all">
-                info@lomashwood.com
+              <Link href="mailto:contact@lomashwood.com" className="text-gray-600 hover:text-primary transition-colors break-all">
+                contact@lomashwood.com
               </Link>
               <p className="text-sm text-gray-500 mt-1">
                 We reply within 24 hours
@@ -452,8 +452,8 @@ export default function ContactForm({
             <p className="text-sm text-red-700 mb-3">
               For urgent matters related to existing installations or services:
             </p>
-            <Link href="tel:+919876543210" className="text-sm font-medium text-red-900 hover:text-red-700 transition-colors">
-              Emergency Hotline: +91 98765 43210
+            <Link href="tel:01708898755" className="text-sm font-medium text-red-900 hover:text-red-700 transition-colors">
+              Emergency Hotline: 01708 898 755
             </Link>
             <p className="text-xs text-red-600 mt-2">Available 24/7</p>
           </div>
