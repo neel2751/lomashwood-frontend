@@ -31,7 +31,7 @@ const fallbackSlides: Slide[] = [
     id: '1',
     type: 'video',
     src: 'https://lomashwood-prod.s3.eu-west-2.amazonaws.com/public/hero/kitchen.mp4',
-    title: 'Transform Your Kitchen',
+    title: 'British Made Bespoke Kitchen',
     subtitle: 'Modern Designs, Timeless Quality',
     description: 'Discover our premium kitchen solutions tailored to your lifestyle',
     ctaText: 'Explore Kitchens',
@@ -44,28 +44,28 @@ const fallbackSlides: Slide[] = [
     id: '2',
     type: 'video',
     src: 'https://lomashwood-prod.s3.eu-west-2.amazonaws.com/public/hero/Bedroom.mp4',
-    title: 'Bedroom Sanctuary',
+    title: 'Modern Fitted bedrooms',
     subtitle: 'Where Comfort Meets Elegance',
-    description: 'Create your perfect retreat with our bespoke bedroom designs',
+    description: 'Discover our premium bedroom solutions tailored to your lifestyle',
     ctaText: 'Explore Bedrooms',
     ctaLink: '/bedroom',
     secondaryCtaText: 'View Portfolio',
     secondaryCtaLink: '/inspiration',
     overlayOpacity: 0.5,
   },
-  {
-    id: '3',
-    type: 'image',
-    src: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=1748&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    title: 'Limited Time Offers',
-    subtitle: 'Up to 30% Off Selected Ranges',
-    description: 'Transform your home with our exclusive seasonal deals',
-    ctaText: 'View Offers',
-    ctaLink: '/sale',
-    secondaryCtaText: 'Download Brochure',
-    secondaryCtaLink: '/brochure',
-    overlayOpacity: 0.45,
-  },
+  // {
+  //   id: '3',
+  //   type: 'image',
+  //   src: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=1748&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  //   title: 'Limited Time Offers',
+  //   subtitle: 'Up to 30% Off Selected Ranges',
+  //   description: 'Transform your home with our exclusive seasonal deals',
+  //   ctaText: 'View Offers',
+  //   ctaLink: '/sale',
+  //   secondaryCtaText: 'Download Brochure',
+  //   secondaryCtaLink: '/brochure',
+  //   overlayOpacity: 0.45,
+  // },
 ];
 
 const HERO_CACHE_KEY = 'hero-slides-cache-v1';
@@ -232,7 +232,7 @@ export function Hero() {
       className="relative h-[78svh] min-h-[560px] w-full overflow-hidden bg-gray-900 md:h-screen"
       aria-label="Hero Slider"
     >
-      {shouldShowLoading ? (
+      {/* {shouldShowLoading ? (
         <div className="absolute inset-0 z-40 flex items-center justify-center bg-gray-950">
           <div className="flex flex-col items-center gap-4 text-center text-white">
             <div className="h-10 w-10 animate-spin rounded-full border-2 border-white/20 border-t-white" />
@@ -242,11 +242,11 @@ export function Hero() {
             </div>
           </div>
         </div>
-      ) : null}
+      ) : null} */}
 
       {/* Slides */}
       <div className="relative h-full w-full">
-        {slides.map((slide, index) => (
+        {fallbackSlides.map((slide, index) => (
           <div
             key={slide.id}
             className={cn(

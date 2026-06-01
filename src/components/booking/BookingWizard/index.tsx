@@ -22,24 +22,27 @@ import { cn } from "@/lib/utils";
 import { appointmentService } from "@/services/appointmentService";
 
 const bookingSchema = z.object({
-  appointmentType:   z.string(),
-  serviceType:       z.array(z.string()),
-  firstName:         z.string(),
-  lastName:          z.string(),
-  email:             z.string().email(),
-  phone:             z.string(),
-  postcode:          z.string(),
-  address:           z.string(),
-  appointmentDate:   z.any(),
-  appointmentTime:   z.string(),
-  alternativeDate:   z.string(),
-  alternativeTime:   z.string(),
-  message:           z.string(),
-  marketingConsent:  z.boolean(),
-  type:              z.string(),
-  name:              z.string(),
-  customerType:      z.string(),
-  agreeToTerms:      z.boolean(),
+  appointmentType: z.string().min(1, "Please select an appointment type"),
+  serviceType: z.array(z.string()).min(1, "Please select at least one service"),
+  firstName: z.string().trim().min(1, "First name is required"),
+  lastName: z.string().trim().min(1, "Last name is required"),
+  email: z
+    .string()
+    .trim()
+    .refine(
+      (value) => value === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+      "Please enter a valid email address"
+    ),
+  phone: z.string().trim().min(1, "Phone number is required"),
+  fullAddress: z.string().trim().min(1, "Full address is required"),
+  postcode: z.string().trim().min(1, "Postcode is required"),
+  notes: z.string().trim().optional(),
+  address: z.string().optional(),
+  appointmentDate: z.any(),
+  appointmentTime: z.string(),
+  alternativeDate: z.string(),
+  alternativeTime: z.string(),
+  message: z.string(),
 });
 
 export type BookingFormData = z.infer<typeof bookingSchema>;
@@ -56,31 +59,28 @@ function getFieldsForStep(step: number): (keyof BookingFormData)[] {
   switch (step) {
     case 1:  return ["appointmentType"];
     case 2:  return ["serviceType"];
-    case 3:  return ["firstName", "lastName", "email", "phone", "postcode"];
+    case 3:  return ["firstName", "lastName", "email", "phone", "fullAddress", "postcode"];
     case 4:  return ["appointmentDate", "appointmentTime"];
     default: return [];
   }
 }
 
 const DEFAULT_VALUES: BookingFormData = {
-  appointmentType:  "",
-  serviceType:      [],
-  firstName:        "",
-  lastName:         "",
-  email:            "",
-  phone:            "",
-  postcode:         "",
-  address:          "",
-  appointmentDate:  "",
-  appointmentTime:  "",
-  alternativeDate:  "",
-  alternativeTime:  "",
-  message:          "",
-  marketingConsent: false,
-  type:             "",
-  name:             "",
-  customerType:     "",
-  agreeToTerms:     false,
+  appointmentType: "",
+  serviceType: [],
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  fullAddress: "",
+  postcode: "",
+  notes: "",
+  address: "",
+  appointmentDate: "",
+  appointmentTime: "",
+  alternativeDate: "",
+  alternativeTime: "",
+  message: "",
 };
 
 interface BookingWizardProps {
@@ -113,7 +113,6 @@ export default function BookingWizard({ className, product: _product, category: 
         selectedShowroom?: string;
         fullAddress?: string;
         notes?: string;
-        termsAccepted?: boolean;
       };
 
       const serviceType = data.serviceType?.[0] || "kitchen";
@@ -173,9 +172,7 @@ export default function BookingWizard({ className, product: _product, category: 
         preferredDate: appointmentDate,
         timeSlot: data.appointmentTime,
         message: data.message || "",
-        marketingConsent: data.marketingConsent,
         source: "website",
-        agreeToTerms: rawData.termsAccepted,
       };
 
       return appointmentService.createAppointment(payload as Parameters<typeof appointmentService.createAppointment>[0]);
@@ -211,7 +208,7 @@ export default function BookingWizard({ className, product: _product, category: 
   });
   const handleNext = async () => {
     const fieldsToValidate = getFieldsForStep(currentStep);
-    const isValid = await methods.trigger(fieldsToValidate);
+    const isValid = await methods.trigger(fieldsToValidate, { shouldFocus: true });
     if (isValid) {
       if (currentStep === STEPS.length) {
         submitBooking(methods.getValues());
@@ -275,6 +272,7 @@ export default function BookingWizard({ className, product: _product, category: 
           isNextDisabled={!isStepComplete(currentStep) || isPending}
           isLoading={isPending}
           nextButtonText={currentStep === STEPS.length ? "Confirm Booking" : "Continue"}
+          isCustomerDetailsStep={currentStep === 3}
         />
       </div>
     </FormProvider>

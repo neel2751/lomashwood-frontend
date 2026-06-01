@@ -63,21 +63,15 @@ export default function Confirmation({ onEdit }: ConfirmationProps) {
   const appointmentType = watch('appointmentType');
   const service = watch('service');
   const additionalServices = watch('additionalServices') || [];
-  const title = watch('title');
   const firstName = watch('firstName');
   const lastName = watch('lastName');
   const email = watch('email');
   const phone = watch('phone');
-  const alternatePhone = watch('alternatePhone');
-  const houseNumber = watch('houseNumber');
-  const street = watch('street');
-  const city = watch('city');
+  const fullAddress = watch('fullAddress');
   const postcode = watch('postcode');
   const appointmentDate = watch('appointmentDate');
   const appointmentTime = watch('appointmentTime');
   const notes = watch('notes');
-  const contactPreferences = watch('contactPreferences') || [];
-  const marketingConsent = watch('marketingConsent');
   const smsReminders = watch('smsReminders');
 
   const getAppointmentTypeLabel = () => {
@@ -208,23 +202,13 @@ export default function Confirmation({ onEdit }: ConfirmationProps) {
           <SummaryItem
             icon={<User className="h-5 w-5 text-primary" />}
             label="Name"
-            value={`${title ? title.charAt(0).toUpperCase() + title.slice(1) + '.' : ''} ${firstName} ${lastName}`}
+            value={`${firstName} ${lastName}`.trim()}
           />
           <SummaryItem icon={<Mail className="h-5 w-5 text-primary" />} label="Email" value={email} />
           <SummaryItem
             icon={<Phone className="h-5 w-5 text-primary" />}
             label="Phone"
-            value={
-              <span className="block">
-                {phone}
-                {alternatePhone && (
-                  <>
-                    <br />
-                    <span className="text-sm text-gray-600">Alt: {alternatePhone}</span>
-                  </>
-                )}
-              </span>
-            }
+            value={phone}
           />
         </CardContent>
       </Card>
@@ -247,8 +231,7 @@ export default function Confirmation({ onEdit }: ConfirmationProps) {
             label="Full Address"
             value={
               <div className="space-y-0.5">
-                <div>{houseNumber} {street}</div>
-                <div>{city}</div>
+                <div className="whitespace-pre-wrap">{fullAddress}</div>
                 <div className="font-bold">{postcode}</div>
               </div>
             }
@@ -268,40 +251,6 @@ export default function Confirmation({ onEdit }: ConfirmationProps) {
           </CardContent>
         </Card>
       )}
-
-      {/* Preferences */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg">Contact Preferences</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {contactPreferences.length > 0 && (
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm text-gray-600">Preferred contact methods:</span>
-              {contactPreferences.map((pref: string) => (
-                <Badge key={pref} variant="secondary">
-                  {pref.charAt(0).toUpperCase() + pref.slice(1)}
-                </Badge>
-              ))}
-            </div>
-          )}
-          <Separator />
-          <div className="space-y-3">
-            {marketingConsent && (
-              <div className="flex items-center gap-2 text-sm text-gray-700">
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
-                <span>Subscribed to marketing updates</span>
-              </div>
-            )}
-            {smsReminders && (
-              <div className="flex items-center gap-2 text-sm text-gray-700">
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
-                <span>SMS appointment reminders enabled</span>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
 
       {/* SMS Reminders */}
       <Card className="border-primary/20 bg-primary/5">

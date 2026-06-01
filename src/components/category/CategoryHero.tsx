@@ -40,9 +40,9 @@ export default function CategoryHero({
       )}
     >
       <div className="container">
-        <div className="grid gap-8 py-12 md:grid-cols-2 md:py-16 lg:gap-12 lg:py-20">
+        <div className="grid gap-8 py-12 md:grid-cols-1 md:py-16 lg:gap-12 lg:py-20">
           {/* Content */}
-          <div className="flex flex-col justify-center space-y-6">
+          <div className="flex items-center flex-col justify-center space-y-6">
             {/* Category Badge */}
             <div className="flex items-center gap-3">
               <Badge variant="secondary" className="text-sm">
@@ -66,7 +66,7 @@ export default function CategoryHero({
             </div>
 
             {/* Features List */}
-            <ul className="space-y-2 text-sm text-muted-foreground">
+            {/* <ul className="space-y-2 text-sm text-muted-foreground">
               <li className="flex items-center gap-2">
                 <span className="flex h-1.5 w-1.5 rounded-full bg-primary" />
                 Bespoke designs tailored to your space
@@ -83,7 +83,7 @@ export default function CategoryHero({
                 <span className="flex h-1.5 w-1.5 rounded-full bg-primary" />
                 Free design consultation available
               </li>
-            </ul>
+            </ul> */}
 
             {/* CTA Buttons */}
             <div className="flex flex-col gap-3 sm:flex-row">
@@ -108,7 +108,7 @@ export default function CategoryHero({
             </div>
 
             {/* Trust Indicators */}
-            <div className="flex flex-wrap items-center gap-6 pt-4 text-sm text-muted-foreground">
+            {/* <div className="flex flex-wrap items-center gap-6 pt-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <div className="flex -space-x-2">
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 ring-2 ring-background">
@@ -125,12 +125,12 @@ export default function CategoryHero({
                 <span className="font-medium text-foreground">10+ years</span> of
                 experience
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Image */}
-          <div className="relative order-first md:order-last">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border bg-muted shadow-xl md:aspect-square">
+          {/* <div className="relative order-first md:order-last"> */}
+            {/* <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border bg-muted shadow-xl md:aspect-square">
               <Image
                 src={image || defaultImages[category]}
                 alt={title}
@@ -139,12 +139,11 @@ export default function CategoryHero({
                 priority
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
-              {/* Overlay Gradient */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-            </div>
+            </div> */}
 
             {/* Floating Stats Card */}
-            <div className="absolute -bottom-4 left-4 right-4 rounded-lg border bg-background p-4 shadow-lg md:-bottom-6 md:left-6 md:right-auto md:w-64">
+            {/* <div className="absolute -bottom-4 left-4 right-4 rounded-lg border bg-background p-4 shadow-lg md:-bottom-6 md:left-6 md:right-auto md:w-64">
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
                   <div className="text-2xl font-bold text-primary">500+</div>
@@ -159,8 +158,8 @@ export default function CategoryHero({
                   <div className="text-xs text-muted-foreground">Support</div>
                 </div>
               </div>
-            </div>
-          </div>
+            </div> */}
+          {/* </div> */}
         </div>
       </div>
 

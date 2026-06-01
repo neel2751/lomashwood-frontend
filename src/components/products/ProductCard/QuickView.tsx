@@ -21,6 +21,7 @@ interface QuickViewProps {
   product: {
     id: string;
     name: string;
+    title: string;
     category: string;
     style: string;
     finish: string;
@@ -279,7 +280,7 @@ export function QuickView({ product, isOpen, onClose }: QuickViewProps) {
                   size="lg"
                   disabled={!product.inStock}
                 >
-                  <Link href={`/book-appointment?product=${product.id}`}>
+                  <Link href={`/book-appointment?product=${product.title}&category=${product.category}`}>
                     Book Consultation
                   </Link>
                 </Button>

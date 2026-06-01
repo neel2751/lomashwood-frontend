@@ -193,8 +193,8 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       </div>
 
       <div className="container mx-auto px-8 lg:px-18 py-8 lg:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12">
-          <div className="lg:sticky lg:top-24 lg:self-start">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-4 mb-12">
+          <div className="lg:sticky lg:top-24 lg:self-start lg:col-span-2">
             <ImageGallery images={galleryImages} productName={productName} />
           </div>
 
@@ -305,7 +305,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
-                href={`/book-appointment?product=${product.id}&category=${category}`}
+                href={`/book-appointment?product=${product.title}&category=${category}`}
                 className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors"
               >
                 Book Free Consultation

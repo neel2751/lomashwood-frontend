@@ -12,6 +12,7 @@ interface Product {
   id: string;
   slug: string;
   name: string;
+  title: string;
   category: string;
   style: string;
   finish: string;
@@ -217,7 +218,7 @@ export function ListView({ products }: ListViewProps) {
               size="icon"
               className='sm:hidden'
             >
-              <Link href={`/book-appointment?product=${product.slug || product.id}&category=${product.category}`}>
+              <Link href={`/book-appointment?product=${product.title}&category=${product.category}`}>
                 <svg
                   className="w-5 h-5"
                   fill="none"

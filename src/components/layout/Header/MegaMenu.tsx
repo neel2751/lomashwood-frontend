@@ -38,12 +38,12 @@ const kitchenCategories = [
   {
     title: "By Color",
     items: [
-      { label: "White Kitchens", href: "/kitchen?color=white", isNew: false, swatch: "#FFFFFF" },
-      { label: "Grey Kitchens", href: "/kitchen?color=grey", isNew: false, swatch: "#9CA3AF" },
-      { label: "Black Kitchens", href: "/kitchen?color=black", isNew: false, swatch: "#1A1A1A" },
-      { label: "Blue Kitchens", href: "/kitchen?color=blue", isNew: false, swatch: "#3B82F6" },
-      { label: "Green Kitchens", href: "/kitchen?color=green", isNew: false, swatch: "#77c117" },
-      { label: "Cream Kitchens", href: "/kitchen?color=cream", isNew: false, swatch: "#F5F0E8" },
+      { label: "Graphite Kitchens", href: "/kitchen?colour=graphite", isNew: false, swatch: "#3B3F46" },
+      { label: "Grey Kitchens", href: "/kitchen?colour=grey", isNew: false, swatch: "#9CA3AF" },
+      { label: "Black Kitchens", href: "/kitchen?colour=black", isNew: false, swatch: "#1A1A1A" },
+      { label: "Navy Blue Kitchens", href: "/kitchen?colour=blue", isNew: false, swatch: "#1B2A4A" },
+      { label: "Pista Green Kitchens", href: "/kitchen?colour=green", isNew: false, swatch: "#93C572" },
+      { label: "Cream Kitchens", href: "/kitchen?colour=cream", isNew: false, swatch: "#F5F0E8" },
     ],
   },
 ];
@@ -70,12 +70,12 @@ const bedroomCategories = [
   {
     title: "By Color",
     items: [
-      { label: "White", href: "/bedroom?color=white", isNew: false, swatch: "#FFFFFF" },
-      { label: "Grey", href: "/bedroom?color=grey", isNew: false, swatch: "#9CA3AF" },
-      { label: "Black", href: "/bedroom?color=black", isNew: false, swatch: "#1A1A1A" },
-      { label: "Oak / Wood", href: "/bedroom?color=oak", isNew: false, swatch: "#C4962A" },
-      { label: "Ivory", href: "/bedroom?color=ivory", isNew: false, swatch: "#FFFFF0" },
-      { label: "Navy Blue", href: "/bedroom?color=navy", isNew: false, swatch: "#1E3A5F" },
+      { label: "Graphite", href: "/bedroom?colour=graphite", isNew: false, swatch: "#3B3F46" },
+      { label: "Grey", href: "/bedroom?colour=grey", isNew: false, swatch: "#9CA3AF" },
+      { label: "Black", href: "/bedroom?colour=black", isNew: false, swatch: "#1A1A1A" },
+      { label: "Pista Green", href: "/bedroom?colour=green", isNew: false, swatch: "#93C572" },
+      { label: "Cream", href: "/bedroom?colour=cream", isNew: false, swatch: "#F5F0E8" },
+      { label: "Navy Blue", href: "/bedroom?colour=navy", isNew: false, swatch: "#1B2A4A" },
     ],
   },
 ];
