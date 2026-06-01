@@ -105,7 +105,7 @@ export function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const { data: apiSlides, isLoading, isFetching } = useQuery<Slide[]>({
+  const { data: apiSlides } = useQuery<Slide[]>({
     queryKey: ['hero-slides'],
     queryFn: async () => {
       const response = await apiClient.heroSlider.getAll();
@@ -116,7 +116,7 @@ export function Hero() {
 
   const hasApiSlides = Boolean(apiSlides && apiSlides.length > 0);
   const hasCachedSlides = cachedSlides.length > 0;
-  const shouldShowLoading = (isLoading || isFetching) && !hasApiSlides && !hasCachedSlides;
+  // const shouldShowLoading = (isLoading || isFetching) && !hasApiSlides && !hasCachedSlides;
   const slides: Slide[] = hasApiSlides
     ? apiSlides ?? fallbackSlides
     : hasCachedSlides

@@ -16,6 +16,7 @@ import { WishlistButton } from './WishlistButton';
 interface ProductCardProps {
   product: {
     id: string;
+    title: string;
     slug: string;
     name: string;
     category: string;

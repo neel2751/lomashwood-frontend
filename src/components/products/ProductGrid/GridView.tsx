@@ -2,6 +2,7 @@ import { ProductCard } from '../ProductCard';
 
 interface Product {
   id: string;
+  title: string;
   slug: string;
   name: string;
   category: string;

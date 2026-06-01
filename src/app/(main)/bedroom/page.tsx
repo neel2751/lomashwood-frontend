@@ -14,8 +14,8 @@ export const metadata: Metadata = {
 
 interface BackendProduct {
   id: string;
-  slug: string;
   title: string;
+  slug: string;
   category: 'kitchen' | 'bedroom';
   style?: string;
   finish?: string;
@@ -131,6 +131,7 @@ async function getBedroomProducts(searchParams?: BedroomSearchParams) {
     return uniqueRows.map((product) => ({
       id: product.id,
       slug: product.slug,
+      title: product.title,
       name: product.title,
       category: product.category,
       style: product.style || 'modern',

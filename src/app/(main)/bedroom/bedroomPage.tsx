@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 
 interface Product {
   id: string;
+  title: string;
   slug: string;
   name: string;
   category: string;

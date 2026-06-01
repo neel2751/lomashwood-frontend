@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRight, Filter } from "lucide-react";
-import Image from "next/image";
+// import Image from "next/image";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,16 +21,16 @@ interface CategoryHeroProps {
 export default function CategoryHero({
   title,
   description,
-  image,
+  // image,
   totalProducts,
   category,
   onFilterClick,
   className,
 }: CategoryHeroProps) {
-  const defaultImages = {
-    kitchen: "/images/products/kitchen/hero.jpg",
-    bedroom: "/images/products/bedroom/hero.jpg",
-  };
+  // const defaultImages = {
+  //   kitchen: "/images/products/kitchen/hero.jpg",
+  //   bedroom: "/images/products/bedroom/hero.jpg",
+  // };
 
   return (
     <section

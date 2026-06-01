@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 
 interface Product {
   id: string;
+  title: string;
   name: string;
   slug: string;
   image: string;
@@ -33,6 +34,7 @@ interface Product {
 
 const mapApiProductToCard = (product: ApiProduct): Product => ({
   id: product.id,
+  title: product.title,
   name: product.title,
   slug: product.slug,
   image: product.images?.[0] || "/images/placeholder-product.jpg",
