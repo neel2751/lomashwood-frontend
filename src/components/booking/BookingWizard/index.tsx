@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -124,10 +125,23 @@ export default function BookingWizard({ className, product: _product, category: 
             : data.appointmentType === "video-call"
               ? "online"
               : data.appointmentType;
-      const appointmentDate = data.appointmentDate
-        ? new Date(data.appointmentDate).toISOString().split("T")[0]
-        : "";
+      // Build YYYY-MM-DD from the picked date's LOCAL calendar components.
+      // Using toISOString() here would convert local midnight to UTC and, in any
+      // positive-offset timezone (e.g. BST/IST), roll the date back to the previous day.
+      const appointmentDate = (() => {
+        if (!data.appointmentDate) return "";
+        const d = new Date(data.appointmentDate);
+        if (Number.isNaN(d.getTime())) return "";
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      })();
 
+      // The slots API returns a plain clock time (e.g. "11:00") that the backend
+      // expects encoded as the UTC portion of the ISO string (its own example:
+      // the "09:00" slot -> "2026-06-25T09:00:00.000Z"). Encode the picked time
+      // literally as UTC — do NOT round-trip through local time, which shifts the hour.
       const slotDateTime = (() => {
         if (!appointmentDate || !data.appointmentTime) return "";
         const [hourText, minuteText = "0"] = data.appointmentTime.split(":");
@@ -135,9 +149,9 @@ export default function BookingWizard({ className, product: _product, category: 
         const minute = Number(minuteText);
         if (Number.isNaN(hour) || Number.isNaN(minute)) return "";
 
-        const dateObj = new Date(`${appointmentDate}T00:00:00`);
-        dateObj.setHours(hour, minute, 0, 0);
-        return dateObj.toISOString();
+        const hh = String(hour).padStart(2, "0");
+        const mm = String(minute).padStart(2, "0");
+        return `${appointmentDate}T${hh}:${mm}:00.000Z`;
       })();
 
       const customerName = `${data.firstName || ""} ${data.lastName || ""}`.trim();
@@ -145,6 +159,15 @@ export default function BookingWizard({ className, product: _product, category: 
       const notes = rawData.notes || data.message || "";
       const forKitchen = serviceType === "kitchen" || serviceType === "both";
       const forBedroom = serviceType === "bedroom" || serviceType === "both";
+
+      // Guard against payloads the backend will reject, so the user gets a clear
+      // message instead of a confusing server error.
+      if (!slotDateTime) {
+        throw new Error("Please select a valid appointment date and time before confirming.");
+      }
+      if (!forKitchen && !forBedroom) {
+        throw new Error("Please select at least one service (Kitchen or Bedroom).");
+      }
 
       const payload = {
         // Backend Prisma model fields
@@ -250,6 +273,27 @@ export default function BookingWizard({ className, product: _product, category: 
 
   return (
     <FormProvider {...methods}>
+      {/* Full-screen overlay while the booking is being submitted, so the user
+          knows something is happening and doesn't double-submit or navigate away. */}
+      {isPending && (
+        <div
+          role="status"
+          aria-live="polite"
+          aria-busy="true"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm"
+        >
+          <div className="mx-4 flex max-w-sm flex-col items-center gap-4 rounded-xl bg-card p-8 text-center shadow-xl">
+            <Loader2 className="h-12 w-12 animate-spin text-primary" />
+            <div>
+              <p className="text-lg font-semibold">Confirming your booking…</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Please wait a moment and don&apos;t close this window.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className={cn("space-y-6", className)} ref={formContainerRef}>
         <StepIndicator
           steps={STEPS}
