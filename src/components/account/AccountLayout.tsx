@@ -361,10 +361,10 @@ export default function AccountLayout({
               <Link href="/help" className="hover:text-foreground transition-colors">
                 Help Center
               </Link>
-              <Link href="/privacy" className="hover:text-foreground transition-colors">
+              <Link href="/privacy-policy" className="hover:text-foreground transition-colors">
                 Privacy Policy
               </Link>
-              <Link href="/terms" className="hover:text-foreground transition-colors">
+              <Link href="/terms-conditions" className="hover:text-foreground transition-colors">
                 Terms of Service
               </Link>
             </div>
