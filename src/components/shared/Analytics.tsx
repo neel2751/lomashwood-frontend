@@ -2,7 +2,10 @@
 
 import { usePathname, useSearchParams } from "next/navigation"
 import Script from "next/script"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+
+import { CONSENT_CHANGE_EVENT, readCookieConsent } from "@/lib/cookie-consent"
+import type { CookiePreferences } from "@/lib/cookie-consent"
 
 interface AnalyticsProps {
   googleAnalyticsId?: string
@@ -15,6 +18,27 @@ export function Analytics({
 }: AnalyticsProps) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const [consent, setConsent] = useState<CookiePreferences | null>(null)
+
+  // Tracking scripts only load once the visitor has agreed to them in the cookie banner
+  useEffect(() => {
+    setConsent(readCookieConsent())
+
+    const handleConsentChange = () => {
+      const updated = readCookieConsent()
+      setConsent(updated)
+
+      if ((window as any).fbq) {
+        (window as any).fbq("consent", updated?.marketing ? "grant" : "revoke")
+      }
+    }
+
+    window.addEventListener(CONSENT_CHANGE_EVENT, handleConsentChange)
+    return () => window.removeEventListener(CONSENT_CHANGE_EVENT, handleConsentChange)
+  }, [])
+
+  const analyticsAllowed = consent?.analytics === true
+  const marketingAllowed = consent?.marketing === true
 
   useEffect(() => {
     if (pathname) {
@@ -23,13 +47,13 @@ export function Analytics({
   }, [pathname, searchParams])
 
   const trackPageView = (url: string) => {
-    if (googleAnalyticsId && typeof window !== "undefined" && (window as any).gtag) {
+    if (analyticsAllowed && googleAnalyticsId && typeof window !== "undefined" && (window as any).gtag) {
       (window as any).gtag("config", googleAnalyticsId, {
         page_path: url,
       })
     }
 
-    if (facebookPixelId && typeof window !== "undefined" && (window as any).fbq) {
+    if (marketingAllowed && facebookPixelId && typeof window !== "undefined" && (window as any).fbq) {
       (window as any).fbq("track", "PageView")
     }
   }
@@ -37,7 +61,7 @@ export function Analytics({
   return (
     <>
       {/* Google Analytics */}
-      {googleAnalyticsId && (
+      {analyticsAllowed && googleAnalyticsId && (
         <>
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
@@ -57,7 +81,7 @@ export function Analytics({
       )}
 
       {/* Facebook Pixel */}
-      {facebookPixelId && (
+      {marketingAllowed && facebookPixelId && (
         <Script id="facebook-pixel" strategy="afterInteractive">
           {`
             !function(f,b,e,v,n,t,s)

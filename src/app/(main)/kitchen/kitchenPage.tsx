@@ -1,5 +1,5 @@
 "use client";
-import { Phone, Shield, Paintbrush, CreditCard, CheckCircle2 } from 'lucide-react';
+import { Phone, Shield, Paintbrush, Timer, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import { parseAsString, useQueryStates } from 'nuqs';
 import { Suspense, useMemo } from 'react';
@@ -144,9 +144,9 @@ export default function KitchenPageCom({
             {/* Info Cards */}
             <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-5">
               {[
-                { icon: <Shield className="w-6 h-6 text-[#77c117]" />, title: "Lifetime Warranty", desc: "Premium quality with comprehensive coverage" },
+                { icon: <Shield className="w-6 h-6 text-[#77c117]" />, title: "5-Year Guarantee", desc: "Up to 5 years on cabinet materials, 3 years on accessories" },
                 { icon: <Paintbrush className="w-6 h-6 text-[#77c117]" />, title: "Bespoke Designs", desc: "Tailored furniture to match your space" },
-                { icon: <CreditCard className="w-6 h-6 text-[#77c117]" />, title: "Flexible Payment", desc: "Easy financing options available" },
+                { icon: <Timer className="w-6 h-6 text-[#77c117]" />, title: "Quickest Installation", desc: "Fitted quickly by our own team with minimal disruption" },
               ].map((card) => (
                 <div key={card.title} className="text-center p-6 border border-gray-100 rounded-xl hover:border-[#77c117]/30 hover:shadow-sm transition-all duration-200 bg-white">
                   <div className="w-12 h-12 bg-[#77c117]/10 rounded-full flex items-center justify-center mx-auto mb-4">{card.icon}</div>

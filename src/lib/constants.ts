@@ -191,8 +191,8 @@ export const WHY_CHOOSE_US_FEATURES = [
     icon: "Award",
   },
   {
-    title: "10-Year Warranty",
-    description: "Comprehensive warranty on all our products",
+    title: "5-Year Guarantee",
+    description: "Maximum 5-year guarantee for the cabinet materials and 3-year for the accessories",
     icon: "Shield",
   },
   {
@@ -201,9 +201,9 @@ export const WHY_CHOOSE_US_FEATURES = [
     icon: "Home",
   },
   {
-    title: "Flexible Finance Options",
-    description: "Affordable payment plans to suit your budget",
-    icon: "CreditCard",
+    title: "Quickest Installation",
+    description: "Our expert fitters install your kitchen or bedroom quickly, with minimal disruption to your home",
+    icon: "Timer",
   },
 ] as const;
 

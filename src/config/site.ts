@@ -141,7 +141,7 @@ export const pageSEO = {
   whyChooseUs: {
     title: "Why Choose Us - Lomash Wood",
     description:
-      "Best price guarantee, expert design team, premium quality, and 10-year warranty. Discover why customers choose Lomash Wood.",
+      "Best price guarantee, expert design team, premium quality, and up to 5-year guarantee. Discover why customers choose Lomash Wood.",
     keywords: [
       "why choose us",
       "benefits",

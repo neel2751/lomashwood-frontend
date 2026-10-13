@@ -1,6 +1,6 @@
 import {
   Award,
-  Heart,
+  ClipboardList,
   Leaf,
   Shield,
   Star,
@@ -8,13 +8,9 @@ import {
   Hammer,
   TrendingUp,
   CheckCircle2,
-  Clock,
   Trophy,
-  Zap,
-  Ruler,
   Palette,
   RefreshCw,
-  Globe,
   BadgeCheck,
   Handshake,
   FileCheck,
@@ -22,8 +18,8 @@ import {
   Phone,
   BookOpen,
   MapPin,
-  PoundSterling,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -33,7 +29,7 @@ import { Card, CardContent } from '@/components/ui/card';
 export const metadata: Metadata = {
   title: 'Why Choose Us | Lomash Wood',
   description:
-    'Discover what sets Lomash Wood apart - from our master craftsmanship and sustainable practices to our lifetime warranty and personalized service.',
+    'Discover what sets Lomash Wood apart - from our master craftsmanship and sustainable practices to our 5-year guarantee and personalized service.',
 };
 
 type LatestProject = {
@@ -71,48 +67,44 @@ async function getLatestProjects(): Promise<LatestProject[]> {
 }
 
 export default async function WhyChooseUsPage() {
-  const keyDifferentiators = [
+  const keyDifferentiators: { icon: LucideIcon; title: string; description: string; stats?: string }[] = [
     {
       icon: Hammer,
       title: 'Master Craftsmanship',
       description:
-        'Our team of artisans brings over 100 years of combined experience in traditional woodworking techniques, ensuring every piece is a work of art.',
-      stats: '25+ years average experience',
+        'Over 100 projects completed, and every one made in our own factory in Romford. Our makers cut, edge, spray and finish each piece by hand, then check it before it leaves the building. That volume is where the skill comes from, and it shows in the details you only notice years later: the drawer that still runs true, the door that still sits flush.',
+      stats: '100+ project Experience',
     },
     {
       icon: Leaf,
       title: 'Sustainable & Ethical',
       description:
-        'We source 100% FSC-certified wood and plant three trees for every one we use. Our workshop runs on renewable energy, making us carbon-neutral.',
-      stats: '15,000+ trees planted',
+        'Timber is one of the few materials that grows back. We buy responsibly sourced board, cut every panel to your exact measurements rather than trimming down standard units on site, and recycle the offcuts that remain. Build furniture properly and it stays out of landfill for decades, which is the greenest thing a kitchen can do.',
     },
     {
       icon: Palette,
       title: 'Bespoke Design',
       description:
-        'Every piece is custom-designed for your space and lifestyle. No two pieces are exactly alike, making your furniture truly one-of-a-kind.',
+        'Every piece is custom-designed for your space and lifestyle. Our designers measure your room, listen to how you live, and draw the layout around you, from the height of the worktops to where the last drawer sits. You choose the style, colour, finish and handles, and we build each cabinet to those exact measurements in our own factory. No two pieces are exactly alike, making your furniture truly one-of-a-kind.',
       stats: '5,000+ unique designs',
     },
     {
       icon: Shield,
-      title: 'Lifetime Warranty',
+      title: '5-Year Guarantee',
       description:
-        "We stand behind our work with a comprehensive lifetime craftsmanship warranty. If our joinery fails, we fix it — no questions asked.",
-      stats: 'Lifetime guarantee',
+        'Every cabinet we make and fit is guaranteed for five years, with three years on accessories. If something we built fails in that time, we come back and put it right at our own cost. Our fitters installed it, so there is nobody to pass you on to.',
     },
     {
-      icon: Heart,
-      title: 'Personalized Service',
+      icon: ClipboardList,
+      title: 'Project Management',
       description:
-        'From initial consultation to delivery, you work with a dedicated project manager who ensures your vision comes to life exactly as you imagined.',
-      stats: '98% satisfaction rate',
+        'Every project is assigned a dedicated project manager who oversees it from initial consultation through to final handover. They coordinate the design, manufacture and installation stages, maintain the schedule, and remain your single point of contact throughout. One person accountable for the whole project, and one number to call.',
     },
     {
       icon: Trophy,
-      title: 'Award-Winning Quality',
+      title: 'Top Rated Quality',
       description:
-        'Our commitment to excellence has earned us industry recognition, including the 2024 Craftsmanship Excellence Award and 4.9/5 customer rating.',
-      stats: '12 industry awards',
+        'Our customers rate us 4.9 out of 5. We regard that figure as something to be earned on each project rather than a milestone already reached, and it reflects the standard applied at every stage: accurate design, controlled manufacture in our own factory, and installation by our own fitting team.',
     },
   ];
 
@@ -158,8 +150,8 @@ export default async function WhyChooseUsPage() {
       icon: TrendingUp,
       items: [
         'Furniture that appreciates over time',
-        'Lifetime craftsmanship warranty included',
-        '5-year finish warranty',
+        'Up to 5-year guarantee on cabinet materials',
+        '3-year guarantee on accessories',
         'Free annual maintenance consultations',
         'Repair and restoration services available',
         'Trade-in program for future purchases',
@@ -167,44 +159,44 @@ export default async function WhyChooseUsPage() {
     },
   ];
 
-  const comparisonPoints = [
-    {
-      feature: 'Construction Method',
-      us: 'Traditional joinery, hand-crafted',
-      others: 'Mass production, mechanical fasteners',
-      icon: Hammer,
-    },
-    {
-      feature: 'Materials',
-      us: 'FSC-certified premium hardwoods',
-      others: 'Particle board, veneer, low-grade wood',
-      icon: Leaf,
-    },
-    {
-      feature: 'Customisation',
-      us: 'Fully bespoke to your specifications',
-      others: 'Limited to standard sizes and options',
-      icon: Ruler,
-    },
-    {
-      feature: 'Warranty',
-      us: 'Lifetime craftsmanship guarantee',
-      others: '1-3 years limited warranty',
-      icon: Shield,
-    },
-    {
-      feature: 'Production Time',
-      us: '6-16 weeks (quality takes time)',
-      others: 'Immediate (but mass-produced)',
-      icon: Clock,
-    },
-    {
-      feature: 'Environmental Impact',
-      us: 'Carbon-neutral, 3 trees planted per 1 used',
-      others: 'Often unsustainable practices',
-      icon: Globe,
-    },
-  ];
+  // const comparisonPoints = [
+  //   {
+  //     feature: 'Construction Method',
+  //     us: 'Traditional joinery, hand-crafted',
+  //     others: 'Mass production, mechanical fasteners',
+  //     icon: Hammer,
+  //   },
+  //   {
+  //     feature: 'Materials',
+  //     us: 'FSC-certified premium hardwoods',
+  //     others: 'Particle board, veneer, low-grade wood',
+  //     icon: Leaf,
+  //   },
+  //   {
+  //     feature: 'Customisation',
+  //     us: 'Fully bespoke to your specifications',
+  //     others: 'Limited to standard sizes and options',
+  //     icon: Ruler,
+  //   },
+  //   {
+  //     feature: 'Warranty',
+  //     us: 'Up to 5 years on cabinet materials, 3 years on accessories',
+  //     others: '1-3 years limited warranty',
+  //     icon: Shield,
+  //   },
+  //   {
+  //     feature: 'Production Time',
+  //     us: '6-16 weeks (quality takes time)',
+  //     others: 'Immediate (but mass-produced)',
+  //     icon: Clock,
+  //   },
+  //   {
+  //     feature: 'Environmental Impact',
+  //     us: 'Carbon-neutral, 3 trees planted per 1 used',
+  //     others: 'Often unsustainable practices',
+  //     icon: Globe,
+  //   },
+  // ];
 
   const guarantees = [
     {
@@ -271,19 +263,18 @@ export default async function WhyChooseUsPage() {
         </div>
       </section>
 
-      {/* ─── Personalised Service ─── */}
+      {/* ─── Style, Colour and Finish Options ─── */}
       <section className="py-28 px-6 md:px-20 mx-auto">
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <div>
             <h2 className="font-heading text-3xl md:text-4xl font-semibold text-lomash-dark mb-6 leading-snug">
-              A Personalised Service
+              Unlimited Style, Colour and Finish Options
             </h2>
             <p className="text-lomash-gray-600 text-sm md:text-base leading-relaxed mb-8 max-w-lg">
-              We have an extremely talented, friendly and knowledgeable team. We take the time to
-              understand our customers and their needs to craft high-end, custom furniture that fits
-              effortlessly with their lifestyles and reflects all tastes. We pride ourselves on our
-              customer service and offer complete project management to make your installation as
-              seamless as possible.
+              Your kitchen should suit your home, not a showroom floor. Choose from hundreds of
+              colours across our Modern and Shaker collections, finished in matt, gloss, acrylic or
+              hand-painted PU. From Classical Ivory to Slate Black Glass, every door is made to
+              order at our own British factory, so nothing is off the shelf.
             </p>
             <Link
               href="/inspiration"
@@ -294,8 +285,9 @@ export default async function WhyChooseUsPage() {
           </div>
           <div className="relative h-80 md:h-96 rounded-sm overflow-hidden shadow-md bg-lomash-gray-200">
             <Image
-              src="/images/projects/personalised-service.jpg"
-              alt="Our friendly design team"
+              src="/why/unlimited_colour_finish.webp"
+              alt="Kitchen doors in a range of styles, colours and finishes"
+              sizes="(max-width: 768px) 100vw, 50vw"
               fill
               className="object-cover"
             />
@@ -303,7 +295,7 @@ export default async function WhyChooseUsPage() {
         </div>
       </section>
 
-      {/* ─── 15 Years Experience Banner ─── */}
+      {/* ─── Years of Experience Banner ─── */}
       <section className="relative py-28 px-6 md:px-20 ">
         <div className="absolute inset-0 bg-lomash-dark">
           <Image
@@ -315,14 +307,14 @@ export default async function WhyChooseUsPage() {
         </div>
         <div className="relative z-10 max-w-2xl">
           <h2 className="font-heading text-3xl md:text-4xl text-white font-semibold leading-snug mb-6">
-            Over 15 Years Of Experience…
+            Years of Experience
           </h2>
           <p className="text-white/85 text-sm md:text-base leading-relaxed mb-8">
-            With our extensive experience installing beautiful, bespoke furniture, we have honed
-            unequalled knowledge in the industry, meaning we truly understand our craft — and thanks
-            to our position as a local, family-run, independent business, we also understand people.
-            Because of this, our designs are always unique and of the highest quality, perfectly
-            reflecting you, your family, and your home.
+            Years of designing and fitting bespoke furniture have given us a deep understanding of
+            our craft. We make every cabinet ourselves, at our own factory in Romford, and fit it
+            with our own team rather than subcontractors. But knowing the furniture is only half of
+            it. Knowing people is the rest, and after more than 300 homes, we have learned to
+            listen first. That is why no two Lomash Wood kitchens are ever quite the same.
           </p>
           <Link
             href="/showrooms"
@@ -333,28 +325,28 @@ export default async function WhyChooseUsPage() {
         </div>
       </section>
 
-      {/* ─── Award Winning ─── */}
+      {/* ─── Expert Craftsmanship ─── */}
       <section className="py-28 px-6 md:px-20">
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <div className="relative h-80 md:h-[450px] rounded-sm overflow-hidden shadow-md bg-lomash-gray-200 order-last md:order-first">
             <Image
-              src="/images/projects/award.jpg"
-              alt="Award winning team"
+              src="/why/expert_craftmenship.webp"
+              alt="Lomash Wood maker finishing a cabinet door by hand"
+              sizes="(max-width: 768px) 100vw, 50vw"
               fill
               className="object-cover"
             />
           </div>
           <div>
             <h2 className="font-heading text-3xl md:text-4xl font-semibold text-lomash-dark mb-6 leading-snug">
-              An Award Winning Team To Help You
+              Expert Craftsmanship
             </h2>
-            <p className="text-lomash-gray-600 text-sm md:text-base leading-relaxed mb-4">
-              We won Best Customer Service at the Häfele Studio Partner Awards for the second time,
-              thanks to our customer-focused approach, and this means the world to us, as it&apos;s
-              you, the customer, who matters the most.
-            </p>
             <p className="text-lomash-gray-600 text-sm md:text-base leading-relaxed mb-8">
-              Our award also assures you that when you choose Lomash Wood, you are in safe hands.
+              Every Lomash Wood kitchen is made in Britain, at our own factory in East London. Our
+              makers select the materials, cut and edge every panel, and spray and cure each door by
+              hand before it passes inspection. Nothing arrives flat-packed from overseas and
+              nothing leaves the building unchecked. That is why every cabinet we make and fit
+              carries a five-year guarantee.
             </p>
             <Link
               href="/contact"
@@ -395,10 +387,12 @@ export default async function WhyChooseUsPage() {
                     <p className="text-lomash-gray-600 text-sm mb-4 leading-relaxed">
                       {item.description}
                     </p>
-                    <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-lomash-primary/10 text-lomash-primary text-xs font-semibold">
-                      <Star className="w-3 h-3" />
-                      {item.stats}
-                    </div>
+                    {item.stats && (
+                      <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-lomash-primary/10 text-lomash-primary text-xs font-semibold">
+                        <Star className="w-3 h-3" />
+                        {item.stats}
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               );
@@ -448,7 +442,7 @@ export default async function WhyChooseUsPage() {
       </section>
 
       {/* ─── Comparison Table ─── */}
-      <section className="py-16 px-6 md:px-20 bg-lomash-gray-50">
+      {/* <section className="py-16 px-6 md:px-20 bg-lomash-gray-50">
         <div className="container mx-auto">
           <div className="mb-10">
             <h2 className="font-heading text-4xl md:text-5xl font-semibold text-lomash-dark mb-3">
@@ -503,7 +497,7 @@ export default async function WhyChooseUsPage() {
             </table>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* ─── Testimonials ─── */}
       {/* <section className="py-16 px-6 md:px-20 container mx-auto">
@@ -578,7 +572,7 @@ export default async function WhyChooseUsPage() {
       </section>
 
       {/* ─── Investment Value ─── */}
-      <section className="py-16 px-6 md:px-20 container mx-auto">
+      {/* <section className="py-16 px-6 md:px-20 container mx-auto">
         <div className="mb-8">
           <h2 className="font-heading text-3xl md:text-4xl font-semibold text-lomash-dark mb-3">
             An Investment in Quality
@@ -632,7 +626,7 @@ export default async function WhyChooseUsPage() {
             </ul>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* ─── Latest Projects ─── */}
       <section className="py-16 px-6 md:px-20 bg-lomash-gray-50">

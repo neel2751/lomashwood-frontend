@@ -190,21 +190,29 @@ export const mainNavigation: NavItem[] = [
       // ],
     },
   },
-  {
-    label: "Offers",
-    href: "/sale",
-  },
+  // {
+  //   label: "Offers",
+  //   href: "/sale",
+  // },
   {
     label: "Find a Showroom",
     href: "/showrooms",
   },
+  // {
+  //   label: "Finance",
+  //   href: "/finance",
+  // },
   {
-    label: "Finance",
-    href: "/finance",
+    label: "Our Projects",
+    href: "/projects",
   },
   {
     label: "Inspiration & Guide",
     href: "/inspiration",
+  },
+  {
+    label: "Contact Us",
+    href: "/contact",
   },
 ];
 
@@ -225,16 +233,16 @@ export const footerNavigation = {
   products: [
     { label: "Kitchen Collection", href: "/kitchen" },
     { label: "Bedroom Collection", href: "/bedroom" },
-    { label: "Media Wall", href: "/media-wall" },
-    { label: "Special Offers", href: "/sale" },
+    // { label: "Media Wall", href: "/media-wall" },
+    // { label: "Special Offers", href: "/sale" },
     { label: "Our Projects", href: "/projects" },
   ],
   support: [
     { label: "Book Consultation", href: "/book-appointment" },
-    { label: "Finance Options", href: "/finance" },
+    // { label: "Finance Options", href: "/finance" },
     { label: "Find Showroom", href: "/showrooms" },
     { label: "Download Brochure", href: "/brochure" },
-    { label: "FAQs", href: "/faqs" },
+    // { label: "FAQs", href: "/faqs" },
   ],
   legal: [
     { label: "Terms & Conditions", href: "/terms-conditions" },
@@ -258,7 +266,8 @@ export const mobileBottomNavigation: NavLink[] = [
   { label: "Home", href: "/", icon: "Home" },
   { label: "Kitchen", href: "/kitchen", icon: "ChefHat" },
   { label: "Bedroom", href: "/bedroom", icon: "Bed" },
-  { label: "Offers", href: "/sale", icon: "Tag" },
+  // { label: "Offers", href: "/sale", icon: "Tag" },
+  { label: "Contact", href: "/contact", icon: "Phone" },
   { label: "More", href: "/menu", icon: "Menu" },
 ];
 

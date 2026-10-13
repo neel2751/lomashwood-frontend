@@ -8,7 +8,8 @@ import {
   Award,
   Shield,
   Home,
-  CreditCard
+  CreditCard,
+  Timer
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -30,6 +31,7 @@ const iconMap: Record<string, LucideIcon> = {
   Shield,
   Home,
   CreditCard,
+  Timer,
 };
 
 export function FeatureCard({ feature, className }: FeatureCardProps) {

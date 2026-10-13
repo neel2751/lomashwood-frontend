@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { Analytics } from "@/components/shared/Analytics";
+import { CookieConsent } from "@/components/shared/CookieConsent";
 import { siteConfig, defaultSEO } from "@/config/site";
 import { Providers } from "@/providers/Providers";
 import "@/styles/globals.css";
@@ -89,18 +90,6 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <Analytics facebookPixelId={facebookPixelId} />
         </Suspense>
-        {facebookPixelId && (
-          <noscript>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              alt=""
-              height="1"
-              width="1"
-              style={{ display: "none" }}
-              src={`https://www.facebook.com/tr?id=${facebookPixelId}&ev=PageView&noscript=1`}
-            />
-          </noscript>
-        )}
         <NuqsAdapter>
           <Providers>
             <div className="flex flex-col min-h-[100dvh] w-full mx-w-full overflow-x-hidden">
@@ -108,6 +97,7 @@ export default function RootLayout({
               <main className="flex-1 w-full">{children}</main>
               <Footer />
             </div>
+            <CookieConsent />
           </Providers>
         </NuqsAdapter>
       </body>

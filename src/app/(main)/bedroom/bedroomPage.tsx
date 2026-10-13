@@ -1,5 +1,5 @@
 "use client";
-import { Phone, Shield, Paintbrush, CreditCard, CheckCircle2 } from 'lucide-react';
+import { Phone, Shield, Paintbrush, Timer, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import { parseAsString, useQueryStates } from 'nuqs';
 import { Suspense, useMemo } from 'react';
@@ -159,9 +159,9 @@ export default function BedroomPageCom({ products }: { products: Product[] }) {
             {/* Info Cards */}
             <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-5">
               {[
-                { icon: <Shield className="w-6 h-6 text-primary" />, title: "Lifetime Warranty", desc: "Premium quality with comprehensive coverage" },
+                { icon: <Shield className="w-6 h-6 text-primary" />, title: "5-Year Guarantee", desc: "Up to 5 years on cabinet materials, 3 years on accessories" },
                 { icon: <Paintbrush className="w-6 h-6 text-primary" />, title: "Bespoke Designs", desc: "Tailored furniture to match your space" },
-                { icon: <CreditCard className="w-6 h-6 text-primary" />, title: "Flexible Payment", desc: "Easy financing options available" },
+                { icon: <Timer className="w-6 h-6 text-primary" />, title: "Quickest Installation", desc: "Fitted quickly by our own team with minimal disruption" },
               ].map((card) => (
                 <div
                   key={card.title}

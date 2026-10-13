@@ -81,18 +81,20 @@ export function PackageCard({ package: pkg, className }: PackageCardProps) {
         </div>
 
         {/* CTA Button two buttons kitchen package & bedroom package */}
- <div className="flex flex-col sm:flex-row items-center justify-center mt-10 gap-4">
-            <Link
-              href={`/kitchen?package=${normalizeFilterValue(pkg.title)}`}
-              className="inline-flex items-center gap-2 px-6 py-2 bg-lomash-primary text-white font-medium rounded-full hover:bg-lomash-primary-dark transition-colors"
-            >Kitchen Packages
-            </Link>
-            <Link
-              href={`/bedroom?package=${normalizeFilterValue(pkg.title)}`}
-              className="inline-flex items-center gap-2 px-6 py-2 bg-lomash-secondary text-white font-medium rounded-full hover:bg-lomash-secondary-dark transition-colors"
-            >Bedroom Packages
-            </Link>
-          </div>
+        <div className="flex flex-wrap gap-3">
+          <Link
+            href={`/kitchen?package=${normalizeFilterValue(pkg.title)}`}
+            className="flex-1 inline-flex items-center justify-center whitespace-nowrap px-4 py-2.5 bg-lomash-primary text-white text-sm font-medium rounded-full hover:bg-lomash-accent transition-colors"
+          >
+            Kitchen Packages
+          </Link>
+          <Link
+            href={`/bedroom?package=${normalizeFilterValue(pkg.title)}`}
+            className="flex-1 inline-flex items-center justify-center whitespace-nowrap px-4 py-2.5 bg-lomash-secondary text-white text-sm font-medium rounded-full hover:bg-lomash-dark transition-colors"
+          >
+            Bedroom Packages
+          </Link>
+        </div>
       </div>
     </div>
   );

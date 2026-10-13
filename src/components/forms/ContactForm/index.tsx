@@ -419,8 +419,8 @@ export default function ContactForm({
               <Link href="/brochure" className="block text-sm text-gray-600 hover:text-primary transition-colors">
                 → Download Brochure
               </Link>
-              <Link href="/finance" className="block text-sm text-gray-600 hover:text-primary transition-colors">
-                → Finance Options
+              <Link href="/projects" className="block text-sm text-gray-600 hover:text-primary transition-colors">
+                → Our Projects
               </Link>
             </div>
           </div>

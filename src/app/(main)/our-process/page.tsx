@@ -80,7 +80,7 @@ const steps = [
     details: [
       'Full snagging inspection before sign-off',
       'Technical demonstrations on all appliances',
-      'Lifetime craftsmanship warranty',
+      'Up to 5-year guarantee on cabinet materials',
       'Ongoing support whenever you need it',
     ],
     image: 'aftercare',

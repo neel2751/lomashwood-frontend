@@ -4,6 +4,7 @@ import { Facebook, Instagram, Twitter, Linkedin, Mail, Phone, MapPin } from "luc
 import Image from "next/image";
 import Link from "next/link";
 
+import { CookieSettingsButton } from "@/components/shared/CookieConsent";
 import { Separator } from "@/components/ui/separator";
 import { footerNavigation, socialLinks } from "@/config/navigation";
 import { siteConfig } from "@/config/site";
@@ -34,9 +35,9 @@ export function Footer() {
             </span>
           </div>
           <div className="flex flex-col items-center text-center">
-            <span className="mb-1 text-lg font-semibold">10-Year Guarantee</span>
+            <span className="mb-1 text-lg font-semibold">5-Year Guarantee</span>
             <span className="text-sm text-primary-foreground/70">
-              All cabinets are guaranteed for 10 years.
+              Up to 5 years on cabinet materials and 3 years on accessories.
             </span>
           </div>
           <div className="flex flex-col items-center text-center">
@@ -175,7 +176,7 @@ export function Footer() {
           </p>
 
           {/* Legal Links */}
-          <div className="flex items-center space-x-6">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             {footerNavigation.legal.map((link) => (
               <Link
                 key={link.href}
@@ -185,6 +186,7 @@ export function Footer() {
                 {link.label}
               </Link>
             ))}
+            <CookieSettingsButton className="text-sm text-lomash-gray-400 hover:text-white transition-colors" />
           </div>
 
           {/* Social Links */}

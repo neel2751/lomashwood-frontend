@@ -3,11 +3,11 @@
   import { ColorOptions } from "@/components/home/ColorOptions";
   import { ExploreBedroom } from "@/components/home/ExploreBedroom";
   import { ExploreKitchen } from "@/components/home/ExploreKitchen";
-  import { FinanceSection } from "@/components/home/FinanceSection";
+  // import { FinanceSection } from "@/components/home/FinanceSection";
   import { Hero } from "@/components/home/Hero";
   import HomeScrollRestore from "@/components/home/HomeScrollRestore";
   import { MainCTA } from "@/components/home/MainCTA";
-  import { MediaWall } from "@/components/home/MediaWall";
+  // import { MediaWall } from "@/components/home/MediaWall";
   import { OurProcess } from "@/components/home/OurProcess";
   import { PackageSection } from "@/components/home/PackageSection";
   import { Projects } from "@/components/home/Projects";
@@ -46,10 +46,10 @@
         <PackageSection />
 
         {/* Media Wall - Large CTA section with image/video */}
-        <MediaWall />
+        {/* <MediaWall /> */}
 
         {/* Finance Section - Finance options and benefits */}
-        <FinanceSection />
+        {/* <FinanceSection /> */}
 
         {/* Our Process - 4 step process */}
         <OurProcess />

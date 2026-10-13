@@ -22,6 +22,7 @@ import {
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import { ContactEnquiryForm } from '@/components/forms/ContactEnquiryForm';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -162,7 +163,7 @@ export default function ContactPage() {
         },
         {
           q: 'Do you offer a warranty?',
-          a: 'Yes. We offer a lifetime craftsmanship warranty on all joinery. Finishes carry a 5-year warranty.',
+          a: 'Yes. We provide maximum 5-year guarantee for the cabinet materials and 3-year for the accessories.',
         },
         {
           q: 'Can I customise colours and finishes?',
@@ -382,7 +383,7 @@ export default function ContactPage() {
               </p>
             </div>
 
-            <form className="space-y-5">
+            <ContactEnquiryForm>
               <div className="grid md:grid-cols-2 gap-5">
                 <div className="space-y-1.5">
                   <Label htmlFor="firstName" className="text-sm font-medium text-lomash-dark">
@@ -392,6 +393,7 @@ export default function ContactPage() {
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-lomash-gray-400" />
                     <input
                       id="firstName"
+                      name="firstName"
                       type="text"
                       required
                       placeholder="John"
@@ -407,6 +409,7 @@ export default function ContactPage() {
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-lomash-gray-400" />
                     <input
                       id="lastName"
+                      name="lastName"
                       type="text"
                       required
                       placeholder="Doe"
@@ -425,6 +428,7 @@ export default function ContactPage() {
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-lomash-gray-400" />
                     <input
                       id="email"
+                      name="email"
                       type="email"
                       required
                       placeholder="john@example.com"
@@ -440,6 +444,7 @@ export default function ContactPage() {
                     <Smartphone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-lomash-gray-400" />
                     <input
                       id="phone"
+                      name="phone"
                       type="tel"
                       required
                       placeholder="+44 7123 456789"
@@ -458,6 +463,7 @@ export default function ContactPage() {
                   <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-lomash-gray-400" />
                   <input
                     id="company"
+                    name="company"
                     type="text"
                     placeholder="Your company name"
                     className="w-full h-10 pl-10 pr-4 border border-lomash-gray-300 rounded-sm text-sm text-lomash-dark placeholder:text-lomash-gray-400 focus:outline-none focus:border-lomash-primary"
@@ -471,6 +477,7 @@ export default function ContactPage() {
                 </Label>
                 <select
                   id="inquiryType"
+                  name="inquiryType"
                   required
                   className="w-full h-10 px-3 border border-lomash-gray-300 rounded-sm text-sm text-lomash-dark bg-white focus:outline-none focus:border-lomash-primary"
                 >
@@ -489,6 +496,7 @@ export default function ContactPage() {
                 </Label>
                 <input
                   id="subject"
+                  name="subject"
                   type="text"
                   required
                   placeholder="Brief description of your inquiry"
@@ -502,6 +510,7 @@ export default function ContactPage() {
                 </Label>
                 <textarea
                   id="message"
+                  name="message"
                   required
                   rows={6}
                   placeholder="Tell us about your project, questions, or how we can help..."
@@ -532,7 +541,7 @@ export default function ContactPage() {
 
               {/* Consent */}
               <div className="flex items-start gap-2">
-                <input type="checkbox" id="consent" required className="mt-1" />
+                <input type="checkbox" id="consent" name="consent" required className="mt-1" />
                 <label htmlFor="consent" className="text-xs text-lomash-gray-600 leading-relaxed">
                   I agree to be contacted by Lomash Wood regarding my inquiry and consent to the
                   processing of my personal data as per the{' '}
@@ -553,7 +562,7 @@ export default function ContactPage() {
                 <Send className="w-4 h-4" />
                 Send Message
               </button>
-            </form>
+            </ContactEnquiryForm>
           </div>
 
           {/* Sidebar */}

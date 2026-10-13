@@ -1,216 +1,202 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-  Download,
-  FileText,
-  Eye,
-  Share2,
-  Mail,
-  Printer,
-  Layers,
-  CheckCircle2,
-  Star,
-  Calendar,
-  Bookmark,
-  Search,
-  Filter,
-  Package,
-  Sparkles,
-} from 'lucide-react';
+import { Download, CheckCircle2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-const featuredBrochures = [
-  {
-    id: 1,
-    title: 'Complete Furniture Catalog 2024',
-    description:
-      'Our comprehensive catalog featuring all furniture collections, wood species, and customization options.',
-    category: 'Complete Catalog',
-    pages: 68,
-    size: '12.5 MB',
-    format: 'PDF',
-    publishedDate: '2024-01-15',
-    downloads: 2341,
-    thumbnail: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=80',
-    tags: ['Complete', 'All Categories', '2024'],
-  },
-  {
-    id: 2,
-    title: 'Kitchen Collection Lookbook',
-    description:
-      'Beautiful imagery and details of our bespoke kitchen designs, materials, and finishes.',
-    category: 'Kitchen',
-    pages: 24,
-    size: '8.2 MB',
-    format: 'PDF',
-    publishedDate: '2024-01-10',
-    downloads: 1567,
-    thumbnail: 'https://plus.unsplash.com/premium_photo-1683140941523-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    tags: ['Kitchen', 'Bespoke', 'Design'],
-  },
-  {
-    id: 3,
-    title: 'Sustainable Wood Guide',
-    description: 'Learn about our commitment to sustainability and the FSC-certified woods we use.',
-    category: 'Guide',
-    pages: 16,
-    size: '4.8 MB',
-    format: 'PDF',
-    publishedDate: '2023-12-20',
-    downloads: 892,
-    thumbnail: 'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80',
-    tags: ['Sustainability', 'Wood Species', 'Guide'],
-  },
-];
+import { API_BASE_URL } from '@/config/api';
 
-const allBrochures = [
-  {
-    id: 4,
-    title: 'Bedroom Furniture Collection',
-    description: 'Beds, wardrobes, nightstands, and dressers for your bedroom.',
-    category: 'Bedroom',
-    pages: 20,
-    size: '6.4 MB',
-    format: 'PDF',
-    publishedDate: '2024-01-08',
-    downloads: 1234,
-    thumbnail: 'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80',
-    tags: ['Bedroom', 'Beds', 'Storage'],
-  },
-  {
-    id: 5,
-    title: 'Living Room Essentials',
-    description: 'Coffee tables, TV units, bookshelves, and living room seating.',
-    category: 'Living Room',
-    pages: 28,
-    size: '9.1 MB',
-    format: 'PDF',
-    publishedDate: '2024-01-05',
-    downloads: 1678,
-    thumbnail: 'https://images.unsplash.com/photo-1504624975280-0c8f8c0f0c3e?auto=format&fit=crop&w=800&q=80',
-    tags: ['Living Room', 'Coffee Tables', 'Storage'],
-  },
-  {
-    id: 6,
-    title: 'Office & Study Furniture',
-    description: 'Desks, chairs, and storage solutions for your workspace.',
-    category: 'Office',
-    pages: 18,
-    size: '5.7 MB',
-    format: 'PDF',
-    publishedDate: '2023-12-28',
-    downloads: 756,
-    thumbnail: 'https://images.unsplash.com/photo-1523580494868-79c0e1d20c7f?auto=format&fit=crop&w=800&q=80',
-    tags: ['Office', 'Desks', 'Chairs'],
-  },
-  {
-    id: 7,
-    title: 'Custom Design Portfolio',
-    description: 'Showcase of bespoke furniture projects and custom commissions.',
-    category: 'Portfolio',
-    pages: 32,
-    size: '15.3 MB',
-    format: 'PDF',
-    publishedDate: '2023-12-15',
-    downloads: 2103,
-    thumbnail: 'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80',
-    tags: ['Custom', 'Portfolio', 'Inspiration'],
-  },
-  {
-    id: 8,
-    title: 'Wood Finishes & Stains',
-    description: 'Complete guide to available wood finishes, stains, and treatments.',
-    category: 'Guide',
-    pages: 12,
-    size: '3.2 MB',
-    format: 'PDF',
-    publishedDate: '2023-12-10',
-    downloads: 1089,
-    thumbnail: 'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80',
-    tags: ['Finishes', 'Colors', 'Guide'],
-  },
-  {
-    id: 9,
-    title: 'Care & Maintenance Guide',
-    description: 'How to care for and maintain your solid wood furniture.',
-    category: 'Guide',
-    pages: 8,
-    size: '2.1 MB',
-    format: 'PDF',
-    publishedDate: '2023-12-01',
-    downloads: 1423,
-    thumbnail: 'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80',
-    tags: ['Care', 'Maintenance', 'Guide'],
-  },
-  {
-    id: 10,
-    title: 'Outdoor Furniture Catalog',
-    description: 'Weather-resistant outdoor tables, benches, and garden furniture.',
-    category: 'Outdoor',
-    pages: 16,
-    size: '7.8 MB',
-    format: 'PDF',
-    publishedDate: '2023-11-20',
-    downloads: 567,
-    thumbnail: 'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80',
-    tags: ['Outdoor', 'Garden', 'Weather-Resistant'],
-  },
-  {
-    id: 11,
-    title: 'Price List 2024',
-    description: 'Current pricing for standard items and customization options.',
-    category: 'Pricing',
-    pages: 10,
-    size: '1.8 MB',
-    format: 'PDF',
-    publishedDate: '2024-01-01',
-    downloads: 3214,
-    thumbnail: 'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80',
-    tags: ['Pricing', 'Quotes', '2024'],
-  },
-  {
-    id: 12,
-    title: 'Kitchen & Dining Storage',
-    description: 'Cabinets, sideboards, and storage solutions for kitchen and dining.',
-    category: 'Storage',
-    pages: 14,
-    size: '4.5 MB',
-    format: 'PDF',
-    publishedDate: '2023-11-15',
-    downloads: 892,
-    thumbnail: 'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80',
-    tags: ['Kitchen', 'Storage', 'Cabinets'],
-  },
-];
+// const featuredBrochures = [
+//   {
+//     id: 1,
+//     title: 'Complete Furniture Catalog 2024',
+//     description:
+//       'Our comprehensive catalog featuring all furniture collections, wood species, and customization options.',
+//     category: 'Complete Catalog',
+//     pages: 68,
+//     size: '12.5 MB',
+//     format: 'PDF',
+//     publishedDate: '2024-01-15',
+//     downloads: 2341,
+//     thumbnail: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=80',
+//     tags: ['Complete', 'All Categories', '2024'],
+//   },
+//   {
+//     id: 2,
+//     title: 'Kitchen Collection Lookbook',
+//     description:
+//       'Beautiful imagery and details of our bespoke kitchen designs, materials, and finishes.',
+//     category: 'Kitchen',
+//     pages: 24,
+//     size: '8.2 MB',
+//     format: 'PDF',
+//     publishedDate: '2024-01-10',
+//     downloads: 1567,
+//     thumbnail: 'https://plus.unsplash.com/premium_photo-1683140941523-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+//     tags: ['Kitchen', 'Bespoke', 'Design'],
+//   },
+//   {
+//     id: 3,
+//     title: 'Sustainable Wood Guide',
+//     description: 'Learn about our commitment to sustainability and the FSC-certified woods we use.',
+//     category: 'Guide',
+//     pages: 16,
+//     size: '4.8 MB',
+//     format: 'PDF',
+//     publishedDate: '2023-12-20',
+//     downloads: 892,
+//     thumbnail: 'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80',
+//     tags: ['Sustainability', 'Wood Species', 'Guide'],
+//   },
+// ];
 
-const categories = [
-  'All Categories',
-  'Complete Catalog',
-  'Kitchen',
-  'Bedroom',
-  'Living Room',
-  'Office',
-  'Outdoor',
-  'Storage',
-  'Portfolio',
-  'Guide',
-  'Pricing',
-];
+// const allBrochures = [
+//   {
+//     id: 4,
+//     title: 'Bedroom Furniture Collection',
+//     description: 'Beds, wardrobes, nightstands, and dressers for your bedroom.',
+//     category: 'Bedroom',
+//     pages: 20,
+//     size: '6.4 MB',
+//     format: 'PDF',
+//     publishedDate: '2024-01-08',
+//     downloads: 1234,
+//     thumbnail: 'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80',
+//     tags: ['Bedroom', 'Beds', 'Storage'],
+//   },
+//   {
+//     id: 5,
+//     title: 'Living Room Essentials',
+//     description: 'Coffee tables, TV units, bookshelves, and living room seating.',
+//     category: 'Living Room',
+//     pages: 28,
+//     size: '9.1 MB',
+//     format: 'PDF',
+//     publishedDate: '2024-01-05',
+//     downloads: 1678,
+//     thumbnail: 'https://images.unsplash.com/photo-1504624975280-0c8f8c0f0c3e?auto=format&fit=crop&w=800&q=80',
+//     tags: ['Living Room', 'Coffee Tables', 'Storage'],
+//   },
+//   {
+//     id: 6,
+//     title: 'Office & Study Furniture',
+//     description: 'Desks, chairs, and storage solutions for your workspace.',
+//     category: 'Office',
+//     pages: 18,
+//     size: '5.7 MB',
+//     format: 'PDF',
+//     publishedDate: '2023-12-28',
+//     downloads: 756,
+//     thumbnail: 'https://images.unsplash.com/photo-1523580494868-79c0e1d20c7f?auto=format&fit=crop&w=800&q=80',
+//     tags: ['Office', 'Desks', 'Chairs'],
+//   },
+//   {
+//     id: 7,
+//     title: 'Custom Design Portfolio',
+//     description: 'Showcase of bespoke furniture projects and custom commissions.',
+//     category: 'Portfolio',
+//     pages: 32,
+//     size: '15.3 MB',
+//     format: 'PDF',
+//     publishedDate: '2023-12-15',
+//     downloads: 2103,
+//     thumbnail: 'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80',
+//     tags: ['Custom', 'Portfolio', 'Inspiration'],
+//   },
+//   {
+//     id: 8,
+//     title: 'Wood Finishes & Stains',
+//     description: 'Complete guide to available wood finishes, stains, and treatments.',
+//     category: 'Guide',
+//     pages: 12,
+//     size: '3.2 MB',
+//     format: 'PDF',
+//     publishedDate: '2023-12-10',
+//     downloads: 1089,
+//     thumbnail: 'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80',
+//     tags: ['Finishes', 'Colors', 'Guide'],
+//   },
+//   {
+//     id: 9,
+//     title: 'Care & Maintenance Guide',
+//     description: 'How to care for and maintain your solid wood furniture.',
+//     category: 'Guide',
+//     pages: 8,
+//     size: '2.1 MB',
+//     format: 'PDF',
+//     publishedDate: '2023-12-01',
+//     downloads: 1423,
+//     thumbnail: 'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80',
+//     tags: ['Care', 'Maintenance', 'Guide'],
+//   },
+//   {
+//     id: 10,
+//     title: 'Outdoor Furniture Catalog',
+//     description: 'Weather-resistant outdoor tables, benches, and garden furniture.',
+//     category: 'Outdoor',
+//     pages: 16,
+//     size: '7.8 MB',
+//     format: 'PDF',
+//     publishedDate: '2023-11-20',
+//     downloads: 567,
+//     thumbnail: 'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80',
+//     tags: ['Outdoor', 'Garden', 'Weather-Resistant'],
+//   },
+//   {
+//     id: 11,
+//     title: 'Price List 2024',
+//     description: 'Current pricing for standard items and customization options.',
+//     category: 'Pricing',
+//     pages: 10,
+//     size: '1.8 MB',
+//     format: 'PDF',
+//     publishedDate: '2024-01-01',
+//     downloads: 3214,
+//     thumbnail: 'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80',
+//     tags: ['Pricing', 'Quotes', '2024'],
+//   },
+//   {
+//     id: 12,
+//     title: 'Kitchen & Dining Storage',
+//     description: 'Cabinets, sideboards, and storage solutions for kitchen and dining.',
+//     category: 'Storage',
+//     pages: 14,
+//     size: '4.5 MB',
+//     format: 'PDF',
+//     publishedDate: '2023-11-15',
+//     downloads: 892,
+//     thumbnail: 'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80',
+//     tags: ['Kitchen', 'Storage', 'Cabinets'],
+//   },
+// ];
+
+// const categories = [
+//   'All Categories',
+//   'Complete Catalog',
+//   'Kitchen',
+//   'Bedroom',
+//   'Living Room',
+//   'Office',
+//   'Outdoor',
+//   'Storage',
+//   'Portfolio',
+//   'Guide',
+//   'Pricing',
+// ];
 
 const requestBrochures = [
   {
     id: 'kitchen',
     label: 'Lomash Wood Premium Kitchen Brochure',
+    file: '/brochures/Lomash%20Wood%20Premium%20Kitchen%20Brochure.pdf',
     thumbnail: 'https://plus.unsplash.com/premium_photo-1683140941523-f1fbbabe54d5?q=80&w=3174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     tags: ['Kitchen', 'Bespoke', 'Design'],
   },
   {
     id: 'bedroom',
     label: 'Lomash Wood Luxury Bedroom Brochure',
+    file: '/brochures/Lomash%20Wood%20Luxury%20Bedroom%20Brochure.pdf',
     thumbnail: 'https://images.unsplash.com/photo-1615874959474-d609969a20ed?q=80&w=3280&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     tags: ['Bedroom', 'Luxury', 'Design'],
   },
@@ -218,39 +204,111 @@ const requestBrochures = [
 
 export default function BrochurePage() {
   const [selectedBrochures, setSelectedBrochures] = useState<string[]>([]);
-  const [deliveryMethod, setDeliveryMethod] = useState<'download' | 'post' | ''>('');
+  const [deliveryMethod, setDeliveryMethod] = useState<'download' | 'post' | ''>('download');
+  const [selectionError, setSelectionError] = useState(false);
+  const downloadsRef = useRef<HTMLDivElement>(null);
   const [commsPreference, setCommsPreference] = useState<'yes' | 'no' | ''>('');
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+
+  // The download view is much shorter than the form, so bring it into view once it renders
+  useEffect(() => {
+    if (submitted) {
+      downloadsRef.current?.scrollIntoView({ block: 'center', behavior: 'instant' });
+    }
+  }, [submitted]);
 
   const toggleBrochure = (id: string) => {
+    setSelectionError(false);
     setSelectedBrochures((prev) =>
       prev.includes(id) ? prev.filter((b) => b !== id) : [...prev, id]
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    if (selectedBrochures.length === 0) {
+      setSelectionError(true);
+      return;
+    }
+
+    const formData = new FormData(e.currentTarget);
+    const field = (name: string) => String(formData.get(name) ?? '').trim();
+
+    setSubmitting(true);
+    setSubmitError('');
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/brochure/request`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: field('firstName'),
+          lastName: field('lastName'),
+          postcode: field('postcode'),
+          // The backend requires an address, but download requests don't collect one
+          address: 'Not provided',
+          email: field('email'),
+          phone: field('phone'),
+          deliveryMethod: deliveryMethod || 'download',
+          marketingOptIn: commsPreference === 'yes',
+          brochureIds: selectedBrochures,
+          notes: `Selected: ${requestBrochures
+            .filter((b) => selectedBrochures.includes(b.id))
+            .map((b) => b.label)
+            .join(', ')}`,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(data?.message || 'Something went wrong. Please try again.');
+      }
+
+      setSubmitted(true);
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error && error.message !== 'Failed to fetch'
+          ? error.message
+          : 'We could not submit your request. Please check your connection and try again.'
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {
+    const chosenBrochures = requestBrochures.filter((b) => selectedBrochures.includes(b.id));
+
     return (
-      <div className="min-h-[60vh] flex items-center justify-center px-6">
-        <div className="text-center max-w-md">
-          <div className="w-16 h-16 rounded-full bg-lomash-primary flex items-center justify-center mx-auto mb-6">
+      <div className="min-h-[60vh] flex items-center justify-center px-6 py-16">
+        <div ref={downloadsRef} className="text-center max-w-md w-full">
+          <div className="w-16 h-16 rounded-full bg-lomash-primary/10 flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 className="w-8 h-8 text-lomash-primary" />
           </div>
           <h2 className="font-heading text-2xl font-bold text-lomash-dark mb-3">
-            Request Received!
+            Your {chosenBrochures.length > 1 ? 'brochures are' : 'brochure is'} ready
           </h2>
           <p className="text-lomash-gray-600 text-sm leading-relaxed mb-6">
-            {deliveryMethod === 'download'
-              ? 'Your brochure is ready to download. Check your email for the link.'
-              : 'Your brochure will be delivered within 3–5 working days.'}
+            Thank you. Use the {chosenBrochures.length > 1 ? 'buttons' : 'button'} below to download your PDF.
           </p>
+          <div className="space-y-3 mb-8">
+            {chosenBrochures.map((brochure) => (
+              <a
+                key={brochure.id}
+                href={brochure.file}
+                download
+                className="flex items-center justify-center gap-2 w-full bg-lomash-primary text-white font-heading font-semibold text-sm px-6 py-4 rounded-full hover:bg-lomash-secondary transition-colors duration-200"
+              >
+                <Download className="w-4 h-4 flex-shrink-0" />
+                {brochure.label}
+              </a>
+            ))}
+          </div>
           <Link
             href="/"
-            className="inline-block bg-lomash-primary text-white text-xs tracking-widest uppercase px-8 py-3 hover:bg-lomash-secondary transition-colors duration-200"
+            className="inline-block text-lomash-secondary text-sm font-semibold underline hover:text-lomash-primary"
           >
             Back To Home
           </Link>
@@ -367,6 +425,11 @@ export default function BrochurePage() {
                   );
                 })}
               </div>
+              {selectionError && (
+                <p role="alert" className="text-red-500 text-sm mt-4">
+                  Please choose at least one brochure.
+                </p>
+              )}
             </div>
 
             {/* ── Right: Delivery + personal details ── */}
@@ -392,6 +455,7 @@ export default function BrochurePage() {
                       value="download"
                       className="sr-only"
                       required
+                      checked={deliveryMethod === 'download'}
                       onChange={() => setDeliveryMethod('download')}
                     />
                     {deliveryMethod === 'download' && (
@@ -403,13 +467,13 @@ export default function BrochurePage() {
                       Download
                     </p>
                     <p className="text-lomash-gray-500 text-xs leading-relaxed">
-                      Can&apos;t wait? Download the brochure as a PDF immediately.
+                      Download the brochure as a PDF as soon as you submit this form.
                     </p>
                   </div>
                 </label>
 
-                {/* Post */}
-                <label className="flex items-start gap-4 cursor-pointer group">
+                {/* Post (hidden for now) */}
+                {/* <label className="flex items-start gap-4 cursor-pointer group">
                   <div
                     className={`mt-0.5 w-5 h-5 border-2 flex-shrink-0 flex items-center rounded-lg justify-center transition-colors ${
                       deliveryMethod === 'post'
@@ -436,7 +500,7 @@ export default function BrochurePage() {
                       Your brochure will be delivered within 3–5 working days.
                     </p>
                   </div>
-                </label>
+                </label> */}
               </div>
 
               {/* Personal details — bottom-border-only inputs */}
@@ -457,6 +521,7 @@ export default function BrochurePage() {
                     </label>
                     <input
                       id={id}
+                      name={id}
                       type={type}
                       required
                       className={`w-full border-b border-lomash-gray-300 py-2 text-sm text-lomash-dark bg-transparent focus:outline-none focus:border-lomash-primary transition-colors ${info ? 'pr-6' : ''}`}
@@ -513,11 +578,18 @@ export default function BrochurePage() {
                 </div>
 
                 {/* Submit */}
+                {submitError && (
+                  <p role="alert" className="text-red-500 text-sm">
+                    {submitError}
+                  </p>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full bg-lomash-primary text-white font-heading font-semibold text-sm py-4 rounded-full hover:bg-lomash-secondary transition-colors duration-200"
+                  disabled={submitting}
+                  className="w-full bg-lomash-primary text-white font-heading font-semibold text-sm py-4 rounded-full hover:bg-lomash-secondary transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  Send me a brochure
+                  {submitting ? 'Submitting...' : 'Download brochure'}
                 </button>
 
                 <p className="text-center text-lomash-gray-500 text-sm leading-relaxed">
@@ -561,7 +633,7 @@ export default function BrochurePage() {
       {/* ═══════════════════════════════════════════════════════════════════════
           SECTION 4 — Filter & Search
       ═══════════════════════════════════════════════════════════════════════ */}
-      <section className="py-8 px-6 max-w-7xl mx-auto mt-12">
+      {/* <section className="py-8 px-6 max-w-7xl mx-auto mt-12">
         <div className="border border-lomash-gray-200 bg-white p-6 rounded-lg">
           <h2 className="font-heading font-semibold text-lomash-dark flex items-center gap-2 mb-5">
             <Filter className="w-5 h-5 text-lomash-primary" />
@@ -590,20 +662,9 @@ export default function BrochurePage() {
               <option value="pages">Pages (Low to High)</option>
             </select>
           </div>
-          {/* <div className="flex gap-2">
-            <button className="flex items-center gap-1.5 border border-lomash-gray-300 text-lomash-dark text-xs px-3 py-2 hover:border-lomash-primary hover:text-lomash-primary transition-colors">
-              <Grid3x3 className="w-4 h-4" /> Grid
-            </button>
-            <button className="flex items-center gap-1.5 border border-lomash-gray-300 text-lomash-dark text-xs px-3 py-2 hover:border-lomash-primary hover:text-lomash-primary transition-colors">
-              <List className="w-4 h-4" /> List
-            </button>
-          </div> */}
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════════════════
-          SECTION 5 — Featured Brochures
-      ═══════════════════════════════════════════════════════════════════════ */}
       <section className="py-8 px-6 max-w-7xl mx-auto">
         <div className="mb-6">
           <h2 className="font-heading text-2xl font-bold text-lomash-dark flex items-center gap-2 mb-1">
@@ -622,7 +683,6 @@ export default function BrochurePage() {
               key={brochure.id}
               className="border-2 border-lomash-accent/30 bg-lomash-primary/5 rounded-lg overflow-hidden hover:shadow-product-card-hover transition-shadow"
             >
-              {/* Brochure cover */}
               <div className="relative h-52 bg-lomash-gray-100 border-b border-lomash-gray-200">
                 <Image
                   src={brochure.thumbnail}
@@ -693,9 +753,6 @@ export default function BrochurePage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════════════════
-          SECTION 6 — All Brochures list
-      ═══════════════════════════════════════════════════════════════════════ */}
       <section className="py-8 px-6 bg-lomash-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6">
@@ -714,7 +771,6 @@ export default function BrochurePage() {
                 key={brochure.id}
                 className="flex flex-col md:flex-row gap-4 p-4 border-2 border-lomash-gray-200 bg-white hover:border-lomash-accent hover:shadow-product-card transition-all rounded-lg group cursor-pointer"
               >
-                {/* Thumb */}
                 <div className="w-full md:w-20 h-28 bg-lomash-gray-100 rounded-sm flex items-center justify-center border border-lomash-gray-200 flex-shrink-0">
                   {brochure.thumbnail ? (
                     <img
@@ -801,14 +857,14 @@ export default function BrochurePage() {
             </Button>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* ═══════════════════════════════════════════════════════════════════════
           SECTION 7 — Request physical + Help
       ═══════════════════════════════════════════════════════════════════════ */}
       <section className="py-8  max-w-7xl mx-auto space-y-4">
-        {/* Physical catalog */}
-        <div className="border border-lomash-gray-200 rounded-sm bg-lomash-primary/5 p-6">
+        {/* Physical catalog (hidden for now) */}
+        {/* <div className="border border-lomash-gray-200 rounded-sm bg-lomash-primary/5 p-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-lg bg-lomash-primary/10 flex items-center justify-center flex-shrink-0">
@@ -833,7 +889,7 @@ export default function BrochurePage() {
               Request Catalog
             </Link>
           </div>
-        </div>
+        </div> */}
 
         {/* Need help */}
         <div className="border-2 border-lomash-accent/40 rounded-sm bg-lomash-secondary/5 p-6">

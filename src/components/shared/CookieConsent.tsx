@@ -1,11 +1,17 @@
 "use client"
 
-import { X } from "lucide-react"
+import { Cookie } from "lucide-react"
 import Link from "next/link"
 import { useState, useEffect } from "react"
 
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+import {
+  OPEN_COOKIE_SETTINGS_EVENT,
+  openCookieSettings,
+  readCookieConsent,
+  saveCookieConsent,
+} from "@/lib/cookie-consent"
+import type { CookiePreferences } from "@/lib/cookie-consent"
 import { cn } from "@/lib/utils"
 
 
@@ -13,139 +19,105 @@ interface CookieConsentProps {
   className?: string
 }
 
+const defaultPreferences: CookiePreferences = {
+  necessary: true,
+  analytics: false,
+  marketing: false,
+}
+
+const toggleClassName =
+  "peer h-6 w-11 rounded-full bg-lomash-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-lomash-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-lomash-primary peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-lomash-primary peer-focus-visible:ring-offset-2"
+
 export function CookieConsent({ className }: CookieConsentProps) {
   const [isVisible, setIsVisible] = useState(false)
-  const [preferences, setPreferences] = useState({
-    necessary: true,
-    analytics: false,
-    marketing: false,
-  })
+  const [preferences, setPreferences] = useState<CookiePreferences>(defaultPreferences)
   const [showPreferences, setShowPreferences] = useState(false)
 
   useEffect(() => {
-    const consent = localStorage.getItem("cookie-consent")
-    if (!consent) {
-      setIsVisible(true)
+    const saved = readCookieConsent()
+    if (saved) {
+      setPreferences(saved)
     } else {
-      try {
-        const savedPreferences = JSON.parse(consent)
-        setPreferences(savedPreferences)
-        applyConsent(savedPreferences)
-      } catch (error) {
-        setIsVisible(true)
-      }
+      setIsVisible(true)
     }
+
+    const handleOpen = () => {
+      setPreferences(readCookieConsent() ?? defaultPreferences)
+      setShowPreferences(true)
+      setIsVisible(true)
+    }
+
+    window.addEventListener(OPEN_COOKIE_SETTINGS_EVENT, handleOpen)
+    return () => window.removeEventListener(OPEN_COOKIE_SETTINGS_EVENT, handleOpen)
   }, [])
 
-  const applyConsent = (prefs: typeof preferences) => {
-    if (prefs.analytics) {
-      if (typeof window !== "undefined" && (window as any).gtag) {
-        (window as any).gtag("consent", "update", {
-          analytics_storage: "granted",
-        })
-      }
-    }
-
-    if (prefs.marketing) {
-      if (typeof window !== "undefined" && (window as any).gtag) {
-        (window as any).gtag("consent", "update", {
-          ad_storage: "granted",
-        })
-      }
-    }
-  }
-
-  const handleAcceptAll = () => {
-    const allAccepted = {
-      necessary: true,
-      analytics: true,
-      marketing: true,
-    }
-    localStorage.setItem("cookie-consent", JSON.stringify(allAccepted))
-    setPreferences(allAccepted)
-    applyConsent(allAccepted)
+  const save = (prefs: CookiePreferences) => {
+    saveCookieConsent(prefs)
+    setPreferences(prefs)
+    setShowPreferences(false)
     setIsVisible(false)
   }
 
-  const handleRejectAll = () => {
-    const onlyNecessary = {
-      necessary: true,
-      analytics: false,
-      marketing: false,
-    }
-    localStorage.setItem("cookie-consent", JSON.stringify(onlyNecessary))
-    setPreferences(onlyNecessary)
-    applyConsent(onlyNecessary)
-    setIsVisible(false)
-  }
-
-  const handleSavePreferences = () => {
-    localStorage.setItem("cookie-consent", JSON.stringify(preferences))
-    applyConsent(preferences)
-    setIsVisible(false)
-  }
-
-  const handleClose = () => {
-    setIsVisible(false)
-  }
+  const handleAcceptAll = () => save({ necessary: true, analytics: true, marketing: true })
+  const handleRejectAll = () => save({ necessary: true, analytics: false, marketing: false })
+  const handleSavePreferences = () => save(preferences)
 
   if (!isVisible) return null
 
   return (
     <div
+      role="dialog"
+      aria-label="Cookie consent"
       className={cn(
         "fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 animate-in slide-in-from-bottom-5",
         className
       )}
     >
-      <Card className="mx-auto max-w-4xl border-2 shadow-xl">
-        <div className="relative p-6">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute right-2 top-2"
-            onClick={handleClose}
-          >
-            <X className="h-4 w-4" />
-          </Button>
-
+      <div className="mx-auto max-w-4xl max-h-[85dvh] overflow-y-auto rounded-lg border border-lomash-gray-200 border-t-4 border-t-lomash-primary bg-white shadow-2xl">
+        <div className="p-5 md:p-6">
           {!showPreferences ? (
-            <div className="space-y-4">
-              <div className="pr-8">
-                <h3 className="mb-2 text-lg font-semibold">
-                  We value your privacy
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  We use cookies to enhance your browsing experience, serve
-                  personalized content, and analyze our traffic. By clicking
-                  "Accept All", you consent to our use of cookies.{" "}
-                  <Link
-                    href="/cookies"
-                    className="underline hover:text-foreground"
-                  >
-                    Learn more
-                  </Link>
-                </p>
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-center">
+              <div className="flex flex-1 items-start gap-4">
+                <div className="hidden h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-lomash-primary to-lomash-secondary shadow-lg sm:flex">
+                  <Cookie className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="mb-1 text-lg font-bold text-lomash-dark">
+                    We value your privacy
+                  </h3>
+                  <p className="text-sm leading-relaxed text-lomash-gray-600">
+                    We use cookies to keep our website working and, with your
+                    permission, to understand how it is used and to measure our
+                    advertising. You can accept all cookies, reject the optional
+                    ones, or choose which to allow.{" "}
+                    <Link
+                      href="/cookies"
+                      className="font-medium text-lomash-secondary underline hover:text-lomash-primary"
+                    >
+                      Cookie Policy
+                    </Link>
+                  </p>
+                </div>
               </div>
 
-              <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
+              <div className="flex flex-col gap-2 sm:flex-row sm:justify-end lg:flex-shrink-0">
                 <Button
-                  variant="outline"
+                  variant="ghost"
                   onClick={() => setShowPreferences(true)}
-                  className="w-full sm:w-auto"
+                  className="w-full text-lomash-dark sm:w-auto"
                 >
-                  Customize
+                  Customise
                 </Button>
                 <Button
                   variant="outline"
                   onClick={handleRejectAll}
-                  className="w-full sm:w-auto"
+                  className="w-full border-lomash-dark text-lomash-dark hover:bg-lomash-dark hover:text-white sm:w-auto"
                 >
                   Reject All
                 </Button>
                 <Button
                   onClick={handleAcceptAll}
-                  className="w-full sm:w-auto"
+                  className="w-full bg-lomash-primary text-white hover:bg-lomash-accent sm:w-auto"
                 >
                   Accept All
                 </Button>
@@ -153,39 +125,41 @@ export function CookieConsent({ className }: CookieConsentProps) {
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="pr-8">
-                <h3 className="mb-2 text-lg font-semibold">
+              <div>
+                <h3 className="mb-1 text-lg font-bold text-lomash-dark">
                   Cookie Preferences
                 </h3>
-                <p className="text-sm text-muted-foreground">
-                  Choose which cookies you want to accept. You can change your
-                  preferences at any time.
+                <p className="text-sm text-lomash-gray-600">
+                  Choose which cookies you want to allow. You can change your
+                  preferences at any time from the Cookie Settings link at the
+                  bottom of the page.
                 </p>
               </div>
 
               <div className="space-y-3">
-                <div className="flex items-center justify-between rounded-lg border p-3">
+                <div className="flex items-center justify-between rounded-lg border border-lomash-gray-200 bg-lomash-gray-50 p-3">
                   <div className="flex-1">
-                    <h4 className="font-medium">Necessary Cookies</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Required for the website to function properly.
+                    <h4 className="font-semibold text-lomash-dark">Necessary Cookies</h4>
+                    <p className="text-sm text-lomash-gray-600">
+                      Required for the website to work, such as keeping you signed in.
                     </p>
                   </div>
-                  <div className="ml-4 text-sm font-medium text-muted-foreground">
+                  <div className="ml-4 text-sm font-medium text-lomash-secondary">
                     Always Active
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between rounded-lg border p-3">
+                <div className="flex items-center justify-between rounded-lg border border-lomash-gray-200 p-3">
                   <div className="flex-1">
-                    <h4 className="font-medium">Analytics Cookies</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Help us understand how visitors interact with our website.
+                    <h4 className="font-semibold text-lomash-dark">Analytics Cookies</h4>
+                    <p className="text-sm text-lomash-gray-600">
+                      Help us understand how visitors use our website.
                     </p>
                   </div>
                   <label className="relative ml-4 inline-flex cursor-pointer items-center">
                     <input
                       type="checkbox"
+                      aria-label="Analytics cookies"
                       checked={preferences.analytics}
                       onChange={(e) =>
                         setPreferences((prev) => ({
@@ -195,20 +169,21 @@ export function CookieConsent({ className }: CookieConsentProps) {
                       }
                       className="peer sr-only"
                     />
-                    <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring peer-focus:ring-offset-2" />
+                    <div className={toggleClassName} />
                   </label>
                 </div>
 
-                <div className="flex items-center justify-between rounded-lg border p-3">
+                <div className="flex items-center justify-between rounded-lg border border-lomash-gray-200 p-3">
                   <div className="flex-1">
-                    <h4 className="font-medium">Marketing Cookies</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Used to deliver personalized advertisements.
+                    <h4 className="font-semibold text-lomash-dark">Marketing Cookies</h4>
+                    <p className="text-sm text-lomash-gray-600">
+                      Used to measure our advertising and show you more relevant adverts.
                     </p>
                   </div>
                   <label className="relative ml-4 inline-flex cursor-pointer items-center">
                     <input
                       type="checkbox"
+                      aria-label="Marketing cookies"
                       checked={preferences.marketing}
                       onChange={(e) =>
                         setPreferences((prev) => ({
@@ -218,7 +193,7 @@ export function CookieConsent({ className }: CookieConsentProps) {
                       }
                       className="peer sr-only"
                     />
-                    <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring peer-focus:ring-offset-2" />
+                    <div className={toggleClassName} />
                   </label>
                 </div>
               </div>
@@ -226,14 +201,14 @@ export function CookieConsent({ className }: CookieConsentProps) {
               <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
                 <Button
                   variant="outline"
-                  onClick={() => setShowPreferences(false)}
-                  className="w-full sm:w-auto"
+                  onClick={handleRejectAll}
+                  className="w-full border-lomash-dark text-lomash-dark hover:bg-lomash-dark hover:text-white sm:w-auto"
                 >
-                  Back
+                  Reject All
                 </Button>
                 <Button
                   onClick={handleSavePreferences}
-                  className="w-full sm:w-auto"
+                  className="w-full bg-lomash-primary text-white hover:bg-lomash-accent sm:w-auto"
                 >
                   Save Preferences
                 </Button>
@@ -241,7 +216,15 @@ export function CookieConsent({ className }: CookieConsentProps) {
             </div>
           )}
         </div>
-      </Card>
+      </div>
     </div>
+  )
+}
+
+export function CookieSettingsButton({ className }: { className?: string }) {
+  return (
+    <button type="button" onClick={openCookieSettings} className={className}>
+      Cookie Settings
+    </button>
   )
 }

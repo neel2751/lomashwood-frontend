@@ -39,7 +39,7 @@ const mockProducts = [
     popularity: 95,
     specifications: {
       material: 'Engineered Wood with Laminate',
-      warranty: '10 Years',
+      warranty: '5 Years',
       dimensions: 'Customizable',
       weight: 'Varies by configuration',
       installation: 'Professional Installation Included',
@@ -175,7 +175,7 @@ const mockProducts = [
     popularity: 98,
     specifications: {
       material: 'High-Quality MDF with Acrylic Finish',
-      warranty: '15 Years',
+      warranty: '5 Years',
       dimensions: 'Fully Customizable',
       weight: 'Varies by configuration',
       installation: 'Premium Installation Included',
